@@ -45,6 +45,7 @@ public class Work {
 		post(Path.Web.AUTH, AuthController.serveAuthPost);
 		post(Path.Web.SENSORS, SensorController.getSensors);
 		post(Path.Web.SENSORDATA, SensorController.getSensorData); 
+		get(Path.Web.MACHINEDATA, IndexController.getMachineData);
 		
 	}
 	// Enables CORS on requests. This method is an initialization method and should be called once.

@@ -1,8 +1,17 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <router-link to="/login">Вход</router-link>
-  </div>
+<div class="hello">
+<md-layout md-align="center" md-gutter="10">
+  <md-layout md-flex="35" md-align="center">
+    <h1>{{ msg }}</h1> 
+    
+  </md-layout>
+</md-layout>
+<md-layout md-align="center" md-gutter="10">
+  <md-layout md-flex="35" md-align="center">
+    <md-button @click.native="$router.push({ name: 'Login' })">Вход</md-button>
+  </md-layout>
+</md-layout>
+</div>
 </template>
 <script>
 export default {

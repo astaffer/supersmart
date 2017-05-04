@@ -30,6 +30,7 @@
 </template>
 <script>
 import auth from '../auth'
+import router from '../router'
 export default {
   data () {
     return {
@@ -42,6 +43,9 @@ export default {
       error: ''
     }
   },
+  mounted: function () {
+    this.isAuthenticated()
+  },
   methods: {
     submit () {
       var credentials = {
@@ -51,8 +55,13 @@ export default {
         // We need to pass the component's this context
         // to properly make use of http in the auth service
       auth.login(this, credentials, 'Dashboard')
+    },
+    isAuthenticated () {
+      auth.checkAuth()
+      if (auth.user.authenticated) {
+        router.push({name: 'Dashboard'})
+      }
     }
-      // auth.login(this, credential, 'Hello')
   }
 }
 </script>

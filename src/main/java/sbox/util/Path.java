@@ -9,6 +9,7 @@ public class Path {
         @Getter public static final String AUTH = "/auth/";
         @Getter public static final String LIVE = "/live/";
         @Getter public static final String SENSORS = "/sensors/";
+        @Getter public static final String MACHINEDATA = "/machine/";
         @Getter public static final String SENSORDATA = "/sensors/:id/data";
     }
 

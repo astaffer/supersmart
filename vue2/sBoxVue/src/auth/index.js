@@ -1,7 +1,8 @@
 // src/auth/index.js
 // URL and endpoint constants
 import router from '../router'
-const API_URL = 'http://' + location.hostname + ':8080/'
+const HOST_NAME = 'divay.ru' // location.hostname
+const API_URL = 'http://' + HOST_NAME + ':8080/'
 const LOGIN_URL = API_URL + 'auth/'
 
 export default {
@@ -38,7 +39,6 @@ export default {
   checkAuth () {
     var jwt = localStorage.getItem('access_id')
     if (jwt) {
-      console.log(jwt)
       this.user.authenticated = true
     } else {
       this.user.authenticated = false
