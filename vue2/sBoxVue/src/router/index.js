@@ -5,6 +5,9 @@ import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Settings from '@/components/Settings'
+import Effects from '@/components/Effects'
+import Services from '@/components/Services'
+import Properties from '@/components/Properties'
 
 Vue.use(Router)
 export default new Router({
@@ -18,12 +21,26 @@ export default new Router({
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
+      children: [
+        {
+          path: 'effects',
+          component: Effects
+        },
+        {
+          path: 'services',
+          component: Services
+        },
+        {
+          path: 'settings',
+          component: Settings
+        }
+      ],
       meta: { requiresAuth: true }
     },
     {
-      path: '/settings',
-      name: 'Settings',
-      component: Settings,
+      path: '/properties',
+      name: 'Properties',
+      component: Properties,
       meta: { requiresAuth: true }
     },
     {

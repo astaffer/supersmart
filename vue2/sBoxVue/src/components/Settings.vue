@@ -1,7 +1,6 @@
 <template>
   <div class="settings">
     <h1>{{ msg }}</h1>
-    <router-link to="/login">Вход</router-link>
   </div>
 </template>
 <script>
@@ -14,3 +13,8 @@ export default {
   }
 }
 </script>
+<style>
+.settings{
+  width: 100%;
+}
+</style>

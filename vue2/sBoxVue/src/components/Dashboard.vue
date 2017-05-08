@@ -5,10 +5,19 @@
 		  	 	 {{msg}} 
 		  	 </md-layout>
 	</md-layout>
-	<md-layout md-gutter>
-	  <md-layout md-flex="100">
-		  <md-theme md-name="wh">
-		  	<md-tabs md-fixed >
+	<md-layout md-gutter="16">
+	  <md-layout md-flex="100" md-align="center">
+	  <md-button-toggle md-single class="md-accent">
+		  <md-button @click.native="$router.push({ path: '/dashboard/effects' })">Эффективность</md-button>
+		  <md-button @click.native="$router.push({ path: '/dashboard/services' })">Сервис</md-button>
+		  <md-button @click.native="$router.push({ path: '/dashboard/settings' })">Настройки</md-button>
+		</md-button-toggle>
+		</md-layout>
+	</md-layout>
+	<md-layout md-gutter="16" class="dash-router">
+		<md-layout md-flex="100">
+		  <router-view></router-view>
+		  	<!--<md-tabs md-fixed >
 				  <md-tab id="effects" md-label="Эффективность">
 					  <md-layout md-gutter>
 						  <md-layout md-flex="60" md-flex-offset="10">
@@ -114,25 +123,22 @@
 									  </md-table-body>
 									</md-table>
  								</md-layout>
- 							</md-layout> 
+ 						</md-layout> 
 				  </md-tab>
-
 				  <md-tab id="services" md-label="Сервис">
-				    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
-				    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
+    				<radial-gauge :value="377"></radial-gauge>
 				  </md-tab>
-
 				  <md-tab id="settings" md-label="Настройки">
 				    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas.</p>
 				  </md-tab>
 				</md-tabs>
-			</md-theme>	
+				-->
 	  </md-layout>
 	</md-layout>
 </div>
 </template>
 <script>
-import CommitChart from '../charts/CommitChart'
+
 export default {
   name: 'Dash',
   data () {
@@ -140,9 +146,6 @@ export default {
       msg: 'Покрасочная камера №1',
       showTable: false
     }
-  },
-  components: {
-    CommitChart
   }
 }
 </script>
@@ -153,5 +156,8 @@ export default {
 .chart-container{
 	min-height: 400px;
 	min-width: 800px;
+}
+.dash-router{
+	padding-top: 20px;
 }
 </style>
