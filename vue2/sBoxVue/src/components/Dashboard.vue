@@ -5,7 +5,7 @@
 		  	 	 {{msg}} 
 		  	 </md-layout>
 	</md-layout>
-	<md-layout md-gutter="16">
+	<md-layout md-gutter>
 	  <md-layout md-flex="100" md-align="center">
 	  <md-button-toggle md-single class="md-accent">
 		  <md-button @click.native="$router.push({ path: '/dashboard/effects' })">Эффективность</md-button>
@@ -14,8 +14,8 @@
 		</md-button-toggle>
 		</md-layout>
 	</md-layout>
-	<md-layout md-gutter="16" class="dash-router">
-		<md-layout md-flex="100">
+	<md-layout md-gutter class="dash-router" md-align="center">
+		<md-layout md-flex="90" md-align="center">
 		  <router-view></router-view>
 		  	<!--<md-tabs md-fixed >
 				  <md-tab id="effects" md-label="Эффективность">

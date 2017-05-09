@@ -9,7 +9,7 @@ export default {
   name: 'properties',
   data () {
     return {
-      msg: 'Настройки'
+      msg: 'Параметры'
     }
   }
 }

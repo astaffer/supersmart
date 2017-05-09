@@ -1,9 +1,13 @@
-import { Bar } from 'vue-chartjs'
+import { Bar, mixins } from 'vue-chartjs'
+const { reactiveProp } = mixins
 // import the component - chart you need
-
 export default Bar.extend({
+  mixins: [reactiveProp],
+  props: ['options'],
   mounted () {
     // Overwriting base render method with actual data.
+    this.renderChart(this.chartData, this.options)
+    /*
     this.renderChart({
       width: 400,
       height: 600,
@@ -11,7 +15,7 @@ export default Bar.extend({
       datasets: [
         {
           label: 'Эффективность, %',
-          data: [100, 64, 35, 51, 25, 31, 13, 1, 3],
+          data: this.someData,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -60,10 +64,29 @@ export default Bar.extend({
             },
             hover: {
               animationDuration: 0
+            },
+            animation: {
+              duration: 1,
+              onComplete: function () {
+                console.log('heelo')
+                var chartInstance = this.chart
+                var ctx = chartInstance.ctx
+                ctx.font = Bar.helpers.fontString(Bar.defaults.global.defaultFontSize, Bar.defaults.global.defaultFontStyle, Bar.defaults.global.defaultFontFamily)
+                ctx.textAlign = 'center'
+                ctx.textBaseline = 'bottom'
+                this.data.datasets.forEach(function (dataset, i) {
+                  var meta = chartInstance.controller.getDatasetMeta(i)
+                  meta.data.forEach(function (bar, index) {
+                    var data = this.realData[index]
+                    ctx.fillText(data, bar._model.x, bar._model.y - 5)
+                  })
+                })
+              }
             }
           }
         }
       ]
     })
+    */
   }
 })

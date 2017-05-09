@@ -24,15 +24,18 @@ export default new Router({
       children: [
         {
           path: 'effects',
-          component: Effects
+          component: Effects,
+          meta: { requiresAuth: true }
         },
         {
           path: 'services',
-          component: Services
+          component: Services,
+          meta: { requiresAuth: true }
         },
         {
           path: 'settings',
-          component: Settings
+          component: Settings,
+          meta: { requiresAuth: true }
         }
       ],
       meta: { requiresAuth: true }

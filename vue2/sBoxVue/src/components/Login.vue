@@ -54,12 +54,12 @@ export default {
       }
         // We need to pass the component's this context
         // to properly make use of http in the auth service
-      auth.login(this, credentials, 'Dashboard')
+      auth.login(this, credentials, '/dashboard/effects')
     },
     isAuthenticated () {
       auth.checkAuth()
       if (auth.user.authenticated) {
-        router.push({name: 'Dashboard'})
+        router.push({path: '/dashboard/effects'})
       }
     }
   }

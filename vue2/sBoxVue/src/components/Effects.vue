@@ -3,17 +3,17 @@
     <md-layout md-gutter>
       <md-layout md-flex="60" md-flex-offset="10">
         <md-button-toggle md-single class="md-accent">
-          <md-button class="md-toggle">Сегодня</md-button>
-          <md-button>Вчера</md-button>
-          <md-button>Неделя</md-button>
-          <md-button>Месяц</md-button>
-          <md-button>Квартал</md-button>
-          <md-button>Год</md-button>
+          <md-button @click.native="generateData()" class="md-toggle">Сегодня</md-button>
+          <md-button @click.native="generateData()" >Вчера</md-button>
+          <md-button @click.native="generateData()" >Неделя</md-button>
+          <md-button @click.native="generateData()" >Месяц</md-button>
+          <md-button @click.native="generateData()" >Квартал</md-button>
+          <md-button @click.native="generateData()" >Год</md-button>
           <md-button>19 фев - 17 мар 2017</md-button>
         </md-button-toggle>   
       </md-layout>
     </md-layout>
-    <md-layout md-align="end" md-gutter="16">
+    <md-layout md-align="end" md-gutter>
       <md-layout md-flex="30" >
         <md-button-toggle md-single class="md-accent">
           <md-button 
@@ -38,12 +38,16 @@
       </md-layout>
     </md-layout>
     <md-layout md-gutter> 
-      <md-layout md-flex="100" md-flex-offset="10" v-if="!showTable">
+      <md-layout md-flex="80" md-flex-offset="10" v-if="!showTable">
         <div class="chart-container">
-          <commitChart :width="8" :height="4"></commitChart>
+          <commitChart 
+            :width="750" 
+            :height="500" 
+            :chartData=this.dtc
+            :options=this.chartOptions></commitChart>
         </div> 
       </md-layout>
-      <md-layout md-flex="100" md-align="center" v-if="showTable">
+      <md-layout md-flex="80" md-align="center" v-if="showTable">
         <md-table v-once>
           <md-table-header>
             <md-table-row>
@@ -116,7 +120,131 @@ export default {
   data () {
     return {
       msg: 'Эффективность',
-      showTable: false
+      showTable: false,
+      someData: [100, 65, 54, 51, 25, 31, 13, 1, 3],
+      dtc: {
+        labels: ['План', 'Время включения', 'Время работы', 'Свет', 'Завеса', 'Вентиляция', 'Нет Завеса – насос', 'Нет Завеса - уровень воды', 'Фильтры забиты'],
+        datasets: [
+          {
+            label: 'Эффективность, %',
+            data: [100, 65, 54, 51, 25, 31, 13, 1, 3],
+            borderWidth: 1,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(75, 192, 12, 0.2)',
+              'rgba(153, 12, 35, 0.2)',
+              'rgba(255, 59, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+              'rgba(75, 192, 12, 1)',
+              'rgba(153, 12, 35, 1)',
+              'rgba(255, 59, 64, 1)'
+            ]
+          }]
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+          display: true,
+          text: 'Custom Chart Title'
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            },
+            gridLines: {
+              display: true
+            }
+          }],
+          xAxes: [{
+            categorySpacing: 1,
+            categoryPercentage: 4,
+            gridLines: {
+              display: true
+            }
+          }]
+        },
+        events: true,
+        tooltips: {
+          enabled: true
+        },
+        hover: {
+          animationDuration: 0
+        },
+        animation: {
+          duration: 1,
+          onComplete: function () {
+            var chartInstance = this.chart
+            var ctx = chartInstance.ctx
+            // ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily)
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'bottom'
+            this.data.datasets.forEach(function (dataset, i) {
+              var meta = chartInstance.controller.getDatasetMeta(i)
+              meta.data.forEach(function (bar, index) {
+                var realData = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                var data = realData[index]
+                ctx.fillText(data, bar._model.x, bar._model.y - 5)
+              })
+            })
+          }
+        }
+      }
+      // dtc: null
+    }
+  },
+  mounted () {
+    this.generateData()
+  },
+  methods: {
+    generateData () {
+      this.dtc = {
+        labels: ['План', 'Время включения', 'Время работы', 'Свет', 'Завеса', 'Вентиляция', 'Нет Завеса – насос', 'Нет Завеса - уровень воды', 'Фильтры забиты'],
+        datasets: [
+          {
+            label: 'Эффективность, %',
+            data: [100, this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
+            borderWidth: 1,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(75, 192, 12, 0.2)',
+              'rgba(153, 12, 35, 0.2)',
+              'rgba(255, 59, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)',
+              'rgba(75, 192, 12, 1)',
+              'rgba(153, 12, 35, 1)',
+              'rgba(255, 59, 64, 1)'
+            ]
+          }]
+      }
+    },
+    getRandomInt () {
+      return Math.floor(Math.random() * (100 - 5 + 1)) + 5
     }
   },
   components: {

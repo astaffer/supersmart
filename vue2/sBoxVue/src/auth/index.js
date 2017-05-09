@@ -20,7 +20,7 @@ export default {
         this.user.authenticated = true
         // Redirect to a specified route
         if (redirect) {
-          router.push({name: redirect})
+          router.push({path: redirect})
         }
       } else {
         context.error = 'Error:' + response.data.message
