@@ -1,7 +1,8 @@
 // src/auth/index.js
 // URL and endpoint constants
 import router from '../router'
-const HOST_NAME = 'divay.ru' // location.hostname
+// const HOST_NAME = 'divay.ru' // location.hostname
+const HOST_NAME = location.hostname
 const API_URL = 'http://' + HOST_NAME + ':8080/'
 const LOGIN_URL = API_URL + 'auth/'
 
@@ -11,7 +12,9 @@ export default {
   user: {
     authenticated: false
   },
-
+  getApiUrl () {
+    return API_URL
+  },
   // Send a request to the login URL and save the returned JWT
   login (context, creds, redirect) {
     context.$http.post(LOGIN_URL, creds).then(response => {
@@ -49,5 +52,8 @@ export default {
     return {
       'Authorization': 'Bearer ' + localStorage.getItem('access_id')
     }
+  },
+  getAccessId () {
+    return localStorage.getItem('access_id')
   }
 }
