@@ -6,10 +6,12 @@ import java.util.List;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import sbox.effects.EffectsData;
+import sbox.effects.EffectsModel;
 import sbox.sensor.*;
  
 
-public class Sql2oModel implements SensorModel {
+public class Sql2oModel implements SensorModel, EffectsModel {
 
 	private Sql2o sql2o;
 
@@ -44,6 +46,17 @@ public class Sql2oModel implements SensorModel {
 			return data;
 		}
 		
+	}
+
+	@Override
+	public List<EffectsData> getEffects(Date dateFrom, Date dateTo) {
+		try (Connection conn = sql2o.open()) {
+            List<EffectsData> effects = conn.createQuery("CALL sbox.effects(:dateFrom,:dateTo);")
+            		.addParameter("dateFrom",  dateFrom)
+					.addParameter("dateTo",  dateTo)
+                    .executeAndFetch(EffectsData.class);
+            return effects;
+        }
 	}
 
 }

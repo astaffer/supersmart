@@ -3,12 +3,12 @@
     <md-layout md-gutter>
       <md-layout md-flex="60" md-flex-offset="10">
         <md-button-toggle md-single class="md-accent">
-          <md-button @click.native="generateData()" class="md-toggle">Сегодня</md-button>
-          <md-button @click.native="generateData()" >Вчера</md-button>
-          <md-button @click.native="generateData()" >Неделя</md-button>
-          <md-button @click.native="generateData()" >Месяц</md-button>
-          <md-button @click.native="generateData()" >Квартал</md-button>
-          <md-button @click.native="generateData()" >Год</md-button>
+          <md-button @click.native="getEffects(0)" class="md-toggle">Сегодня</md-button>
+          <md-button @click.native="getEffects(1)" >Вчера</md-button>
+          <md-button @click.native="getEffects(7)" >Неделя</md-button>
+          <md-button @click.native="getEffects(30)" >Месяц</md-button>
+          <md-button @click.native="getEffects(120)" >Квартал</md-button>
+          <md-button @click.native="getEffects(365)" >Год</md-button>
           <md-button>19 фев - 17 мар 2017</md-button>
         </md-button-toggle>   
       </md-layout>
@@ -39,12 +39,15 @@
     </md-layout>
     <md-layout md-gutter> 
       <md-layout md-flex="80" md-flex-offset="10" v-if="!showTable">
+        <md-card class="md-warn" v-if="error">
+                <p>{{ error }}</p>
+        </md-card>
         <div class="chart-container">
           <commitChart 
-            :width="750" 
-            :height="500" 
-            :chartData=this.dtc
-            :options=this.chartOptions></commitChart>
+            :width = "750" 
+            :height = "500" 
+            :chartData = this.dtc
+            :options = this.chartOptions></commitChart>
         </div> 
       </md-layout>
       <md-layout md-flex="80" md-align="center" v-if="showTable">
@@ -115,44 +118,16 @@
 </template>
 <script>
 import CommitChart from '../charts/CommitChart'
+import effects from '../effects'
 export default {
   name: 'effects',
   data () {
     return {
       msg: 'Эффективность',
+      error: '',
       showTable: false,
       someData: [100, 65, 54, 51, 25, 31, 13, 1, 3],
-      dtc: {
-        labels: ['План', 'Время включения', 'Время работы', 'Свет', 'Завеса', 'Вентиляция', 'Нет Завеса – насос', 'Нет Завеса - уровень воды', 'Фильтры забиты'],
-        datasets: [
-          {
-            label: 'Эффективность, %',
-            data: [100, 65, 54, 51, 25, 31, 13, 1, 3],
-            borderWidth: 1,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(75, 192, 12, 0.2)',
-              'rgba(153, 12, 35, 0.2)',
-              'rgba(255, 59, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-              'rgba(75, 192, 12, 1)',
-              'rgba(153, 12, 35, 1)',
-              'rgba(255, 59, 64, 1)'
-            ]
-          }]
-      },
+      dtc: {},
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -205,45 +180,34 @@ export default {
       }
     }
   },
+  created () {
+    this.getEffects(0)
+  },
   mounted () {
-    this.generateData()
+    this.getEffects(0)
   },
   methods: {
-    generateData () {
+    getEffects (daysBack) {
+      var effectsData = effects.getEffects(this, this.getDate(-daysBack), this.getDate(1), 'hour')
+      // console.log(effectsData)
       this.dtc = {
-        labels: ['План', 'Время включения', 'Время работы', 'Свет', 'Завеса', 'Вентиляция', 'Нет Завеса – насос', 'Нет Завеса - уровень воды', 'Фильтры забиты'],
+        labels: effectsData.labels,
         datasets: [
           {
             label: 'Эффективность, %',
-            data: [100, this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
+            data: effectsData.percents,
             borderWidth: 1,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(75, 192, 12, 0.2)',
-              'rgba(153, 12, 35, 0.2)',
-              'rgba(255, 59, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-              'rgba(75, 192, 12, 1)',
-              'rgba(153, 12, 35, 1)',
-              'rgba(255, 59, 64, 1)'
-            ]
+            backgroundColor: effectsData.backgroundColors,
+            borderColor: effectsData.borderColors
           }]
       }
     },
-    getRandomInt () {
-      return Math.floor(Math.random() * (100 - 5 + 1)) + 5
+    getDate (days) {
+      var date = new Date()
+      date.setHours(0, 0, 0, 0)
+      var newDate = new Date(date.setTime(date.getTime() + days * 86400000)).toISOString()
+      console.log(newDate)
+      return newDate
     }
   },
   components: {

@@ -10,6 +10,7 @@ import com.beust.jcommander.JCommander;
 
 
 import sbox.auth.AuthController;
+import sbox.effects.EffectsController;
 import sbox.index.IndexController;
 import sbox.sensor.SensorController;
 import sbox.user.UserDao;
@@ -45,6 +46,7 @@ public class Work {
 		post(Path.Web.AUTH, AuthController.serveAuthPost);
 		post(Path.Web.SENSORS, SensorController.getSensors);
 		post(Path.Web.SENSORDATA, SensorController.getSensorData); 
+		post(Path.Web.EFFECTS, EffectsController.getEffects);
 		get(Path.Web.MACHINEDATA, IndexController.getMachineData);
 		
 	}

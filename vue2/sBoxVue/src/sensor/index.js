@@ -1,5 +1,5 @@
+import service from '../service'
 import auth from '../auth'
-const SENSORS_URL = 'sensors/'
 export default {
   sensors: [],
   sensor: {},
@@ -8,7 +8,7 @@ export default {
       var creds = {
         access_id: auth.getAccessId()
       }
-      context.$http.post(auth.getApiUrl() + SENSORS_URL, creds).then(response => {
+      context.$http.post(service.getSensorsUrl(), creds).then(response => {
         // console.log(response.data)
         this.sensors = response.data
       }, response => {
