@@ -9,7 +9,7 @@
           <md-button @click.native="getEffects(30)" >Месяц</md-button>
           <md-button @click.native="getEffects(120)" >Квартал</md-button>
           <md-button @click.native="getEffects(365)" >Год</md-button>
-          <md-button>19 фев - 17 мар 2017</md-button>
+          <md-button>{{ datesButtonLabel }}</md-button>
         </md-button-toggle>   
       </md-layout>
     </md-layout>
@@ -47,7 +47,7 @@
             :width = "750" 
             :height = "500" 
             :chartData = this.dtc
-            :options = this.chartOptions></commitChart>
+            :options = this.charOpt></commitChart>
         </div> 
       </md-layout>
       <md-layout md-flex="80" md-align="center" v-if="showTable">
@@ -128,12 +128,22 @@ export default {
       showTable: false,
       someData: [100, 65, 54, 51, 25, 31, 13, 1, 3],
       dtc: {},
-      chartOptions: {
+      dateFrom: {},
+      dateTo: {}
+    }
+  },
+  computed: {
+    charOpt: function () {
+      var chartDataLabel = this.someData
+      var s = {
         responsive: true,
         maintainAspectRatio: false,
+        legend: {
+          display: false
+        },
         title: {
           display: true,
-          text: 'Custom Chart Title'
+          text: ''
         },
         scales: {
           yAxes: [{
@@ -170,7 +180,7 @@ export default {
             this.data.datasets.forEach(function (dataset, i) {
               var meta = chartInstance.controller.getDatasetMeta(i)
               meta.data.forEach(function (bar, index) {
-                var realData = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                var realData = chartDataLabel
                 var data = realData[index]
                 ctx.fillText(data, bar._model.x, bar._model.y - 5)
               })
@@ -178,35 +188,46 @@ export default {
           }
         }
       }
+      return s
+    },
+    datesButtonLabel: function () {
+      var options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }
+      var dateFromStr = this.dateFrom.toLocaleString('ru', options)
+      var dateToStr = this.getDate(0).toLocaleString('ru', options)
+      return `${dateFromStr}-${dateToStr}`
     }
   },
   created () {
     this.getEffects(0)
   },
-  mounted () {
-    this.getEffects(0)
-  },
   methods: {
     getEffects (daysBack) {
-      var effectsData = effects.getEffects(this, this.getDate(-daysBack), this.getDate(1), 'hour')
-      // console.log(effectsData)
-      this.dtc = {
-        labels: effectsData.labels,
-        datasets: [
-          {
-            label: 'Эффективность, %',
-            data: effectsData.percents,
-            borderWidth: 1,
-            backgroundColor: effectsData.backgroundColors,
-            borderColor: effectsData.borderColors
-          }]
-      }
+      this.dateFrom = this.getDate(-daysBack)
+      this.dateTo = this.getDate(1)
+      var effectsData = effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour')
+      setInterval(() => {
+        this.someData = effectsData.data
+        this.dtc = {
+          labels: effectsData.labels,
+          datasets: [
+            {
+              label: '',
+              data: effectsData.percents,
+              borderWidth: 1,
+              backgroundColor: effectsData.backgroundColors,
+              borderColor: effectsData.borderColors
+            }]
+        }
+      }, 200)
     },
     getDate (days) {
       var date = new Date()
       date.setHours(0, 0, 0, 0)
-      var newDate = new Date(date.setTime(date.getTime() + days * 86400000)).toISOString()
-      console.log(newDate)
+      var newDate = new Date(date.setTime(date.getTime() + days * 86400000))
       return newDate
     }
   },
