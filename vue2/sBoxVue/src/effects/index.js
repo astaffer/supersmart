@@ -7,7 +7,8 @@ export default {
     borderColors: [],
     labels: [],
     data: [],
-    percents: []
+    percents: [],
+    eff: []
   },
   getEffects (context, datefrom, dateto, detail) {
     if (auth.user.authenticated) {
@@ -20,6 +21,7 @@ export default {
       context.$http.post(service.getEffectsUrl(), effectsParm).then(response => {
         // console.log(response.data)
         this.effects = response.data
+        this.effectsData.eff = response.data
         this.effectsData.labels = this.effects.map(function (effect) {
           return effect.bar_label
         })
@@ -38,7 +40,8 @@ export default {
           if (effect.bar_type === 'Plan') {
             return effect.hours
           }
-          return effect.bar_type === 'SensorOn' ? plan.hours - effect.hours : effect.hours
+          return effect.hours
+          // return effect.bar_type === 'SensorOff' ? plan.hours - effect.hours : effect.hours
         })
         this.effectsData.percents = this.effectsData.data.map(function (item) {
           return plan.hours > 0 ? Math.round(item / plan.hours * 100) : 0

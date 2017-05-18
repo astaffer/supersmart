@@ -51,7 +51,7 @@
         </div> 
       </md-layout>
       <md-layout md-flex="80" md-align="center" v-if="showTable">
-        <md-table v-once>
+        <md-table>
           <md-table-header>
             <md-table-row>
               <md-table-head>Показатель</md-table-head>
@@ -60,55 +60,10 @@
             </md-table-row>
           </md-table-header>
           <md-table-body>
-            <md-table-row>
-              <md-table-cell>План</md-table-cell>
-              <md-table-cell>56</md-table-cell>
-              <md-table-cell>100</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Время включения</md-table-cell>
-              <md-table-cell>49</md-table-cell>
-              <md-table-cell>87,5</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Время работы</md-table-cell>
-              <md-table-cell>40</md-table-cell>
-              <md-table-cell>71,4</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Свет</md-table-cell>
-              <md-table-cell>56</md-table-cell>
-              <md-table-cell>100</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Завеса</md-table-cell>
-              <md-table-cell>35</md-table-cell>
-              <md-table-cell>65,5</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Вентиляция</md-table-cell>
-              <md-table-cell>30</md-table-cell>
-              <md-table-cell>53,6</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Нет завеса-насос</md-table-cell>
-              <md-table-cell>2</md-table-cell>
-              <md-table-cell>3,6</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Нет завеса-уровень воды</md-table-cell>
-              <md-table-cell>8</md-table-cell>
-              <md-table-cell>14,3</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Фильтры забиты</md-table-cell>
-              <md-table-cell>1</md-table-cell>
-              <md-table-cell>1,8</md-table-cell>
-            </md-table-row>
-            <md-table-row>
-              <md-table-cell>Вибрация</md-table-cell>
-              <md-table-cell>0</md-table-cell>
-              <md-table-cell>0</md-table-cell>
+            <md-table-row v-for="entry in this.eff" :key="entry.bar_id">
+              <md-table-cell>{{ entry.bar_label }}</md-table-cell>
+              <md-table-cell md-numeric>{{ entry.hours }}</md-table-cell>
+              <md-table-cell>{{ percents[entry.bar_id-1] }}</md-table-cell>
             </md-table-row>
           </md-table-body>
         </md-table>
@@ -129,7 +84,9 @@ export default {
       someData: [100, 65, 54, 51, 25, 31, 13, 1, 3],
       dtc: {},
       dateFrom: {},
-      dateTo: {}
+      dateTo: {},
+      eff: [],
+      percents: []
     }
   },
   computed: {
@@ -209,8 +166,10 @@ export default {
       this.dateFrom = this.getDate(-daysBack)
       this.dateTo = this.getDate(1)
       var effectsData = effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour')
-      setInterval(() => {
+      setTimeout(() => {
+        this.eff = effectsData.eff
         this.someData = effectsData.data
+        this.percents = effectsData.percents
         this.dtc = {
           labels: effectsData.labels,
           datasets: [
