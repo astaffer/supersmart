@@ -1,7 +1,7 @@
 <template>
   <div class="services md-align-center">
   	<md-layout md-gutter md-align="center">
-      <md-layout md-flex="35" md-align="center">
+      <!--<md-layout md-flex="35" md-align="center">
         <h2>Журнал событий</h2>
         <md-list class="custom-list md-triple-line">
           <md-list-item class="md-button">
@@ -64,6 +64,7 @@
           </md-list-item>
         </md-list>
       </md-layout>
+      -->
       <md-layout md-flex="20" md-align="center">
         <radial-gauge :options="radOptions('Насос водной завесы')" :value=radialValue></radial-gauge>
       </md-layout>
@@ -72,6 +73,12 @@
       </md-layout>
       <md-layout md-flex="20" md-align="center">
         <radial-gauge :options="radOptions('Лампы освещения')" :value=radialValue3></radial-gauge>
+      </md-layout>
+      <md-layout md-flex="20" v-for="(entry, index) in this.gData.gaugesOptions" :key="entry.gauge_id">
+        <radial-gauge 
+          v-bind:options="entry"
+          v-bind:value="gData.gaugesValues[index]">
+        </radial-gauge>
       </md-layout>
       <!--<md-layout md-flex="20" md-align="center">
         <radial-gauge :options="radOptions('Замена фильтров')" :value=radialValue2></radial-gauge>
@@ -84,6 +91,7 @@
 </template>
 <script>
 import RadialGauge from '../vue-canvas-gauges'
+import Gauges from '../gauges'
 export default {
   name: 'services',
   data () {
@@ -114,8 +122,12 @@ export default {
       },
       radialValue: 35,
       radialValue2: 25,
-      radialValue3: 15
+      radialValue3: 15,
+      gData: []
     }
+  },
+  mounted () {
+    this.readGauge()
   },
   methods: {
     radOptions (title) {
@@ -144,6 +156,12 @@ export default {
       }
       z.title = title
       return z
+    },
+    readGauge () {
+      var gsData = Gauges.getGauges(this, new Date())
+      setTimeout(() => {
+        this.gData = gsData
+      }, 200)
     }
   },
   components: {

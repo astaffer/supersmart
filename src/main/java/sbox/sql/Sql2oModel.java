@@ -8,10 +8,12 @@ import org.sql2o.Sql2o;
 
 import sbox.effects.EffectsData;
 import sbox.effects.EffectsModel;
+import sbox.gauges.GaugesData;
+import sbox.gauges.GaugesModel;
 import sbox.sensor.*;
  
 
-public class Sql2oModel implements SensorModel, EffectsModel {
+public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel {
 
 	private Sql2o sql2o;
 
@@ -56,6 +58,16 @@ public class Sql2oModel implements SensorModel, EffectsModel {
 					.addParameter("dateTo",  dateTo)
                     .executeAndFetch(EffectsData.class);
             return effects;
+        }
+	}
+
+	@Override
+	public List<GaugesData> getGauges(Date dateTo) {
+		try (Connection conn = sql2o.open()) {
+            List<GaugesData> gauges = conn.createQuery("CALL sbox.gauges(:dateTo);")
+					.addParameter("dateTo",  dateTo)
+                    .executeAndFetch(GaugesData.class);
+            return gauges;
         }
 	}
 
