@@ -11,7 +11,7 @@ public class Path {
         @Getter public static final String SENSORS = "/sensors/";
         @Getter public static final String EFFECTS = "/effects/";
         @Getter public static final String GAUGES = "/gauges/";
-        @Getter public static final String MACHINEDATA = "/machine/";
+        @Getter public static final String DEVICE = "/device/";
         @Getter public static final String SENSORDATA = "/sensors/:id/data";
     }
 

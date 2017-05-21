@@ -10,6 +10,7 @@ import com.beust.jcommander.JCommander;
 
 
 import sbox.auth.AuthController;
+import sbox.device.DeviceController;
 import sbox.effects.EffectsController;
 import sbox.gauges.GaugesController;
 import sbox.index.IndexController;
@@ -49,7 +50,7 @@ public class Work {
 		post(Path.Web.SENSORDATA, SensorController.getSensorData); 
 		post(Path.Web.EFFECTS, EffectsController.getEffects);
 		post(Path.Web.GAUGES, GaugesController.getGauges);
-		get(Path.Web.MACHINEDATA, IndexController.getMachineData);
+		post(Path.Web.DEVICE, DeviceController.getDevice);
 		
 	}
 	// Enables CORS on requests. This method is an initialization method and should be called once.

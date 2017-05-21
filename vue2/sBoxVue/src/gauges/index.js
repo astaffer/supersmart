@@ -16,6 +16,10 @@ export default {
           return gauge.value
         })
         this.gaugesData.gaugesOptions = response.data.map(function (gauge) {
+          var ticks = [0, 1 / 6, 1 / 3, 1 / 2, 2 / 3, 5 / 6, 1]
+          var majorTicks = ticks.map(function (tick) {
+            return Math.floor(gauge.limit_value * tick) + ''
+          })
           var gaugeOption = {
             minValue: '0',
             maxValue: gauge.limit_value,
@@ -23,22 +27,14 @@ export default {
             width: 200,
             height: 200,
             valueBox: true,
-            majorTicks: [
-              '0',
-              '500',
-              '1000',
-              '3000',
-              '5000',
-              '7000',
-              '10000'
-            ],
+            majorTicks: majorTicks,
             colorPlate: '#fff',
             borderShadowWidth: 0,
             borders: false,
             highlights: [{
               'from': 0,
               'to': gauge.start_yellow,
-              'color': 'rgba(97, 218, 13, .75)'
+              'color': 'rgba(63, 102, 50, .75)'
             },
             {
               'from': gauge.start_yellow,

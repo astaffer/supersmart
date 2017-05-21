@@ -65,15 +65,6 @@
         </md-list>
       </md-layout>
       -->
-      <md-layout md-flex="20" md-align="center">
-        <radial-gauge :options="radOptions('Насос водной завесы')" :value=radialValue></radial-gauge>
-      </md-layout>
-      <md-layout md-flex="20" md-align="center">
-        <radial-gauge :options="radOptions('Двигатель вентилятора')" :value=radialValue2></radial-gauge>
-      </md-layout>
-      <md-layout md-flex="20" md-align="center">
-        <radial-gauge :options="radOptions('Лампы освещения')" :value=radialValue3></radial-gauge>
-      </md-layout>
       <md-layout md-flex="20" v-for="(entry, index) in this.gData.gaugesOptions" :key="entry.gauge_id">
         <radial-gauge 
           v-bind:options="entry"

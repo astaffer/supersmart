@@ -2,7 +2,7 @@
   <div class="props">
     <h1>{{ msg }}</h1>
 		<md-tabs md-fixed>
-			<md-tab id="movies" md-label="Датчики">
+			<md-tab id="sensors" md-label="Датчики">
 				<md-layout md-gutter md-align="center">
 					<md-layout v-for="sensor in sensorList" :key="sensor.sensor_id">
 						<md-card md-with-hover>
@@ -20,12 +20,12 @@
 				</md-layout>
 			</md-tab>
 
-			<md-tab md-icon="favorite">
+			<md-tab id="effects" md-label="эффективность">
 			  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
 			  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
 			</md-tab>
 
-			<md-tab md-icon="near_me">
+			<md-tab id="gauges" md-label="показатели">
 			  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas.</p>
 			</md-tab>
 		</md-tabs>

@@ -2,7 +2,7 @@
 <div class="dash-form">
 	<md-layout md-gutter>
 		  	 <md-layout md-flex="30" md-flex-offset="20">
-		  	 	 {{msg}} 
+		  	 	 {{deviceInfo}} 
 		  	 </md-layout>
 	</md-layout>
 	<md-layout md-gutter>
@@ -138,14 +138,18 @@
 </div>
 </template>
 <script>
-
+import device from '../device'
 export default {
   name: 'Dash',
   data () {
     return {
-      msg: 'Покрасочная камера №1',
+      deviceInfo: '',
       showTable: false
     }
+  },
+  created () {
+    var devData = device.getDevice(this)
+    this.deviceInfo = devData.device_name + ' ' + devData.device_id
   }
 }
 </script>

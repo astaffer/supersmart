@@ -1,9 +1,11 @@
 const HOST_NAME = location.hostname
-const API_URL = 'http://' + HOST_NAME + ':8080/'
+const HOST_PORT = '8080'
+const API_URL = 'http://' + HOST_NAME + ':' + HOST_PORT + '/'
 const LOGIN_URL = 'auth/'
 const SENSORS_URL = 'sensors/'
 const EFFECTS_URL = 'effects/'
 const GAUGES_URL = 'gauges/'
+const DEVICE_URL = 'device/'
 export default {
   getApiUrl (api) {
     return API_URL + api
@@ -19,5 +21,8 @@ export default {
   },
   getGaugesUrl () {
     return this.getApiUrl(GAUGES_URL)
+  },
+  getDeviceUrl () {
+    return this.getApiUrl(DEVICE_URL)
   }
 }

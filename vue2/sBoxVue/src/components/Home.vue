@@ -1,9 +1,14 @@
 <template>
 <div class="hello">
 <md-layout md-align="center" md-gutter="10">
-  <md-layout md-flex="35" md-align="center">
+  <md-layout md-flex="70" md-flex-medium="70" md-flex-xsmall="100" md-flex-small="70" md-align="center">
     <h1>{{ msg }}</h1> 
     
+  </md-layout>
+</md-layout>
+<md-layout md-align="center" md-gutter="10">
+  <md-layout md-flex="35" md-align="center">
+  <img src="..\assets\bb6.png" class="imglogo" alt="">
   </md-layout>
 </md-layout>
 <md-layout md-align="center" md-gutter="10">
@@ -23,3 +28,10 @@ export default {
   }
 }
 </script>
+<style>
+.imglogo{
+  min-width: 200px;
+  text-align: center;
+  display: inline-block;
+}
+</style>

@@ -9,7 +9,6 @@ export default {
         access_id: auth.getAccessId()
       }
       context.$http.post(service.getSensorsUrl(), creds).then(response => {
-        // console.log(response.data)
         this.sensors = response.data
       }, response => {
         context.error = 'Error when get sensors data'
