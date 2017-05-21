@@ -81,4 +81,56 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		}
 	}
 
+	@Override
+	public DeviceData changeData(String device_name) {
+		try(Connection conn = sql2o.open()){
+			conn.createQuery("UPDATE sbox.device SET device_name=:devicename")
+			.addParameter("devicename", device_name)
+			.executeUpdate();
+		}
+		return getData();
+	}
+
+	@Override
+	public List<EffectsData> getBars() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EffectsData updateBar(int bar_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String deleteBar(int bar_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EffectsData addBar() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GaugesData updateGauge(int gauge_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String deleteGauge(int gauge_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GaugesData addGauge() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

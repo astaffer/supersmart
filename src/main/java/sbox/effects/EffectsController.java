@@ -24,4 +24,16 @@ public class EffectsController {
 		EffectsModel model = new Sql2oModel(sql2o);
 		return JsonUtil.dataToJson(model.getEffects(effects.dateFrom,effects.dateTo));
 	};
+	public static Route getBars = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		if (!bars.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		EffectsModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.getBars());
+	};
 }

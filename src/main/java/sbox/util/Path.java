@@ -8,11 +8,24 @@ public class Path {
         @Getter public static final String LOGOUT = "/logout/";
         @Getter public static final String AUTH = "/auth/";
         @Getter public static final String LIVE = "/live/";
-        @Getter public static final String SENSORS = "/sensors/";
-        @Getter public static final String EFFECTS = "/effects/";
-        @Getter public static final String GAUGES = "/gauges/";
-        @Getter public static final String DEVICE = "/device/";
         @Getter public static final String SENSORDATA = "/sensors/:id/data";
+        @Getter public static final String SENSORS = "/sensors/";
+        /* DEVICE */
+        @Getter public static final String DEVICE = "/device/";
+        @Getter public static final String DEVICEUPD = "/device/change/";
+        /* EFFECTS */
+        @Getter public static final String EFFECTS = "/effects/";
+        @Getter public static final String BARS = "/bars/";
+        @Getter public static final String BARUPD = "/bars/:id/change/";
+        @Getter public static final String BARDEL = "/bars/:id/delete/";
+        @Getter public static final String BARADD = "/bars/add/";
+        /* GAUGES */
+        @Getter public static final String GAUGES = "/gauges/";
+        @Getter public static final String GAUGEUPD = "/gauges/:id/change/";
+        @Getter public static final String GAUGEDEL = "/gauges/:id/delete/";
+        @Getter public static final String GAUGEADD = "/gauges/add/";
+        
+        
     }
 
     public static class Template {

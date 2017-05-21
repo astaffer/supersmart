@@ -26,4 +26,16 @@ public class DeviceController {
 		DeviceModel model = new Sql2oModel(sql2o);
 		return JsonUtil.dataToJson(model.getData());
 	};
+	public static Route updateDevice = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		DeviceDataChangePayload device = mapper.readValue(request.body(), DeviceDataChangePayload.class);
+		if (!device.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		DeviceModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.changeData(device.device_name));
+	};
 }
