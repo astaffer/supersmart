@@ -36,4 +36,52 @@ public class EffectsController {
 		EffectsModel model = new Sql2oModel(sql2o);
 		return JsonUtil.dataToJson(model.getBars());
 	};
+	public static Route getBar = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		if (!bars.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		EffectsModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.getBars());
+	};
+	public static Route addBar = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		if (!bars.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		EffectsModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.getBars());
+	};
+	public static Route deleteBar = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		if (!bars.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		EffectsModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.getBars());
+	};
+	public static Route updateBar = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		if (!bars.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		EffectsModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.getBars());
+	};
 }

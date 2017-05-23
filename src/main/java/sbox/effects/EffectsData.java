@@ -1,5 +1,4 @@
 package sbox.effects;
-import java.util.Date;
 
 import lombok.Data;
 
@@ -9,6 +8,7 @@ public class EffectsData {
 	String bar_label;
 	String bar_color;
 	EffectsType bar_type;
+	int sensor_id;
 	int sort_order;
 	int hours;
 }

@@ -6,7 +6,7 @@ import java.util.List;
 public interface GaugesModel {
 	
 		List<GaugesData> getGauges(Date dateTo);
-		GaugesData updateGauge(int gauge_id);
+		GaugesData updateGauge(GaugesData gauge);
 		String deleteGauge(int gauge_id);
-		GaugesData addGauge();
+		GaugesData addGauge(GaugesData gauge);
 }

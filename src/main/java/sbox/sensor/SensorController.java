@@ -35,6 +35,6 @@ public class SensorController {
 		response.status(200);
 		response.type("application/json");
 		SensorModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getAllSensors());
+		return JsonUtil.dataToJson(model.getSensor(sensor));
 	};
 }

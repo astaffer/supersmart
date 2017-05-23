@@ -2,5 +2,5 @@ package sbox.device;
 
 public interface DeviceModel {
 	DeviceData getData();
-	DeviceData changeData(String device_name);
+	DeviceData changeData(int device_id, String device_name);
 }

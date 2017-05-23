@@ -4,8 +4,6 @@ import static sbox.Work.sql2o;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import sbox.effects.EffectsDataPayload;
-import sbox.effects.EffectsModel;
 import sbox.sql.Sql2oModel;
 import sbox.util.JsonUtil;
 import spark.Request;
@@ -36,6 +34,6 @@ public class DeviceController {
 		response.status(200);
 		response.type("application/json");
 		DeviceModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.changeData(device.device_name));
+		return JsonUtil.dataToJson(model.changeData(device.device_id,device.device_name));
 	};
 }
