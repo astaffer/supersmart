@@ -35,7 +35,8 @@ public class Work {
 		port(options.servicePort);
 		staticFiles.location("/public");
 		staticFiles.expireTime(600L);
-		sql2o = new Sql2o("jdbc:mysql://" + options.dbHost + ":" + options.dbPort + "/" + options.database,
+		String encoding ="?useUnicode=yes&characterEncoding=UTF-8"; 
+		sql2o = new Sql2o("jdbc:mysql://" + options.dbHost + ":" + options.dbPort + "/" + options.database+encoding,
 				options.dbUsername, options.dbPassword);
 
 		enableCORS("*", "GET,POST", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin");

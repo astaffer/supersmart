@@ -37,6 +37,7 @@ public class EffectsController {
 		return JsonUtil.dataToJson(model.getBars());
 	};
 	public static Route getBar = (Request request, Response response) -> {
+		int barId = Integer.parseInt(request.params(":id"));
 		ObjectMapper mapper = new ObjectMapper();
 		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
 		if (!bars.isValid()) {
@@ -46,11 +47,11 @@ public class EffectsController {
 		response.status(200);
 		response.type("application/json");
 		EffectsModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getBars());
+		return JsonUtil.dataToJson(model.getBar(barId));
 	};
 	public static Route addBar = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
-		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		BarDataPayload bars = mapper.readValue(request.body(), BarDataPayload.class);
 		if (!bars.isValid()) {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
@@ -58,11 +59,11 @@ public class EffectsController {
 		response.status(200);
 		response.type("application/json");
 		EffectsModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getBars());
+		return JsonUtil.dataToJson(model.addBar(bars.getBar()));
 	};
 	public static Route deleteBar = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
-		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		DeleteBarDataPayload bars = mapper.readValue(request.body(), DeleteBarDataPayload.class);
 		if (!bars.isValid()) {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
@@ -70,11 +71,12 @@ public class EffectsController {
 		response.status(200);
 		response.type("application/json");
 		EffectsModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getBars());
+		return JsonUtil.dataToJson(model.deleteBar(bars.getBar_id()));
 	};
 	public static Route updateBar = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
-		BarsDataPayload bars = mapper.readValue(request.body(), BarsDataPayload.class);
+		BarDataPayload bars = mapper.readValue(request.body(), BarDataPayload.class);
+		
 		if (!bars.isValid()) {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
@@ -82,6 +84,6 @@ public class EffectsController {
 		response.status(200);
 		response.type("application/json");
 		EffectsModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getBars());
+		return JsonUtil.dataToJson(model.updateBar(bars.getBar()));
 	};
 }

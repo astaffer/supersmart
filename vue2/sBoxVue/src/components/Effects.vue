@@ -42,7 +42,8 @@
         <md-card class="md-warn" v-if="error">
                 <p>{{ error }}</p>
         </md-card>
-        <div class="chart-container">
+        
+        <div class="chart-container" v-if="dataLoaded">
           <commitChart 
             :width = "750" 
             :height = "500" 
@@ -80,6 +81,7 @@ export default {
     return {
       msg: 'Эффективность',
       error: '',
+      dataLoaded: true,
       showTable: false,
       someData: [100, 65, 54, 51, 25, 31, 13, 1, 3],
       dtc: {},
@@ -158,15 +160,19 @@ export default {
       return `${dateFromStr}-${dateToStr}`
     }
   },
-  created () {
+  mounted () {
     this.getEffects(0)
   },
   methods: {
     getEffects (daysBack) {
       this.dateFrom = this.getDate(-daysBack)
       this.dateTo = this.getDate(1)
-      var effectsData = effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour')
-      setTimeout(() => {
+      this.$Progress.start()
+      // this.dataLoaded = false
+      effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour').then(response => {
+        // this.dataLoaded = true
+        // console.log(response.data)
+        var effectsData = effects.prepareData(response.data)
         this.eff = effectsData.eff
         this.someData = effectsData.data
         this.percents = effectsData.percents
@@ -181,7 +187,12 @@ export default {
               borderColor: effectsData.borderColors
             }]
         }
-      }, 200)
+        this.$Progress.finish()
+      }, response => {
+        this.error = 'Error when get effects data'
+        console.log(this.error)
+        this.$Progress.fail()
+      })
     },
     getDate (days) {
       var date = new Date()

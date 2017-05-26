@@ -16,15 +16,15 @@ public class Path {
         /* EFFECTS */
         @Getter public static final String EFFECTS = "/effects/";
         @Getter public static final String BARS = "/bars/";
-        @Getter public static final String BAR = "/bars/:id/";
-        @Getter public static final String BARUPD = "/bars/:id/change/";
-        @Getter public static final String BARDEL = "/bars/:id/delete/";
+        @Getter public static final String BAR = "/bar/:id/";
+        @Getter public static final String BARUPD = "/bars/change/";
+        @Getter public static final String BARDEL = "/bars/delete/";
         @Getter public static final String BARADD = "/bars/add/";
         /* GAUGES */
         @Getter public static final String GAUGES = "/gauges/";
-        @Getter public static final String GAUGE = "/gauges/:id/";
-        @Getter public static final String GAUGEUPD = "/gauges/:id/change/";
-        @Getter public static final String GAUGEDEL = "/gauges/:id/delete/";
+        @Getter public static final String GAUGE = "/gauge/:id/";
+        @Getter public static final String GAUGEUPD = "/gauges/change/";
+        @Getter public static final String GAUGEDEL = "/gauges/delete/";
         @Getter public static final String GAUGEADD = "/gauges/add/";
         
         

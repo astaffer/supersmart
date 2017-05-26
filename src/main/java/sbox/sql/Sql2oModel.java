@@ -31,7 +31,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public List<Sensor> getAllSensors() {
 		try (Connection conn = sql2o.open()) {
-			List<Sensor> sensors = conn.createQuery("SELECT sensor_id,sensor_name,sensor_type FROM sensor")
+			List<Sensor> sensors = conn.createQuery("SELECT sensor_id, sensor_name, sensor_type FROM sensor")
 					.executeAndFetch(Sensor.class);
 			return sensors;
 		}
@@ -113,7 +113,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			return effects;
 		}
 	}
-
+	@Override
 	public EffectsData getBar(int bar_id) {
 		try (Connection conn = sql2o.open()) {
 			EffectsData bar = conn
@@ -125,29 +125,28 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	}
 
 	@Override
-	public EffectsData updateBar(int bar_id, String bar_label, String bar_color, String bar_type, int sensor_id,
-			int sort_order) {
+	public EffectsData updateBar(EffectsData bar) {
 		Map<String, Object> params = new HashMap<>();
 		StringBuilder sql = new StringBuilder("update sbox.effectsbar set ");
-		if (bar_label != null && !bar_label.isEmpty()) {
+		if (bar.getBar_label() != null && !bar.getBar_label().isEmpty()) {
 			sql.append("bar_label = :bar_label,");
-			params.put("bar_label", bar_label);
+			params.put("bar_label", bar.getBar_label());
 		}
-		if (bar_color != null && !bar_color.isEmpty()) {
+		if (bar.getBar_color() != null && !bar.getBar_color().isEmpty()) {
 			sql.append("bar_color = :bar_color,");
-			params.put("bar_color", bar_color);
+			params.put("bar_color", bar.getBar_color());
 		}
-		if (bar_type != null && !bar_type.isEmpty()) {
+		if (bar.getBar_type() != null ) {
 			sql.append("bar_type = :bar_type,");
-			params.put("bar_type", bar_type);
+			params.put("bar_type", bar.getBar_type().toString());
 		}
-		if (sensor_id >= 0) {
+		if (bar.getSensor_id() >= 0) {
 			sql.append("sensor_id = :sensor_id,");
-			params.put("sensor_id", sensor_id);
+			params.put("sensor_id", bar.getSensor_id());
 		}
-		if (sort_order >= 0) {
+		if (bar.getSort_order() >= 0) {
 			sql.append("sort_order = :sort_order,");
-			params.put("sort_order", sort_order);
+			params.put("sort_order", bar.getSort_order());
 		}
 		// remove last comma.
 		sql.deleteCharAt(sql.length() - 1);
@@ -161,10 +160,10 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 					query.addParameter(key, params.get(key));
 				}
 
-				query.addParameter("id", bar_id).executeUpdate();
+				query.addParameter("id", bar.getBar_id()).executeUpdate();
 			}
 		}
-		return getBar(bar_id);
+		return getBar(bar.getBar_id());
 	}
 
 	@Override
@@ -193,7 +192,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		}
 		return getBar(bar_id);
 	}
-
+@Override
 	public GaugesData getGauge(int gauge_id) {
 		try (Connection conn = sql2o.open()) {
 			GaugesData gauge = conn

@@ -6,8 +6,8 @@ import lombok.Data;
 import sbox.util.IValidable;
 
 @Data
-public class GaugesDataPayload implements IValidable {
-	Date dateTo;
+public class DeleteGaugeDataPayload implements IValidable {
+	int gauge_id;
 	String access_id;
 	@Override
 	public boolean isValid() {

@@ -6,10 +6,16 @@ import router from './router'
 import auth from './auth'
 import VueResource from 'vue-resource'
 import VueMaterial from 'vue-material'
+import VueProgressBar from 'vue-progressbar'
 import './assets/css/vue-material.css'
 import './assets/css/main.css'
 Vue.use(VueResource)
 Vue.use(VueMaterial)
+Vue.use(VueProgressBar, {
+  color: 'magenta',
+  failedColor: 'red',
+  height: '2px'
+})
 Vue.material.registerTheme('default', {
   primary: 'light-blue',
   accent: 'green',

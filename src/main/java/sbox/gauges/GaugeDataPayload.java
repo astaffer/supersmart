@@ -6,9 +6,10 @@ import lombok.Data;
 import sbox.util.IValidable;
 
 @Data
-public class GaugesDataPayload implements IValidable {
-	Date dateTo;
+public class GaugeDataPayload implements IValidable {
+	GaugesData gauge;
 	String access_id;
+
 	@Override
 	public boolean isValid() {
 		return access_id != null;
