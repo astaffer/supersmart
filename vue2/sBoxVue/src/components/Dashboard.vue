@@ -2,7 +2,7 @@
 <div class="dash-form">
   <md-layout md-gutter>
          <md-layout md-flex="30" md-flex-offset="20">
-            {{deviceInfo}} 
+              <p class="head-text"> {{ deviceInfo }}</p> 
               <md-card class="md-warn" v-if="error">
                 <p>{{ error }}</p>
             </md-card>
@@ -13,7 +13,7 @@
     <md-button-toggle md-single class="md-accent">
       <md-button @click.native="$router.push({ path: '/dashboard/effects' })">Эффективность</md-button>
       <md-button @click.native="$router.push({ path: '/dashboard/services' })">Сервис</md-button>
-      <md-button @click.native="$router.push({ path: '/dashboard/settings' })">Настройки</md-button>
+      <md-button @click.native="$router.push({ path: '/dashboard/properties' })">Настройки</md-button>
     </md-button-toggle>
     </md-layout>
   </md-layout>
@@ -171,5 +171,9 @@ export default {
 }
 .dash-router{
   padding-top: 20px;
+}
+.head-text{
+  font-size: 20px;
+  font-weight: 600;
 }
 </style>

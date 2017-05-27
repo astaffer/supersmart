@@ -56,5 +56,32 @@ export default {
       }
       return context.$http.post(service.getGaugesUrl(), gaugesParm)
     }
+  },
+  createGauge (context, gaugeUnit) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        gauge: gaugeUnit
+      }
+      return context.$http.post(service.getGaugesCreateUrl(), creds)
+    }
+  },
+  updateGauge (context, gaugeUnit) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        gauge: gaugeUnit
+      }
+      return context.$http.post(service.getGaugesUpdateUrl(), creds)
+    }
+  },
+  deleteGauge (context, gaugeId) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        gauge_id: gaugeId
+      }
+      return context.$http.post(service.getGaugesDeleteUrl(), creds)
+    }
   }
 }

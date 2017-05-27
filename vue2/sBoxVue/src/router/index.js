@@ -33,17 +33,17 @@ export default new Router({
           meta: { requiresAuth: true }
         },
         {
-          path: 'settings',
-          component: Settings,
+          path: 'properties',
+          component: Properties,
           meta: { requiresAuth: true }
         }
       ],
       meta: { requiresAuth: true }
     },
     {
-      path: '/properties',
-      name: 'Properties',
-      component: Properties,
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
       meta: { requiresAuth: true }
     },
     {

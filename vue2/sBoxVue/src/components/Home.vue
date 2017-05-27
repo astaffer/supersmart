@@ -3,7 +3,6 @@
 <md-layout md-align="center" md-gutter="10">
   <md-layout md-flex="70" md-flex-medium="70" md-flex-xsmall="100" md-flex-small="70" md-align="center">
     <h1>{{ msg }}</h1> 
-    
   </md-layout>
 </md-layout>
 <md-layout md-align="center" md-gutter="10">

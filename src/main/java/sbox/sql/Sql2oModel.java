@@ -50,12 +50,12 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			Integer value = conn
 					.createQuery(
-							"SELECT SUM(int_value) as value FROM sbox.intdata where sensor_id = :sensorid and int_date>:fromdate and int_date<:todate")
+							"SELECT SUM(int_value) as value FROM intdata where sensor_id = :sensorid and int_date>:fromdate and int_date<:todate")
 					.addParameter("sensorid", sensorId).addParameter("fromdate", dateFrom)
 					.addParameter("todate", dateTo).executeScalar(Integer.class);
 			Sensor sensor = conn
 					.createQuery(
-							"SELECT SUM(int_value) as value FROM sbox.intdata where sensor_id = :sensorid and int_date>:fromdate and int_date<:todate")
+							"SELECT SUM(int_value) as value FROM intdata where sensor_id = :sensorid and int_date>:fromdate and int_date<:todate")
 					.addParameter("sensorid", sensorId).executeAndFetch(Sensor.class).get(0);
 			SensorData data = new SensorData();
 			data.setSensor(sensor);
@@ -69,7 +69,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public List<EffectsData> getEffects(Date dateFrom, Date dateTo) {
 		try (Connection conn = sql2o.open()) {
-			List<EffectsData> effects = conn.createQuery("CALL sbox.effects(:dateFrom,:dateTo);")
+			List<EffectsData> effects = conn.createQuery("CALL effects(:dateFrom,:dateTo);")
 					.addParameter("dateFrom", dateFrom).addParameter("dateTo", dateTo)
 					.executeAndFetch(EffectsData.class);
 			return effects;
@@ -79,7 +79,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public List<GaugesData> getGauges(Date dateTo) {
 		try (Connection conn = sql2o.open()) {
-			List<GaugesData> gauges = conn.createQuery("CALL sbox.gauges(:dateTo);").addParameter("dateTo", dateTo)
+			List<GaugesData> gauges = conn.createQuery("CALL gauges(:dateTo);").addParameter("dateTo", dateTo)
 					.executeAndFetch(GaugesData.class);
 			return gauges;
 		}
@@ -88,7 +88,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public DeviceData getData() {
 		try (Connection conn = sql2o.open()) {
-			DeviceData device = conn.createQuery("SELECT device_id, device_name  FROM sbox.device limit 1")
+			DeviceData device = conn.createQuery("SELECT device_id, device_name  FROM device limit 1")
 					.executeAndFetch(DeviceData.class).get(0);
 			return device;
 		}
@@ -97,7 +97,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public DeviceData changeData(int device_id, String device_name) {
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery("UPDATE sbox.device SET device_name=:devicename where device_id=:id")
+			conn.createQuery("UPDATE device SET device_name=:devicename where device_id=:id")
 					.addParameter("devicename", device_name).addParameter("id", device_id).executeUpdate();
 		}
 		return getData();
@@ -108,7 +108,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			List<EffectsData> effects = conn
 					.createQuery(
-							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order FROM sbox.effectsbar;")
+							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order FROM effectsbar;")
 					.executeAndFetch(EffectsData.class);
 			return effects;
 		}
@@ -118,7 +118,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			EffectsData bar = conn
 					.createQuery(
-							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order  FROM sbox.effectsbar WHERE bar_id=:bar_id limit 1")
+							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order  FROM effectsbar WHERE bar_id=:bar_id limit 1")
 					.addParameter("bar_id", bar_id).executeAndFetch(EffectsData.class).get(0);
 			return bar;
 		}
@@ -127,7 +127,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public EffectsData updateBar(EffectsData bar) {
 		Map<String, Object> params = new HashMap<>();
-		StringBuilder sql = new StringBuilder("update sbox.effectsbar set ");
+		StringBuilder sql = new StringBuilder("update effectsbar set ");
 		if (bar.getBar_label() != null && !bar.getBar_label().isEmpty()) {
 			sql.append("bar_label = :bar_label,");
 			params.put("bar_label", bar.getBar_label());
@@ -169,7 +169,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public String deleteBar(int bar_id) {
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery("DELETE sbox.effectsbar WHERE bar_id=:bar_id").addParameter("bar_id", bar_id)
+			conn.createQuery("DELETE effectsbar WHERE bar_id=:bar_id").addParameter("bar_id", bar_id)
 					.executeUpdate();
 			return getBar(bar_id) == null ? DELETEOK : DELETEERROR;
 		}
@@ -181,7 +181,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			bar_id = (int) conn
 					.createQuery(
-							"INSERT INTO sbox.effectsbar (`bar_label`,`bar_color`,`bar_type`,`sensor_id`,`sort_order`)"
+							"INSERT INTO effectsbar (`bar_label`,`bar_color`,`bar_type`,`sensor_id`,`sort_order`)"
 									+ "VALUES(:bar_label,:bar_color,:bar_type,:sensor_id,:sort_order)")
 					.addParameter("bar_label", bar.getBar_label() == null ? "bar" : bar.getBar_label())
 					.addParameter("bar_color", bar.getBar_color() == null ? "255, 255, 255" : bar.getBar_color())
@@ -207,7 +207,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public GaugesData updateGauge(GaugesData gauge) {
 		Map<String, Object> params = new HashMap<>();
-		StringBuilder sql = new StringBuilder("update sbox.servicegauge set ");
+		StringBuilder sql = new StringBuilder("update servicegauge set ");
 		if (gauge.getGauge_label() != null && !gauge.getGauge_label().isEmpty()) {
 			sql.append("gauge_label = :gauge_label,");
 			params.put("gauge_label", gauge.getGauge_label());
@@ -273,7 +273,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public String deleteGauge(int gauge_id) {
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery("DELETE sbox.servicegauge WHERE gauge_id=:gauge_id").addParameter("gauge_id", gauge_id)
+			conn.createQuery("DELETE servicegauge WHERE gauge_id=:gauge_id").addParameter("gauge_id", gauge_id)
 					.executeUpdate();
 
 			return getGauge(gauge_id) == null ? DELETEOK : DELETEERROR;
@@ -287,7 +287,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			gauge_id = (int) conn
 					.createQuery(
-							"INSERT INTO sbox.servicegauge (`gauge_label`,`gauge_unit`,`sort_order`,`init_value`,`limit_value`,`start_green`,`start_yellow`,`start_red`,`sensor_id`,`init_date`,`mileage_date`)"
+							"INSERT INTO servicegauge (`gauge_label`,`gauge_unit`,`sort_order`,`init_value`,`limit_value`,`start_green`,`start_yellow`,`start_red`,`sensor_id`,`init_date`,`mileage_date`)"
 									+ "VALUES(:gauge_label,:gauge_unit,:sort_order,:init_value,:limit_value,:start_green,:start_yellow,:start_red,:sensor_id,:init_date,:mileage_date)")
 					.addParameter("gauge_label", gauge.getGauge_label() == null ? "bar" : gauge.getGauge_label())
 					.addParameter("gauge_unit", gauge.getGauge_unit() == null ? "часов" : gauge.getGauge_unit())
