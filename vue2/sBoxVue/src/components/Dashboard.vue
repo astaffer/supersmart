@@ -153,7 +153,7 @@ export default {
   },
   mounted () {
     device.getDeviceFromService(this).then(response => {
-      this.deviceInfo = response.data.device_id + ' ' + response.data.device_name
+      this.deviceInfo = response.data.device_name + ' ' + response.data.device_id
     }, response => {
       this.error = 'Error when get device data'
       console.log(this.error)

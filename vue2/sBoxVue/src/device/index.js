@@ -7,12 +7,16 @@ export default {
         access_id: auth.getAccessId()
       }
       return context.$http.post(service.getDeviceUrl(), creds)
-      /* .then(response => {
-        this.device = response.data
-      }, response => {
-        context.error = 'Error when get device data'
-        console.log(context.error)
-      }) */
+    }
+  },
+  setDeviceName (context, device) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        device_id: device.id,
+        device_name: device.name
+      }
+      return context.$http.post(service.getDeviceUpdateUrl(), creds)
     }
   }
 }

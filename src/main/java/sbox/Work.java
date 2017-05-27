@@ -46,7 +46,7 @@ public class Work {
 		post(Path.Web.AUTH, AuthController.serveAuthPost);
 		
 		post(Path.Web.DEVICE, DeviceController.getDevice);
-		
+		post(Path.Web.DEVICEUPD, DeviceController.updateDevice);
 		post(Path.Web.SENSORS, SensorController.getSensors);
 		post(Path.Web.SENSORDATA, SensorController.getSensorData);
 		
