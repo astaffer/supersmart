@@ -149,13 +149,10 @@ export default {
       return z
     },
     readGauge () {
-      this.$Progress.start()
       Gauges.getGauges(this, new Date()).then(response => {
         this.gData = Gauges.prepareData(response.data)
-        this.$Progress.finish()
       }, response => {
         console.log('Error while loading data')
-        this.$Progress.fail()
       })
     }
   },

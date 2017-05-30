@@ -49,14 +49,11 @@ export default {
   },
   methods: {
     applyDeviceName () {
-      this.$Progress.start()
       device.setDeviceName(this, this.deviceInfo).then(response => {
-        this.$Progress.finish()
         this.deviceInfo.id = response.data.device_id
         this.deviceInfo.name = response.data.device_name
         this.openDialog('dialog3')
       }, response => {
-        this.$Progress.fail()
         this.error = 'Error when get device data'
         console.log(this.error)
       })

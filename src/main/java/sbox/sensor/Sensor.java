@@ -4,5 +4,5 @@ import lombok.*;
 public class Sensor {
 	int sensor_id;
 	String sensor_name;
-	SensorType sensor_type;
+	Boolean sensor_type;
 }

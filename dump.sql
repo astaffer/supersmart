@@ -245,7 +245,7 @@ SELECT
 	sort_order,
     bar_type,
 	IFNULL((select count_hours(sensor_id,fromdate,todate)),0) as hours
-FROM sbox.effectsbar
+FROM  effectsbar
 ORDER by sort_order, bar_id;
 END ;;
 DELIMITER ;
@@ -315,7 +315,7 @@ SELECT gauge_id  ,
 	mileage_date ,
  IFNULL(count_hours(g.sensor_id,g.init_date,todate),0) as value,
  IFNULL(count_hours(g.sensor_id,g.mileage_date,todate),0) as mileage_value
-FROM sbox.servicegauge g;
+FROM  servicegauge g;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

@@ -198,7 +198,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			GaugesData gauge = conn
 					.createQuery(
 							"SELECT  `gauge_id`,`gauge_label`, `gauge_unit`,`sort_order`,`init_value`, `limit_value`,`start_green`, `start_yellow`,`start_red`, `sensor_id`,`init_date`,`mileage_date`"
-									+ "FROM `sbox`.`servicegauge` WHERE gauge_id=:gauge_id limit 1")
+									+ "FROM `servicegauge` WHERE gauge_id=:gauge_id limit 1")
 					.addParameter("gauge_id", gauge_id).executeAndFetch(GaugesData.class).get(0);
 			return gauge;
 		}

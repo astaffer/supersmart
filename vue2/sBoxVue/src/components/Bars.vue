@@ -62,13 +62,10 @@ export default {
     }
   },
   mounted () {
-    this.$Progress.start()
     barservice.getBars(this).then(response => {
       this.bars = response.data
-      this.$Progress.finish()
     }, response => {
       this.error = 'Error when get bar data'
-      this.$Progress.fail()
       console.log(this.error)
     })
   },
@@ -82,24 +79,18 @@ export default {
     createBar () {
     },
     updateBar (bar) {
-      this.$Progress.start()
       barservice.setBar(this, bar).then(response => {
         bar = response.data
-        this.$Progress.finish()
       }, response => {
-        this.$Progress.fail()
         console.log('error')
       })
       console.log(bar)
     },
     deleteBar (barId) {
-      this.$Progress.start()
       barservice.deleteBar(this, barId).then(response => {
         console.log(response.data)
-        this.$Progress.finish()
       }, response => {
         console.log('error')
-        this.$Progress.fail()
       })
       console.log(barId)
     }

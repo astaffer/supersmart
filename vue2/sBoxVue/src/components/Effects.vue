@@ -45,8 +45,7 @@
         
         <div class="chart-container" v-if="dataLoaded">
           <commitChart 
-            :width = "750" 
-            :height = "500" 
+            :width = "800" 
             :chartData = this.dtc
             :options = this.charOpt></commitChart>
         </div> 
@@ -96,7 +95,6 @@ export default {
       var chartDataLabel = this.someData
       var s = {
         responsive: true,
-        maintainAspectRatio: false,
         legend: {
           display: false
         },
@@ -167,11 +165,7 @@ export default {
     getEffects (daysBack) {
       this.dateFrom = this.getDate(-daysBack)
       this.dateTo = this.getDate(1)
-      this.$Progress.start()
-      // this.dataLoaded = false
       effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour').then(response => {
-        // this.dataLoaded = true
-        // console.log(response.data)
         var effectsData = effects.prepareData(response.data)
         this.eff = effectsData.eff
         this.someData = effectsData.data
@@ -187,11 +181,9 @@ export default {
               borderColor: effectsData.borderColors
             }]
         }
-        this.$Progress.finish()
       }, response => {
         this.error = 'Error when get effects data'
         console.log(this.error)
-        this.$Progress.fail()
       })
     },
     getDate (days) {
@@ -209,7 +201,10 @@ export default {
 <style>
 .chart-container{
   min-height: 400px;
+  max-height: 400px;
   min-width: 800px;
+  max-width: 800px;
+  position: relative;
 }
 .effects{
   width: 100%;

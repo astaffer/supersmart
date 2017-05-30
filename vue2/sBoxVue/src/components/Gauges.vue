@@ -87,13 +87,10 @@ export default {
     }
   },
   mounted () {
-    this.$Progress.start()
     Gauge.getGauges(this).then(response => {
       this.gauges = response.data
-      this.$Progress.finish()
     }, response => {
       this.error = 'Error when get bar data'
-      this.$Progress.fail()
       console.log(this.error)
     })
   },
@@ -105,26 +102,17 @@ export default {
       this.$refs[ref].close()
     },
     updateGauge (gauge) {
-      this.$Progress.start()
       Gauge.updateGauge(this, gauge).then(response => {
         gauge = response.data
-        this.$Progress.finish()
       }, response => {
-        this.$Progress.fail()
         console.log('error')
       })
-      console.log(gauge)
     },
     deleteGauge (gaugeId) {
-      this.$Progress.start()
       Gauge.deleteGauge(this, gaugeId).then(response => {
-        console.log(response.data)
-        this.$Progress.finish()
       }, response => {
         console.log('error')
-        this.$Progress.fail()
       })
-      console.log(gaugeId)
     }
   }
 }
