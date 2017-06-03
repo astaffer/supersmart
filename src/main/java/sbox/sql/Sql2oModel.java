@@ -116,10 +116,14 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public EffectsData getBar(int bar_id) {
 		try (Connection conn = sql2o.open()) {
-			EffectsData bar = conn
+			List<EffectsData> bars = conn
 					.createQuery(
 							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order  FROM effectsbar WHERE bar_id=:bar_id limit 1")
-					.addParameter("bar_id", bar_id).executeAndFetch(EffectsData.class).get(0);
+					.addParameter("bar_id", bar_id).executeAndFetch(EffectsData.class);
+			EffectsData bar = null;
+			if (!bars.isEmpty()){
+				bar = bars.get(0);
+			}
 			return bar;
 		}
 	}
@@ -169,10 +173,10 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public String deleteBar(int bar_id) {
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery("DELETE effectsbar WHERE bar_id=:bar_id").addParameter("bar_id", bar_id)
+			conn.createQuery("DELETE FROM effectsbar WHERE bar_id=:bar_id").addParameter("bar_id", bar_id)
 					.executeUpdate();
-			return getBar(bar_id) == null ? DELETEOK : DELETEERROR;
 		}
+		return getBar(bar_id) == null ? DELETEOK : DELETEERROR;
 	}
 
 	@Override
@@ -195,11 +199,15 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 @Override
 	public GaugesData getGauge(int gauge_id) {
 		try (Connection conn = sql2o.open()) {
-			GaugesData gauge = conn
+			List<GaugesData> gauges = conn
 					.createQuery(
 							"SELECT  `gauge_id`,`gauge_label`, `gauge_unit`,`sort_order`,`init_value`, `limit_value`,`start_green`, `start_yellow`,`start_red`, `sensor_id`,`init_date`,`mileage_date`"
 									+ "FROM `servicegauge` WHERE gauge_id=:gauge_id limit 1")
-					.addParameter("gauge_id", gauge_id).executeAndFetch(GaugesData.class).get(0);
+					.addParameter("gauge_id", gauge_id).executeAndFetch(GaugesData.class);
+			GaugesData gauge = null;
+			if (!gauges.isEmpty()){
+				gauge = gauges.get(0);
+			}
 			return gauge;
 		}
 	}
@@ -273,19 +281,18 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public String deleteGauge(int gauge_id) {
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery("DELETE servicegauge WHERE gauge_id=:gauge_id").addParameter("gauge_id", gauge_id)
+			conn.createQuery("DELETE FROM servicegauge WHERE gauge_id=:gauge_id").addParameter("gauge_id", gauge_id)
 					.executeUpdate();
-
-			return getGauge(gauge_id) == null ? DELETEOK : DELETEERROR;
 		}
+		return getGauge(gauge_id) == null ? DELETEOK : DELETEERROR;
 
 	}
 
 	@Override
 	public GaugesData addGauge(GaugesData gauge) {
-		int gauge_id = 0;
+		long gauge_id = 0;
 		try (Connection conn = sql2o.open()) {
-			gauge_id = (int) conn
+			gauge_id = (long) conn
 					.createQuery(
 							"INSERT INTO servicegauge (`gauge_label`,`gauge_unit`,`sort_order`,`init_value`,`limit_value`,`start_green`,`start_yellow`,`start_red`,`sensor_id`,`init_date`,`mileage_date`)"
 									+ "VALUES(:gauge_label,:gauge_unit,:sort_order,:init_value,:limit_value,:start_green,:start_yellow,:start_red,:sensor_id,:init_date,:mileage_date)")
@@ -296,13 +303,13 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 					.addParameter("start_green", gauge.getStart_green() == 0 ? 0 : gauge.getStart_green())
 					.addParameter("start_yellow", gauge.getStart_yellow() == 0 ? 0 : gauge.getStart_yellow())
 					.addParameter("start_red", gauge.getStart_red() == 0 ? 0 : gauge.getStart_red())
-					.addParameter("init_date", gauge.getInit_date() == null ? 0 : gauge.getInit_date())
-					.addParameter("mileage_date", gauge.getMileage_date() == null ? 0 : gauge.getMileage_date())
+					.addParameter("init_date", gauge.getInit_date() == null ? new Date() : gauge.getInit_date())
+					.addParameter("mileage_date", gauge.getMileage_date() == null ? new Date() : gauge.getMileage_date())
 					.addParameter("sensor_id", gauge.getSensor_id() == 0 ? "0" : gauge.getSensor_id())
 					.addParameter("sort_order", gauge.getSort_order() == 0 ? "0" : gauge.getSort_order())
 					.executeUpdate().getKey();
 		}
-		return getGauge(gauge_id);
+		return getGauge((int)gauge_id);
 	}
 
 }
