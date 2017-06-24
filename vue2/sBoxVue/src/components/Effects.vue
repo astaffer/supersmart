@@ -3,12 +3,12 @@
     <md-layout md-gutter>
       <md-layout md-flex="60" md-flex-offset="10">
         <md-button-toggle md-single class="md-accent">
-          <md-button @click.native="getEffects(0)" class="md-toggle">Сегодня</md-button>
-          <md-button @click.native="getEffects(1)" >Вчера</md-button>
-          <md-button @click.native="getEffects(7)" >Неделя</md-button>
-          <md-button @click.native="getEffects(30)" >Месяц</md-button>
-          <md-button @click.native="getEffects(120)" >Квартал</md-button>
-          <md-button @click.native="getEffects(365)" >Год</md-button>
+          <md-button @click.native="getEffects(0,1)" class="md-toggle">Сегодня</md-button>
+          <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
+          <md-button @click.native="getEffects(7,1)" >Неделя</md-button>
+          <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
+          <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
+          <md-button @click.native="getEffects(365,1)" >Год</md-button>
           <md-button>{{ datesButtonLabel }}</md-button>
         </md-button-toggle>   
       </md-layout>
@@ -162,9 +162,9 @@ export default {
     this.getEffects(0)
   },
   methods: {
-    getEffects (daysBack) {
+    getEffects (daysBack, to) {
       this.dateFrom = this.getDate(-daysBack)
-      this.dateTo = this.getDate(1)
+      this.dateTo = this.getDate(to)
       effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour').then(response => {
         var effectsData = effects.prepareData(response.data)
         this.eff = effectsData.eff

@@ -1,11 +1,12 @@
 package sbox.user;
 
-import lombok.Value;
+import java.util.List;
+
+import lombok.Data;
  
 
-@Value // All fields are private and final. Getters (but not setters) are generated (https://projectlombok.org/features/Value.html)
-public class User {
-    String username;
+@Data  
+public class User extends UserView{
     String salt;
-    String hashedPassword;
+    int user_id;
 }

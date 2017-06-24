@@ -24,7 +24,7 @@ public class AuthController {
 		response.status(HTTP_GOOD_REQUEST);
 		Map<String, Object> model = new HashMap<>();
 		// model.put("users", userDao.getAllUserNames());
-		 return ViewUtil.render(request, model, Path.Template.LOGIN);
+		return ViewUtil.render(request, model, Path.Template.LOGIN);
 	};
 	public static Route serveAuthPost = (Request request, Response response) -> {
 		Auth auth = new Auth();
@@ -37,7 +37,7 @@ public class AuthController {
 
 		if (UserController.authenticate(user.username, user.password)) {
 			User userp = UserController.getUser(user.username);
-			auth.access_id = userp.getSalt();
+			auth.access_id = userp.getAccess_id();
 			auth.message = AUTH_OK;
 		} else {
 			auth.access_id = "";
@@ -48,4 +48,12 @@ public class AuthController {
 		return JsonUtil.dataToJson(auth);
 	};
 
+	public static boolean authAccess(String access_id) {
+		boolean access = false;
+		User user = UserController.getUserByAccessId(access_id);
+		if (user != null) {
+			access = access_id.equals(user.getAccess_id());
+		}
+		return access;
+	}
 }

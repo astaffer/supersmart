@@ -14,12 +14,10 @@ import sbox.effects.EffectsController;
 import sbox.gauges.GaugesController;
 import sbox.index.IndexController;
 import sbox.sensor.SensorController;
-import sbox.user.UserDao;
 import sbox.util.*;
 
 public class Work {
 	private static final Logger logger = Logger.getLogger(Work.class.getCanonicalName());
-	public static UserDao userDao;
 	public static Sql2o sql2o;
 
 	public static void main(String[] args) {
@@ -31,7 +29,6 @@ public class Work {
 		logger.finest("Options.dbUsername = " + options.dbUsername);
 		logger.finest("Options.dbPort = " + options.dbPort);
 		logger.finest("Options.servicePort = " + options.servicePort);
-		userDao = new UserDao();
 		port(options.servicePort);
 		staticFiles.location("/public");
 		staticFiles.expireTime(600L);

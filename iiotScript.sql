@@ -9,7 +9,22 @@ CREATE TABLE Sensor(
     sensor_name varchar(100) not null,
     sensor_type enum ('Int','Dec') 
 );
-
+CREATE TABLE Users(
+    user_id tinyint auto_increment PRIMARY KEY,
+    user_name  varchar(50) not null,
+    user_email varchar(100) not null,
+    user_login varchar(50) not null,
+    access_id  varchar(50) not null
+);
+CREATE TABLE Role(
+    role_id tinyint auto_increment PRIMARY KEY,
+    role_name  varchar(50) not null
+);
+CREATE TABLE UserRole(
+	userrole_id tinyint auto_increment PRIMARY KEY,
+    user_id tinyint ,
+    role_id tinyint
+);
 CREATE TABLE DecData(
     dec_id int auto_increment PRIMARY KEY,
     sensor_id tinyint not null,
@@ -146,4 +161,4 @@ FROM sbox.servicegauge g;
 END$$
 DELIMITER ;
 
-
+INSERT INTO `sensor` VALUES (1,'Power',0),(2,'Light',0),(3,'Pull Engine',0),(4,'Water pump',0),(5,'Min water',0),(6,'Preasure diff',0);

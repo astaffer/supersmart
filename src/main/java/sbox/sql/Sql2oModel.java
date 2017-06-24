@@ -16,8 +16,12 @@ import sbox.effects.EffectsModel;
 import sbox.gauges.GaugesData;
 import sbox.gauges.GaugesModel;
 import sbox.sensor.*;
+import sbox.user.User;
+import sbox.user.UserModel;
+import sbox.user.UserPayload;
+import sbox.user.UserView;
 
-public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel {
+public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel,UserModel {
 
 	private Sql2o sql2o;
 	public static final String DELETEOK = "OK";
@@ -312,4 +316,63 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		return getGauge((int)gauge_id);
 	}
 
+	@Override
+	public User getUserByUsername(String username) {
+		try (Connection conn = sql2o.open()) {
+			User user = conn.createQuery("SELECT user_id, user_name, user_email, access_id, salt FROM users where user_name=:id")
+					.addParameter("id", username)
+					.executeAndFetch(User.class).get(0);
+			user.setRoles(getRolesFor(conn,user.getUser_id()));
+			return user;
+		}
+	}
+
+	@Override
+	public User getUserByAccessId(String access_id) {
+		try (Connection conn = sql2o.open()) {
+			User user = conn.createQuery("SELECT user_id, user_name, user_email, access_id, salt FROM users where access_id=:id")
+					.addParameter("id", access_id)
+					.executeAndFetch(User.class).get(0);
+			user.setRoles(getRolesFor(conn,user.getUser_id()));
+			return user;
+		}
+	}
+	private List<String> getRolesFor(Connection conn,int user_id){
+		return conn.createQuery("select role_name from  role join userrole on role.role_id = userrole.role_id where user_id=:user_id")
+                .addParameter("user_id", user_id)
+                .executeAndFetch(String.class);
+	}
+
+	@Override
+	public UserView createUser(String username, String newSalt, String newHashedPassword, String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String deleteUser(String username) {
+		try (Connection conn = sql2o.open()) {
+			conn.createQuery("DELETE FROM users WHERE user_name=:username").addParameter("username", username)
+					.executeUpdate();
+		}
+		return getUserByUsername(username) == null ? DELETEOK : DELETEERROR;
+
+	}
+
+	@Override
+	public UserView changePassword(String username, String newSalt, String newHashedPassword) {
+		try (Connection conn = sql2o.open()) {
+			conn.createQuery("UPDATE users SET users.salt=:salt, users.access_id=:pass WHERE user_name=:username")
+			.addParameter("username", username)
+			.addParameter("salt", newSalt)
+			.addParameter("pass", newHashedPassword)
+					.executeUpdate();
+		}
+		return getUserByUsername(username);
+	}
+
+	@Override
+	public User updateUser(UserPayload user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
