@@ -19,9 +19,8 @@ import sbox.sensor.*;
 import sbox.user.User;
 import sbox.user.UserModel;
 import sbox.user.UserPayload;
-import sbox.user.UserView;
 
-public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel,UserModel {
+public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel, UserModel {
 
 	private Sql2o sql2o;
 	public static final String DELETEOK = "OK";
@@ -40,11 +39,11 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			return sensors;
 		}
 	}
-	public  Sensor  getSensor(int id) {
+
+	public Sensor getSensor(int id) {
 		try (Connection conn = sql2o.open()) {
 			Sensor sensor = conn.createQuery("SELECT sensor_id,sensor_name,sensor_type FROM sensor where sensor_id=:id")
-					.addParameter("id", id)
-					.executeAndFetch(Sensor.class).get(0);
+					.addParameter("id", id).executeAndFetch(Sensor.class).get(0);
 			return sensor;
 		}
 	}
@@ -111,12 +110,12 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	public List<EffectsData> getBars() {
 		try (Connection conn = sql2o.open()) {
 			List<EffectsData> effects = conn
-					.createQuery(
-							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order FROM effectsbar;")
+					.createQuery("SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order FROM effectsbar;")
 					.executeAndFetch(EffectsData.class);
 			return effects;
 		}
 	}
+
 	@Override
 	public EffectsData getBar(int bar_id) {
 		try (Connection conn = sql2o.open()) {
@@ -125,7 +124,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order  FROM effectsbar WHERE bar_id=:bar_id limit 1")
 					.addParameter("bar_id", bar_id).executeAndFetch(EffectsData.class);
 			EffectsData bar = null;
-			if (!bars.isEmpty()){
+			if (!bars.isEmpty()) {
 				bar = bars.get(0);
 			}
 			return bar;
@@ -144,7 +143,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			sql.append("bar_color = :bar_color,");
 			params.put("bar_color", bar.getBar_color());
 		}
-		if (bar.getBar_type() != null ) {
+		if (bar.getBar_type() != null) {
 			sql.append("bar_type = :bar_type,");
 			params.put("bar_type", bar.getBar_type().toString());
 		}
@@ -188,9 +187,8 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		int bar_id = 0;
 		try (Connection conn = sql2o.open()) {
 			bar_id = (int) conn
-					.createQuery(
-							"INSERT INTO effectsbar (`bar_label`,`bar_color`,`bar_type`,`sensor_id`,`sort_order`)"
-									+ "VALUES(:bar_label,:bar_color,:bar_type,:sensor_id,:sort_order)")
+					.createQuery("INSERT INTO effectsbar (`bar_label`,`bar_color`,`bar_type`,`sensor_id`,`sort_order`)"
+							+ "VALUES(:bar_label,:bar_color,:bar_type,:sensor_id,:sort_order)")
 					.addParameter("bar_label", bar.getBar_label() == null ? "bar" : bar.getBar_label())
 					.addParameter("bar_color", bar.getBar_color() == null ? "255, 255, 255" : bar.getBar_color())
 					.addParameter("bar_type", bar.getBar_type() == null ? "Plan" : bar.getBar_type().toString())
@@ -200,7 +198,8 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		}
 		return getBar(bar_id);
 	}
-@Override
+
+	@Override
 	public GaugesData getGauge(int gauge_id) {
 		try (Connection conn = sql2o.open()) {
 			List<GaugesData> gauges = conn
@@ -209,7 +208,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 									+ "FROM `servicegauge` WHERE gauge_id=:gauge_id limit 1")
 					.addParameter("gauge_id", gauge_id).executeAndFetch(GaugesData.class);
 			GaugesData gauge = null;
-			if (!gauges.isEmpty()){
+			if (!gauges.isEmpty()) {
 				gauge = gauges.get(0);
 			}
 			return gauge;
@@ -308,21 +307,23 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 					.addParameter("start_yellow", gauge.getStart_yellow() == 0 ? 0 : gauge.getStart_yellow())
 					.addParameter("start_red", gauge.getStart_red() == 0 ? 0 : gauge.getStart_red())
 					.addParameter("init_date", gauge.getInit_date() == null ? new Date() : gauge.getInit_date())
-					.addParameter("mileage_date", gauge.getMileage_date() == null ? new Date() : gauge.getMileage_date())
+					.addParameter("mileage_date",
+							gauge.getMileage_date() == null ? new Date() : gauge.getMileage_date())
 					.addParameter("sensor_id", gauge.getSensor_id() == 0 ? "0" : gauge.getSensor_id())
 					.addParameter("sort_order", gauge.getSort_order() == 0 ? "0" : gauge.getSort_order())
 					.executeUpdate().getKey();
 		}
-		return getGauge((int)gauge_id);
+		return getGauge((int) gauge_id);
 	}
 
 	@Override
 	public User getUserByUsername(String username) {
 		try (Connection conn = sql2o.open()) {
-			User user = conn.createQuery("SELECT user_id, user_name, user_email, access_id, salt FROM users where user_name=:id")
-					.addParameter("id", username)
-					.executeAndFetch(User.class).get(0);
-			user.setRoles(getRolesFor(conn,user.getUser_id()));
+			User user = conn
+					.createQuery(
+							"SELECT user_id, user_name, user_email, access_id, salt FROM users where user_name=:id")
+					.addParameter("id", username).executeAndFetch(User.class).get(0);
+			user.setRoles(getRolesFor(conn, user.getUser_id()));
 			return user;
 		}
 	}
@@ -330,24 +331,37 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public User getUserByAccessId(String access_id) {
 		try (Connection conn = sql2o.open()) {
-			User user = conn.createQuery("SELECT user_id, user_name, user_email, access_id, salt FROM users where access_id=:id")
-					.addParameter("id", access_id)
-					.executeAndFetch(User.class).get(0);
-			user.setRoles(getRolesFor(conn,user.getUser_id()));
+			User user = conn
+					.createQuery(
+							"SELECT user_id, user_name, user_email, access_id, salt FROM users where access_id=:id")
+					.addParameter("id", access_id).executeAndFetch(User.class).get(0);
+			user.setRoles(getRolesFor(conn, user.getUser_id()));
 			return user;
 		}
 	}
-	private List<String> getRolesFor(Connection conn,int user_id){
-		return conn.createQuery("select role_name from  role join userrole on role.role_id = userrole.role_id where user_id=:user_id")
-                .addParameter("user_id", user_id)
-                .executeAndFetch(String.class);
+
+	private List<String> getRolesFor(Connection conn, int user_id) {
+		return conn
+				.createQuery(
+						"select role_name from  role join userrole on role.role_id = userrole.role_id where user_id=:user_id")
+				.addParameter("user_id", user_id).executeAndFetch(String.class);
 	}
 
 	@Override
-	public UserView createUser(String username, String newSalt, String newHashedPassword, String email) {
-		// TODO Auto-generated method stub
-		return null;
+	public User createUser(String username, String newSalt, String newHashedPassword, String email) {
+		long user_id = 0;
+		try (Connection conn = sql2o.open()) {
+			user_id = (long) conn
+					.createQuery("INSERT INTO users (`user_name`,`user_email`,`access_id`,`salt`)"
+							+ "VALUES(:username,:useremail,:accessid,:salt)")
+					.addParameter("username", username == null ? "newuser" : username)
+					.addParameter("useremail", email == null ? "" : email)
+					.addParameter("accessid", newHashedPassword == null ? "" : newHashedPassword)
+					.addParameter("salt", newSalt == null ? "" : newSalt).executeUpdate().getKey();
+		}
+		return getUserByUsername(username);
 	}
+
 	@Override
 	public String deleteUser(String username) {
 		try (Connection conn = sql2o.open()) {
@@ -359,19 +373,61 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	}
 
 	@Override
-	public UserView changePassword(String username, String newSalt, String newHashedPassword) {
+	public User changePassword(String username, String newSalt, String newHashedPassword) {
 		try (Connection conn = sql2o.open()) {
 			conn.createQuery("UPDATE users SET users.salt=:salt, users.access_id=:pass WHERE user_name=:username")
-			.addParameter("username", username)
-			.addParameter("salt", newSalt)
-			.addParameter("pass", newHashedPassword)
-					.executeUpdate();
+					.addParameter("username", username).addParameter("salt", newSalt)
+					.addParameter("pass", newHashedPassword).executeUpdate();
 		}
 		return getUserByUsername(username);
 	}
 
 	@Override
 	public User updateUser(UserPayload user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		try (Connection conn = sql2o.open()) {
+			List<User> users = conn.createQuery("SELECT user_id, user_name, user_email, access_id FROM users")
+					.executeAndFetch(User.class);
+			users.forEach((user) -> user.setRoles(getRolesFor(conn, user.getUser_id())));
+			return users;
+		}
+
+	}
+
+	@Override
+	public List<User> getUsersByRole(String rolename) {
+		try (Connection conn = sql2o.open()) {
+			List<User> users = conn
+					.createQuery(
+							"SELECT user_id, user_name, user_email, access_id FROM users join userrole on user.user_id = userrole.user_id join role on role.role_id=userrole.role_id WHERE role.role_name=:rolename")
+					.addParameter("rolename", rolename).executeAndFetch(User.class);
+			users.forEach((user) -> user.setRoles(getRolesFor(conn, user.getUser_id())));
+			return users;
+		}
+	}
+
+	@Override
+	public List<String> getRoles() {
+		try (Connection conn = sql2o.open()) {
+			List<String> roles = conn.createQuery("select role_name from  role").executeAndFetch(String.class);
+			return roles;
+		}
+
+	}
+
+	@Override
+	public User addUserRole(String username, String role) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User deleteUserRole(String username, String role) {
 		// TODO Auto-generated method stub
 		return null;
 	}
