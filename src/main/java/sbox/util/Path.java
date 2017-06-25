@@ -26,8 +26,17 @@ public class Path {
         @Getter public static final String GAUGEUPD = "/gauges/change/";
         @Getter public static final String GAUGEDEL = "/gauges/delete/";
         @Getter public static final String GAUGEADD = "/gauges/add/";
-        
-        
+        /*USERS*/
+        @Getter public static final String USERS = "/users/";
+        @Getter public static final String USER = "/user/:username/";
+        @Getter public static final String USERUPD = "/users/change/";
+        @Getter public static final String USERDEL = "/users/delete/";
+        @Getter public static final String USERADD = "/users/add/";
+        @Getter public static final String USERCHANGEPASSWORD = "/users/changepass/";
+        @Getter public static final String USERADDROLE = "/users/addrole/";
+        @Getter public static final String USERDELETEROLE = "/users/deleterole/";
+        @Getter public static final String ROLES = "/roles/";
+        @Getter public static final String USERSBYROLE = "/users/byrole/";
     }
 
     public static class Template {

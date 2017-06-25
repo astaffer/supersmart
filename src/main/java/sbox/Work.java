@@ -14,6 +14,7 @@ import sbox.effects.EffectsController;
 import sbox.gauges.GaugesController;
 import sbox.index.IndexController;
 import sbox.sensor.SensorController;
+import sbox.user.UserController;
 import sbox.util.*;
 
 public class Work {
@@ -60,7 +61,17 @@ public class Work {
 		post(Path.Web.GAUGEDEL, GaugesController.deleteGauge);
 		post(Path.Web.GAUGEUPD, GaugesController.updateGauge);
 		
-
+		post(Path.Web.USERS, UserController.getAllUsers);
+		post(Path.Web.USER, UserController.getUser);
+		post(Path.Web.USERADD, UserController.createUser);
+		post(Path.Web.USERDEL, UserController.deleteUser);
+		post(Path.Web.USERUPD, UserController.changeUser);
+		post(Path.Web.USERCHANGEPASSWORD, UserController.changePassword);
+		
+		post(Path.Web.USERSBYROLE, UserController.getUsersByRole);
+		post(Path.Web.ROLES, UserController.getRoles);
+		post(Path.Web.USERADDROLE, UserController.addUserRole);
+		post(Path.Web.USERDELETEROLE, UserController.deleteUserRole);
 	}
 
 	// Enables CORS on requests. This method is an initialization method and

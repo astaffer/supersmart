@@ -1,12 +1,13 @@
 package sbox.user;
 
+import lombok.Data;
 import lombok.Value;
 import sbox.util.IValidable;
 
-@Value
+@Data
 public class DeleteUserPayload implements IValidable {
 	String access_id;
-	String user_name;
+	String username;
 
 	@Override
 	public boolean isValid() {

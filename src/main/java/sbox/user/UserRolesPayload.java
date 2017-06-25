@@ -2,10 +2,11 @@ package sbox.user;
 
 import java.util.List;
 
+import lombok.Data;
 import lombok.Value;
 import sbox.util.IValidable;
 
-@Value
+@Data
 public class UserRolesPayload implements IValidable {
 	String access_id;
 	String username;

@@ -319,11 +319,15 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public User getUserByUsername(String username) {
 		try (Connection conn = sql2o.open()) {
-			User user = conn
+			List<User> users = conn
 					.createQuery(
 							"SELECT user_id, user_name, user_email, access_id, salt FROM users where user_name=:id")
-					.addParameter("id", username).executeAndFetch(User.class).get(0);
-			user.setRoles(getRolesFor(conn, user.getUser_id()));
+					.addParameter("id", username).executeAndFetch(User.class);
+			User user = null;
+			if (!users.isEmpty()) {
+				user = users.get(0);
+				user.setRoles(getRolesFor(conn, user.getUser_id()));
+			}
 			return user;
 		}
 	}
@@ -331,11 +335,15 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public User getUserByAccessId(String access_id) {
 		try (Connection conn = sql2o.open()) {
-			User user = conn
+			List<User>  users = conn
 					.createQuery(
 							"SELECT user_id, user_name, user_email, access_id, salt FROM users where access_id=:id")
-					.addParameter("id", access_id).executeAndFetch(User.class).get(0);
-			user.setRoles(getRolesFor(conn, user.getUser_id()));
+					.addParameter("id", access_id).executeAndFetch(User.class);
+			User user = null;
+			if (!users.isEmpty()) {
+				user = users.get(0);
+				user.setRoles(getRolesFor(conn, user.getUser_id()));
+			}
 			return user;
 		}
 	}
@@ -404,7 +412,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			List<User> users = conn
 					.createQuery(
-							"SELECT user_id, user_name, user_email, access_id FROM users join userrole on user.user_id = userrole.user_id join role on role.role_id=userrole.role_id WHERE role.role_name=:rolename")
+							"SELECT users.user_id, user_name, user_email, access_id FROM users join userrole on users.user_id = userrole.user_id join role on role.role_id=userrole.role_id WHERE role.role_name=:rolename")
 					.addParameter("rolename", rolename).executeAndFetch(User.class);
 			users.forEach((user) -> user.setRoles(getRolesFor(conn, user.getUser_id())));
 			return users;
@@ -422,13 +430,37 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 
 	@Override
 	public User addUserRole(String username, String role) {
-		// TODO Auto-generated method stub
-		return null;
+		long user_id = 0;
+		User user = getUserByUsername(username);
+		try (Connection conn = sql2o.open()) {
+			
+			String roleidstr =  conn.createQuery("select role_id from  role where role.role_name =:rolename")
+					.addParameter("rolename", role)
+					.executeAndFetch(String.class).get(0);
+			int roleid = Integer.parseInt(roleidstr);
+			user_id = (long) conn.createQuery("INSERT INTO userrole (`user_id`,`role_id`)"
+							+ "VALUES(:userid,:roleid)")
+					.addParameter("userid", user.getUser_id())
+					.addParameter("roleid", roleid)
+					.executeUpdate().getKey();
+		}
+		return getUserByUsername(username);
 	}
 
 	@Override
 	public User deleteUserRole(String username, String role) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = getUserByUsername(username);
+		try (Connection conn = sql2o.open()) {
+			
+			String roleidstr =  conn.createQuery("select role_id from  role where role.role_name =:rolename")
+					.addParameter("rolename", role)
+					.executeAndFetch(String.class).get(0);
+			int roleid = Integer.parseInt(roleidstr);
+			 conn.createQuery("DELETE FROM userrole WHERE user_id=:userid and role_id=:roleid")
+					.addParameter("userid", user.getUser_id())
+					.addParameter("roleid", roleid)
+					.executeUpdate().getKey();
+		}
+		return getUserByUsername(username);
 	}
 }

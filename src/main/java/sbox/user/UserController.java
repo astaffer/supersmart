@@ -56,9 +56,9 @@ public class UserController {
 		response.type("application/json");
 
 		String newSalt = BCrypt.gensalt();
-		String newHashedPassword = BCrypt.hashpw(newSalt, user.getPassword());
+		String newHashedPassword = BCrypt.hashpw( user.getPassword(),newSalt);
 		UserModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.createUser(user.getUser_name(), newSalt, newHashedPassword, user.getEmail()));
+		return JsonUtil.dataToJson(model.createUser(user.getUsername(), newSalt, newHashedPassword, user.getEmail()));
 	};
 	public static Route deleteUser = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
@@ -71,7 +71,7 @@ public class UserController {
 		response.type("application/json");
 
 		UserModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.deleteUser(deleteuser.getUser_name()));
+		return JsonUtil.dataToJson(model.deleteUser(deleteuser.getUsername()));
 	};
 	public static Route changePassword = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
@@ -80,16 +80,16 @@ public class UserController {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
 		}
-		if (!authenticate(user.getUser_name(), user.getPassword())) {
+		if (!authenticate(user.getUsername(), user.getPassword())) {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
 		}
 		response.status(200);
 		response.type("application/json");
 		String newSalt = BCrypt.gensalt();
-		String newHashedPassword = BCrypt.hashpw(newSalt, user.getNewPassword());
+		String newHashedPassword = BCrypt.hashpw(user.getNewpassword(), newSalt);
 		UserModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.changePassword(user.getUser_name(), newSalt, newHashedPassword));
+		return JsonUtil.dataToJson(model.changePassword(user.getUsername(), newSalt, newHashedPassword));
 	};
 	public static Route changeUser = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
@@ -98,7 +98,7 @@ public class UserController {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
 		}
-		if (!authenticate(user.getUser_name(), user.getPassword())) {
+		if (!authenticate(user.getUsername(), user.getPassword())) {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
 		}
@@ -109,6 +109,7 @@ public class UserController {
 	};
 
 	public static Route getUser = (Request request, Response response) -> {
+		String username = request.params(":username");
 		ObjectMapper mapper = new ObjectMapper();
 		GetUserPayload user = mapper.readValue(request.body(), GetUserPayload.class);
 		if (!user.isValid()) {
@@ -117,11 +118,11 @@ public class UserController {
 		}
 		response.status(200);
 		response.type("application/json");
-		return JsonUtil.dataToJson(getUser(user.getUser_name()));
+		return JsonUtil.dataToJson(getUser(username));
 	};
 	public static Route getAllUsers = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
-		DeleteUserPayload user = mapper.readValue(request.body(), DeleteUserPayload.class);
+		GetUserPayload user = mapper.readValue(request.body(), GetUserPayload.class);
 		if (!user.isValid()) {
 			response.status(HTTP_BAD_REQUEST);
 			return "";

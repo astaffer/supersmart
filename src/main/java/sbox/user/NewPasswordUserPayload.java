@@ -1,13 +1,14 @@
 package sbox.user;
 
+import lombok.Data;
 import lombok.Value;
 import sbox.util.IValidable;
 
-@Value
+@Data
 public class NewPasswordUserPayload implements IValidable {
-	String user_name;
+	String username;
 	String password;
-	String newPassword;
+	String newpassword;
 	@Override
 	public boolean isValid() {
 		// TODO Auto-generated method stub
