@@ -3,6 +3,11 @@
    <md-layout md-gutter >
     <md-layout md-flex="30" >
       <md-button @click.native="createBar()" class="md-accent">Добавить</md-button>
+      <md-dialog-alert
+  :md-content="alert.content"
+  :md-ok-text="alert.ok"
+  ref="dialog_bar">
+  </md-dialog-alert>
     </md-layout>
    </md-layout>
    <md-layout md-gutter md-align="center">
@@ -24,12 +29,19 @@
             </md-input-container>
             <md-input-container>
               <label>Тип</label>
-              <md-input  v-model="newbar.bar_type"></md-input>
+              <!--<md-input  v-model="newbar.bar_type"></md-input>-->
+              <md-select v-model="newbar.bar_type">
+                <md-option value="Plan">План</md-option>
+                <md-option value="SensorOn">Время Вкл</md-option>
+                <md-option value="SensorOff">Время Выкл</md-option>
+              </md-select>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
               <label>Датчик</label>
-              <md-input v-model="newbar.sensor_id"></md-input>
+              <md-select v-model="newbar.sensor_id">
+                <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
+              </md-select>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
@@ -61,12 +73,20 @@
             </md-input-container>
             <md-input-container>
               <label>Тип</label>
-              <md-input  v-model="bar.bar_type"></md-input>
+              <!--<md-input  v-model="bar.bar_type"></md-input>-->
+              <md-select v-model="bar.bar_type">
+                <md-option value="Plan">План</md-option>
+                <md-option value="SensorOn">Время Вкл</md-option>
+                <md-option value="SensorOff">Время Выкл</md-option>
+              </md-select>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
               <label>Датчик</label>
               <md-input v-model="bar.sensor_id"></md-input>
+              <md-select v-model="bar.sensor_id">
+                <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
+              </md-select>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
@@ -86,6 +106,7 @@
 </template>
 <script>
 import barservice from '../bars'
+import sensorservice from '../sensor'
 export default {
   name: 'barschange',
   data () {
@@ -94,8 +115,9 @@ export default {
       newbar: {
       },
       bars: [],
+      sensors: [],
       alert: {
-        content: 'Наименование устройства изменено!',
+        content: 'Показатель изменен!',
         ok: 'OK'
       }
     }
@@ -105,6 +127,12 @@ export default {
       this.bars = response.data
     }, response => {
       this.error = 'Error when get bar data'
+      console.log(this.error)
+    })
+    sensorservice.getAllSensors(this).then(response => {
+      this.sensors = response.data
+    }, response => {
+      this.error = 'Error when get sensors data'
       console.log(this.error)
     })
   },
@@ -118,10 +146,10 @@ export default {
     updateBar (bar) {
       barservice.setBar(this, bar).then(response => {
         bar = response.data
+        this.openDialog('dialog_bar')
       }, response => {
         console.log('error')
       })
-      console.log(bar)
     },
     deleteBar (barId) {
       barservice.deleteBar(this, barId).then(response => {

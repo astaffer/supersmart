@@ -14,35 +14,21 @@
 			<md-tab id="gauges" md-label="сервис">
 			  <gaugeschange></gaugeschange>
 			</md-tab>
-      <md-tab id="sensors" md-label="Датчики">
-        <md-layout md-gutter md-align="center">
-          <md-layout v-for="sensor in sensorList" :key="sensor.sensor_id">
-            <md-card md-with-hover>
-              <md-card-header>
-                <div class="md-title">{{ sensor.sensor_name }}</div>
-                <div class="md-subhead">Идентификатор: {{ sensor.sensor_id }}</div>
-                <div class="md-subhead">Тип: {{ sensor.sensor_type }}</div>
-              </md-card-header>
-              <md-card-actions>
-                <md-button>Action</md-button>
-                <md-button>Action</md-button>
-              </md-card-actions>
-            </md-card>
-          </md-layout>
-        </md-layout>
+      <md-tab id="sensors" md-label="датчики">
+        <sensorschange></sensorschange>
       </md-tab>
 		</md-tabs>
   </div>
 </template>
 <script>
-import sensors from '../sensor'
 import device from '../device'
 import Devicechange from '@/components/Device'
 import Barschange from '@/components/Bars'
 import Gaugeschange from '@/components/Gauges'
+import Sensorschange from '@/components/Sensors'
 export default {
   name: 'properties',
-  components: { Devicechange, Barschange, Gaugeschange },
+  components: { Devicechange, Barschange, Gaugeschange, Sensorschange },
   data () {
     return {
       error: '',
@@ -55,7 +41,6 @@ export default {
     }
   },
   mounted () {
-    this.loadSensors()
     device.getDeviceFromService(this).then(response => {
       this.deviceInfo.id = response.data.device_id
       this.deviceInfo.name = response.data.device_name
@@ -65,14 +50,6 @@ export default {
     })
   },
   methods: {
-    loadSensors () {
-      sensors.getAllSensors(this).then(response => {
-        this.sensorList = response.data
-      }, response => {
-        this.error = 'Error when get sensors data'
-        console.log(this.error)
-      })
-    },
     applyDeviceName () {
       device.setDeviceName(this, this.deviceInfo).then(response => {
         this.deviceInfo.id = response.data.device_id

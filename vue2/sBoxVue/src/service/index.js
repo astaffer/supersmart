@@ -20,6 +20,9 @@ export default {
   getSensorsUrl () {
     return this.getApiUrl(SENSORS_URL)
   },
+  getSensorUpdateUrl () {
+    return this.getSensorsUrl() + UPDATE_URL
+  },
   getEffectsUrl () {
     return this.getApiUrl(EFFECTS_URL)
   },

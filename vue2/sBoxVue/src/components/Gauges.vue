@@ -5,6 +5,11 @@
         <md-card md-with-hover style="width:90%">
           <md-card-header>
             <div class="md-title">Новый показатель</div>
+            <md-dialog-alert
+              :md-content="alert.content"
+              :md-ok-text="alert.ok"
+              ref="dialog_gauge">
+              </md-dialog-alert>
           </md-card-header>
           <md-card-content>
             <md-layout md-gutter md-align="center">
@@ -34,7 +39,9 @@
                 
                 <md-input-container>
                   <label>Датчик</label>
-                  <md-input type="number" v-model="newgauge.sensor_id"></md-input>
+                  <md-select v-model="newgauge.sensor_id">
+                    <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
+                  </md-select>
                   <span class="md-error">Ошибка при заполнении</span>
                 </md-input-container>
                 <md-input-container>
@@ -101,7 +108,9 @@
                 
                 <md-input-container>
                   <label>Датчик</label>
-                  <md-input type="number" v-model="gauge.sensor_id"></md-input>
+                  <md-select v-model="gauge.sensor_id">
+                    <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
+                  </md-select>
                   <span class="md-error">Ошибка при заполнении</span>
                 </md-input-container>
                 <md-input-container>
@@ -141,15 +150,17 @@
 </template>
 <script>
 import Gauge from '../gauges'
+import sensorservice from '../sensor'
 export default {
   name: 'gaugeschange',
   data () {
     return {
       error: '',
       gauges: [],
+      sensors: [],
       newgauge: {},
       alert: {
-        content: 'Наименование устройства изменено!',
+        content: 'Показатель изменен!',
         ok: 'OK'
       }
     }
@@ -159,6 +170,12 @@ export default {
       this.gauges = response.data
     }, response => {
       this.error = 'Error when get bar data'
+      console.log(this.error)
+    })
+    sensorservice.getAllSensors(this).then(response => {
+      this.sensors = response.data
+    }, response => {
+      this.error = 'Error when get sensors data'
       console.log(this.error)
     })
   },
@@ -172,6 +189,7 @@ export default {
     updateGauge (gauge) {
       Gauge.updateGauge(this, gauge).then(response => {
         gauge = response.data
+        this.openDialog('dialog_gauge')
       }, response => {
         console.log('error')
       })

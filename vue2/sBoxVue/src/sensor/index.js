@@ -9,7 +9,15 @@ export default {
       return context.$http.post(service.getSensorsUrl(), creds)
     }
   },
-
+  setSensor (context, _sensor) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        sensor: _sensor
+      }
+      return context.$http.post(service.getSensorUpdateUrl(), creds)
+    }
+  },
   getSingleSensor () {
 
   },

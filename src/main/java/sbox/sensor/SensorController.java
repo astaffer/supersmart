@@ -37,4 +37,17 @@ public class SensorController {
 		SensorModel model = new Sql2oModel(sql2o);
 		return JsonUtil.dataToJson(model.getSensor(sensor));
 	};
+	public static Route updateSensorName = (Request request, Response response) -> {
+		 
+		ObjectMapper mapper = new ObjectMapper();
+		UpdateSensorDataPayload sensorData = mapper.readValue(request.body(), UpdateSensorDataPayload.class);
+		if (!sensorData.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		SensorModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.updateSensor(sensorData.getSensor()));
+	};
 }

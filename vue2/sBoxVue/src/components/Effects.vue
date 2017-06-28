@@ -159,12 +159,14 @@ export default {
     }
   },
   mounted () {
-    this.getEffects(0)
+    this.getEffects(0, 1)
   },
   methods: {
     getEffects (daysBack, to) {
       this.dateFrom = this.getDate(-daysBack)
+      console.log(this.dateFrom)
       this.dateTo = this.getDate(to)
+      console.log(this.dateTo)
       effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour').then(response => {
         var effectsData = effects.prepareData(response.data)
         this.eff = effectsData.eff

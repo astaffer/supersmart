@@ -463,4 +463,33 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		}
 		return getUserByUsername(username);
 	}
+
+	@Override
+	public Sensor updateSensor(Sensor sensorData) {
+		Map<String, Object> params = new HashMap<>();
+		StringBuilder sql = new StringBuilder("update sensor set ");
+		if (sensorData.getSensor_name()!= null && !sensorData.getSensor_name().isEmpty()) {
+			sql.append("sensor_name = :sensor_name,");
+			params.put("sensor_name", sensorData.getSensor_name());
+		}
+		if (sensorData.getSensor_type()!= null) {
+			sql.append("sensor_type = :sensor_type,");
+			params.put("sensor_type", sensorData.getSensor_type());
+		}
+		sql.deleteCharAt(sql.length() - 1);
+
+		sql.append(" where sensor_id = :id");
+		if (!params.isEmpty()) {
+			try (Connection conn = sql2o.open()) {
+				Query query = conn.createQuery(sql.toString());
+
+				for (String key : params.keySet()) {
+					query.addParameter(key, params.get(key));
+				}
+
+				query.addParameter("id", sensorData.getSensor_id()).executeUpdate();
+			}
+		}
+		return getSensor(sensorData.getSensor_id());
+	}
 }
