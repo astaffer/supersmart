@@ -23,16 +23,19 @@ export default new Router({
       component: Dashboard,
       children: [
         {
+          name: 'Effects',
           path: 'effects',
           component: Effects,
           meta: { requiresAuth: true }
         },
         {
+          name: 'Services',
           path: 'services',
           component: Services,
           meta: { requiresAuth: true }
         },
         {
+          name: 'Properties',
           path: 'properties',
           component: Properties,
           meta: { requiresAuth: true }

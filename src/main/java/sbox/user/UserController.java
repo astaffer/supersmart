@@ -44,7 +44,18 @@ public class UserController {
 		UserModel model = new Sql2oModel(sql2o);
 		return model.getUserByAccessId(access_id);
 	}
-
+	public static Route getUserByAccessId = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		GetUserPayload user = mapper.readValue(request.body(), GetUserPayload.class);
+		if (!user.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		 
+		return JsonUtil.dataToJson(getUserByAccessId(user.getAccess_id()));
+	};
 	public static Route createUser = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();
 		UserPayload user = mapper.readValue(request.body(), UserPayload.class);

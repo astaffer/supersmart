@@ -11,13 +11,13 @@
           <md-card-content>
             <md-input-container>
               <label>Наименование</label>
-              <md-input maxlength="30" v-model="sensor.sensor_name"></md-input>
+              <md-input maxlength="30" v-model="sensor.sensor_name" :disabled="!hasAdminAccess()"></md-input>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
-              <md-checkbox v-model="sensor.sensor_type">Тип:целочисленный</md-checkbox>
+              <md-checkbox v-model="sensor.sensor_type" :disabled="!hasAdminAccess()">Тип:вещественный</md-checkbox>
           </md-card-content>
           <md-card-actions>
-            <md-button  @click.native="updateSensor(sensor)">Изменить</md-button>
+            <md-button  @click.native="updateSensor(sensor)" v-if="hasAdminAccess()">Изменить</md-button>
           </md-card-actions>
         </md-card>
       </md-layout>
@@ -33,6 +33,12 @@
 import sensorservice from '../sensor'
 export default {
   name: 'sensorschange',
+  props: {
+    user: {
+      user_name: '',
+      roles: []
+    }
+  },
   data () {
     return {
       error: '',
@@ -40,7 +46,8 @@ export default {
       alert: {
         content: 'Датчик изменен!',
         ok: 'OK'
-      }
+      },
+       
     }
   },
   mounted () {
@@ -52,6 +59,10 @@ export default {
     })
   },
   methods: {
+    hasAdminAccess () {
+      return this.user.roles.includes('admin')
+      //console.log(this.user.roles)
+    },
     openDialog (ref) {
       this.$refs[ref].open()
     },

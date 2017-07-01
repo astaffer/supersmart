@@ -2,7 +2,6 @@
   <div>
    <md-layout md-gutter >
     <md-layout md-flex="30" >
-      <md-button @click.native="createBar()" class="md-accent">Добавить</md-button>
       <md-dialog-alert
   :md-content="alert.content"
   :md-ok-text="alert.ok"
@@ -11,8 +10,8 @@
     </md-layout>
    </md-layout>
    <md-layout md-gutter md-align="center">
-      <md-layout md-align="center" md-flex="25">
-        <md-card md-with-hover style="width:90%">
+      <md-layout md-align="center" md-flex="25" v-if="hasAccess">
+        <md-card md-with-hover style="width:90%" >
           <md-card-header>
             <div class="md-title">Новый показатель</div>
           </md-card-header>
@@ -20,6 +19,7 @@
             <md-input-container>
               <label>Наименование</label>
               <md-input maxlength="30" v-model="newbar.bar_label"></md-input>
+
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
@@ -61,20 +61,20 @@
             <div class="md-title">Показатель: {{ bar.bar_id }}</div>
           </md-card-header>
           <md-card-content>
-            <md-input-container>
+            <md-input-container  >
               <label>Наименование</label>
-              <md-input maxlength="30" v-model="bar.bar_label"></md-input>
+              <md-input maxlength="30"  v-model="bar.bar_label" :disabled="!hasAccess"></md-input>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
               <label>Цвет</label>
-              <md-input v-model="bar.bar_color"></md-input>
+              <md-input v-model="bar.bar_color" :disabled="!hasAccess"></md-input>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
               <label>Тип</label>
               <!--<md-input  v-model="bar.bar_type"></md-input>-->
-              <md-select v-model="bar.bar_type">
+              <md-select v-model="bar.bar_type" :disabled="!hasAccess">
                 <md-option value="Plan">План</md-option>
                 <md-option value="SensorOn">Время Вкл</md-option>
                 <md-option value="SensorOff">Время Выкл</md-option>
@@ -83,21 +83,20 @@
             </md-input-container>
             <md-input-container>
               <label>Датчик</label>
-              <md-input v-model="bar.sensor_id"></md-input>
-              <md-select v-model="bar.sensor_id">
+              <md-select v-model="bar.sensor_id" :disabled="!hasAccess">
                 <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
               </md-select>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
               <label>Порядковый номер</label>
-              <md-input type="number" v-model="bar.sort_order"></md-input>
+              <md-input type="number" v-model="bar.sort_order" ></md-input>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
           </md-card-content>
           <md-card-actions>
-            <md-button  @click.native="updateBar(bar)">Изменить</md-button>
-            <md-button @click.native="deleteBar(bar.bar_id)">Удалить</md-button>
+            <md-button  @click.native="updateBar(bar)" >Изменить</md-button>
+            <md-button @click.native="deleteBar(bar.bar_id)" v-if="hasAccess">Удалить</md-button>
           </md-card-actions>
         </md-card>
       </md-layout>
@@ -109,6 +108,12 @@ import barservice from '../bars'
 import sensorservice from '../sensor'
 export default {
   name: 'barschange',
+  props: {
+    user: {
+      user_name: '',
+      roles: []
+    }
+  },
   data () {
     return {
       error: '',
@@ -119,7 +124,8 @@ export default {
       alert: {
         content: 'Показатель изменен!',
         ok: 'OK'
-      }
+      },
+      hasAccess: false
     }
   },
   mounted () {
@@ -135,8 +141,12 @@ export default {
       this.error = 'Error when get sensors data'
       console.log(this.error)
     })
+    this.hasAdminAccess()
   },
   methods: {
+    hasAdminAccess () {
+      this.hasAccess = this.user.roles.includes('admin')
+    },
     openDialog (ref) {
       this.$refs[ref].open()
     },

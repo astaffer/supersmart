@@ -30,6 +30,7 @@ public class Path {
         /*USERS*/
         @Getter public static final String USERS = "/users/";
         @Getter public static final String USER = "/user/:username/";
+        @Getter public static final String USERGET = "/users/get/";
         @Getter public static final String USERUPD = "/users/change/";
         @Getter public static final String USERDEL = "/users/delete/";
         @Getter public static final String USERADD = "/users/add/";

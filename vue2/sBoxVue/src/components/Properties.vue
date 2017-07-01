@@ -9,19 +9,20 @@
         </md-layout>
       </md-tab>
 			<md-tab id="effects" md-label="эффективность">
-        <barschange></barschange>
+        <barschange :user=user></barschange>
 			</md-tab>
 			<md-tab id="gauges" md-label="сервис">
-			  <gaugeschange></gaugeschange>
+			  <gaugeschange :user=user></gaugeschange>
 			</md-tab>
       <md-tab id="sensors" md-label="датчики">
-        <sensorschange></sensorschange>
+        <sensorschange :user=user></sensorschange>
       </md-tab>
 		</md-tabs>
   </div>
 </template>
 <script>
 import device from '../device'
+import userservice from '../user'
 import Devicechange from '@/components/Device'
 import Barschange from '@/components/Bars'
 import Gaugeschange from '@/components/Gauges'
@@ -37,7 +38,11 @@ export default {
         id: '',
         name: ''
       },
-      sensorList: []
+      sensorList: [],
+      user: {
+        user_name: '',
+        roles: []
+      }
     }
   },
   mounted () {
@@ -46,6 +51,12 @@ export default {
       this.deviceInfo.name = response.data.device_name
     }, response => {
       this.error = 'Error when get device data'
+      console.log(this.error)
+    })
+    userservice.getUser(this).then(response => {
+      this.user = response.data
+    }, response => {
+      this.error = 'Error when get user data'
       console.log(this.error)
     })
   },

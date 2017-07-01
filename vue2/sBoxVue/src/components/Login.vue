@@ -16,7 +16,7 @@
               <md-input type="password" v-model="credentials.password"></md-input>
             </md-input-container>
             <md-layout md-align="center">
-              <md-button @click.native="submit()">Войти</md-button>
+              <md-button class="md-raised md-accent" @click.native="submit()">Войти</md-button>
             </md-layout>
             <md-card class="md-warn" v-if="error">
               <p>{{ error }}</p>

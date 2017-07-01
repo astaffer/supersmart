@@ -10,6 +10,10 @@ const DEVICE_URL = 'device/'
 const UPDATE_URL = 'change/'
 const CREATE_URL = 'add/'
 const DELETE_URL = 'delete/'
+const GET_URL = 'get/'
+const USERS_URL = 'users/'
+const CHANGEPASS_URL = 'changepass/'
+
 export default {
   getApiUrl (api) {
     return API_URL + api
@@ -55,5 +59,15 @@ export default {
   },
   getDeviceUpdateUrl () {
     return this.getDeviceUrl() + UPDATE_URL
+  },
+  getUsersUrl () {
+    return this.getApiUrl(USERS_URL)
+  },
+  getUserUrl () {
+    return this.getApiUrl(USERS_URL) + GET_URL
+  },
+  getUsersChangePassUrl () {
+    return this.getUsersUrl() + CHANGEPASS_URL
   }
+
 }

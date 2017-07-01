@@ -1,7 +1,7 @@
 <template>
   <div>
     <md-layout md-gutter md-align="center">
-      <md-layout md-align="center" md-flex="90">
+      <md-layout md-align="center" md-flex="90" v-if="hasAccess">
         <md-card md-with-hover style="width:90%">
           <md-card-header>
             <div class="md-title">Новый показатель</div>
@@ -85,12 +85,12 @@
                 <md-layout md-flex="33">
                 <md-input-container>
                   <label>Наименование</label>
-                  <md-input maxlength="30" v-model="gauge.gauge_label"></md-input>
+                  <md-input maxlength="30" v-model="gauge.gauge_label" :disabled="!hasAccess"></md-input>
                   <span class="md-error">Ошибка при заполнении</span>
                 </md-input-container>
                 <md-input-container>
                   <label>Единицы</label>
-                  <md-input maxlength="10" v-model="gauge.gauge_unit"></md-input>
+                  <md-input maxlength="10" v-model="gauge.gauge_unit" :disabled="!hasAccess"></md-input>
                   <span class="md-error">Ошибка при заполнении</span>
                 </md-input-container>
                 <md-input-container>
@@ -108,7 +108,7 @@
                 
                 <md-input-container>
                   <label>Датчик</label>
-                  <md-select v-model="gauge.sensor_id">
+                  <md-select v-model="gauge.sensor_id" :disabled="!hasAccess">
                     <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
                   </md-select>
                   <span class="md-error">Ошибка при заполнении</span>
@@ -141,7 +141,7 @@
           </md-card-content>
           <md-card-actions>
             <md-button  @click.native="updateGauge(gauge)">Изменить</md-button>
-            <md-button @click.native="deleteGauge(gauge.gauge_id)">Удалить</md-button>
+            <md-button @click.native="deleteGauge(gauge.gauge_id)" v-if="hasAccess">Удалить</md-button>
           </md-card-actions>
         </md-card>
       </md-layout>
@@ -153,6 +153,12 @@ import Gauge from '../gauges'
 import sensorservice from '../sensor'
 export default {
   name: 'gaugeschange',
+  props: {
+    user: {
+      user_name: '',
+      roles: []
+    }
+  },
   data () {
     return {
       error: '',
@@ -162,7 +168,8 @@ export default {
       alert: {
         content: 'Показатель изменен!',
         ok: 'OK'
-      }
+      },
+      hasAccess: false
     }
   },
   mounted () {
@@ -178,8 +185,12 @@ export default {
       this.error = 'Error when get sensors data'
       console.log(this.error)
     })
+    this.hasAdminAccess()
   },
   methods: {
+    hasAdminAccess () {
+      this.hasAccess = this.user.roles.includes('admin')
+    },
     openDialog (ref) {
       this.$refs[ref].open()
     },

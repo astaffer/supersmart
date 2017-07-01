@@ -11,7 +11,7 @@
   <md-layout md-gutter>
     <md-layout md-flex="100" md-align="center">
     <md-button-toggle md-single class="md-accent">
-      <md-button @click.native="$router.push({ path: '/dashboard/effects' })">Эффективность</md-button>
+      <md-button v-bind:class="{ 'md-toggle': effectsActive() }" @click.native="$router.push({ path: '/dashboard/effects' })">Эффективность</md-button>
       <md-button @click.native="$router.push({ path: '/dashboard/services' })">Сервис</md-button>
       <md-button @click.native="$router.push({ path: '/dashboard/properties' })">Настройки</md-button>
     </md-button-toggle>
@@ -148,7 +148,8 @@ export default {
     return {
       deviceInfo: '',
       showTable: false,
-      error: ''
+      error: '',
+      isEffectsActive: true
     }
   },
   mounted () {
@@ -158,12 +159,17 @@ export default {
       this.error = 'Error when get device data'
       console.log(this.error)
     })
+  },
+  methods: {
+    effectsActive () {
+      return this.$route.name === 'Effects'
+    }
   }
 }
 </script>
 <style>
 .dash-form{
-  margin-top: 20px;
+  margin-top: 5px;
 }
 .chart-container{
   min-height: 400px;

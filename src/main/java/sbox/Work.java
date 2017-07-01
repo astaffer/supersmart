@@ -64,6 +64,7 @@ public class Work {
 		
 		post(Path.Web.USERS, UserController.getAllUsers);
 		post(Path.Web.USER, UserController.getUser);
+		post(Path.Web.USERGET, UserController.getUserByAccessId);
 		post(Path.Web.USERADD, UserController.createUser);
 		post(Path.Web.USERDEL, UserController.deleteUser);
 		post(Path.Web.USERUPD, UserController.changeUser);
