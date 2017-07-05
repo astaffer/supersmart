@@ -28,7 +28,6 @@
       <md-button class="md-raised md-accent" @click.native="changePassword()">Применить</md-button>
     </md-card-actions>
   </md-card>
-
   </div>
 </template>
 <script>
@@ -87,10 +86,12 @@ export default {
 </script>
 <style>
 .settings{
-  width: 100%;
+  width: 98%;
 }
 .md-card{
   margin-bottom: 10px;
   margin-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

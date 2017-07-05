@@ -46,8 +46,7 @@ export default {
       alert: {
         content: 'Датчик изменен!',
         ok: 'OK'
-      },
-       
+      }
     }
   },
   mounted () {
@@ -61,7 +60,6 @@ export default {
   methods: {
     hasAdminAccess () {
       return this.user.roles.includes('admin')
-      //console.log(this.user.roles)
     },
     openDialog (ref) {
       this.$refs[ref].open()

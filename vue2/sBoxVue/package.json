@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "chart.js": "^2.5.0",
+    "v-mask": "^1.2.0",
     "vue": "^2.2.2",
     "vue-canvas-gauges": "0.0.0",
     "vue-router": "^2.3.0"

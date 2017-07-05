@@ -6,10 +6,12 @@ import router from './router'
 import auth from './auth'
 import VueResource from 'vue-resource'
 import VueMaterial from 'vue-material'
+import VueMask from 'v-mask'
 import './assets/css/vue-material.css'
 import './assets/css/main.css'
 Vue.use(VueResource)
 Vue.use(VueMaterial)
+Vue.use(VueMask)
 Vue.material.registerTheme('default', {
   primary: 'light-blue',
   accent: 'green',
