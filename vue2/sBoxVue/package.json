@@ -15,6 +15,7 @@
     "v-mask": "^1.2.0",
     "vue": "^2.2.2",
     "vue-canvas-gauges": "0.0.0",
+    "vue-material-datepicker": "^2.0.1",
     "vue-router": "^2.3.0"
   },
   "devDependencies": {

@@ -10,6 +10,7 @@
               :md-ok-text="alert.ok"
               ref="dialog_gauge">
               </md-dialog-alert>
+
           </md-card-header>
           <md-card-content>
             <md-layout md-gutter md-align="center">

@@ -5,6 +5,7 @@ import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Settings from '@/components/Settings'
+import AdminUsers from '@/components/AdminUsers'
 import Effects from '@/components/Effects'
 import Services from '@/components/Services'
 import Properties from '@/components/Properties'
@@ -47,6 +48,12 @@ export default new Router({
       path: '/settings',
       name: 'Settings',
       component: Settings,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/adminusers',
+      name: 'AdminUsers',
+      component: AdminUsers,
       meta: { requiresAuth: true }
     },
     {

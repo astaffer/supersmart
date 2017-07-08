@@ -18,5 +18,65 @@ export default {
       }
       return context.$http.post(service.getUsersChangePassUrl(), creds)
     }
+  },
+  getUsers (context) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId()
+      }
+      return context.$http.post(service.getUsersUrl(), creds)
+    }
+  },
+  getRoles (context) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId()
+      }
+      return context.$http.post(service.getRolesUrl(), creds)
+    }
+  },
+  getUsersByRole (context, role) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId()
+      }
+      return context.$http.post(service.getUsersUrl(), creds)
+    }
+  },
+  createUser (context, user) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        username: user.user_name,
+        password: 'password',
+        email: user.user_email,
+        roles: user.roles
+      }
+      return context.$http.post(service.getUsersCreateUrl(), creds)
+    }
+  },
+  addUserRole (context, user) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId()
+      }
+      return context.$http.post(service.getUsersAddRoleUrl(), creds)
+    }
+  },
+  deleteUserRole (context, user) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId()
+      }
+      return context.$http.post(service.getUsersDeleteRoleUrl(), creds)
+    }
+  },
+  deleteUser (context, user) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId()
+      }
+      return context.$http.post(service.getUsersDeleteUrl(), creds)
+    }
   }
 }

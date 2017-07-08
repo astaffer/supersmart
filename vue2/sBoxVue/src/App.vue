@@ -5,6 +5,9 @@
         <md-icon>cloud</md-icon>
       </md-button>
       <h2 class="md-title" style="flex: 1">BrainBox</h2>
+      <md-button class="md-icon-button"  @click.native="$router.push({ name: 'AdminUsers' })" v-if="user.authenticated">
+        <md-icon>accessibility</md-icon>
+      </md-button>
       <md-button class="md-icon-button"  @click.native="$router.push({ path: '/dashboard/effects' })" v-if="user.authenticated">
         <md-icon>dashboard</md-icon>
       </md-button>

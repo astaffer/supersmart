@@ -12,6 +12,10 @@ const CREATE_URL = 'add/'
 const DELETE_URL = 'delete/'
 const GET_URL = 'get/'
 const USERS_URL = 'users/'
+const ROLES_URL = 'roles/'
+const BYROLE_URL = 'byrole/'
+const ADDROLE_URL = 'addrole/'
+const DELETEROLE_URL = 'deleterole/'
 const CHANGEPASS_URL = 'changepass/'
 
 export default {
@@ -68,6 +72,27 @@ export default {
   },
   getUsersChangePassUrl () {
     return this.getUsersUrl() + CHANGEPASS_URL
+  },
+  getRolesUrl () {
+    return this.getApiUrl(ROLES_URL)
+  },
+  getUsersByRoleUrl () {
+    return this.getApiUrl(USERS_URL) + BYROLE_URL
+  },
+  getUsersAddRoleUrl () {
+    return this.getApiUrl(USERS_URL) + ADDROLE_URL
+  },
+  getUsersDeleteRoleUrl () {
+    return this.getApiUrl(USERS_URL) + DELETEROLE_URL
+  },
+  getUsersCreateUrl () {
+    return this.getApiUrl(USERS_URL) + CREATE_URL
+  },
+  getUsersDeleteUrl () {
+    return this.getApiUrl(USERS_URL) + DELETE_URL
+  },
+  getUsersUpdateUrl () {
+    return this.getApiUrl(USERS_URL) + UPDATE_URL
   }
 
 }
