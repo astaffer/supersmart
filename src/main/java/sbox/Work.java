@@ -2,7 +2,20 @@ package sbox;
 
 import static spark.Spark.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
+
+import javax.swing.Timer;
 
 import org.sql2o.Sql2o;
 
@@ -12,6 +25,7 @@ import sbox.auth.AuthController;
 import sbox.device.DeviceController;
 import sbox.effects.EffectsController;
 import sbox.gauges.GaugesController;
+import sbox.hw.HWModel;
 import sbox.index.IndexController;
 import sbox.sensor.SensorController;
 import sbox.user.UserController;
@@ -20,6 +34,7 @@ import sbox.util.*;
 public class Work {
 	private static final Logger logger = Logger.getLogger(Work.class.getCanonicalName());
 	public static Sql2o sql2o;
+	public static HWModel hwm;
 
 	public static void main(String[] args) {
 		CommandLineOptions options = new CommandLineOptions();
@@ -30,50 +45,75 @@ public class Work {
 		logger.finest("Options.dbUsername = " + options.dbUsername);
 		logger.finest("Options.dbPort = " + options.dbPort);
 		logger.finest("Options.servicePort = " + options.servicePort);
+		logger.finest("Options.updelay = " + options.updelay);
 		port(options.servicePort);
 		staticFiles.location("/public");
 		staticFiles.expireTime(600L);
-		String encoding ="?useUnicode=yes&characterEncoding=UTF-8"; 
-		sql2o = new Sql2o("jdbc:mysql://" + options.dbHost + ":" + options.dbPort + "/" + options.database+encoding,
+		String encoding = "?useUnicode=yes&characterEncoding=UTF-8";
+		sql2o = new Sql2o("jdbc:mysql://" + options.dbHost + ":" + options.dbPort + "/" + options.database + encoding,
 				options.dbUsername, options.dbPassword);
 
 		enableCORS("*", "GET,POST", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin");
 		// Set up routes
-		get(Path.Web.INDEX, IndexController.serveWebPack);
-		get(Path.Web.AUTH, AuthController.serveAuth);
-		post(Path.Web.AUTH, AuthController.serveAuthPost);
-		
-		post(Path.Web.DEVICE, DeviceController.getDevice);
-		post(Path.Web.DEVICEUPD, DeviceController.updateDevice);
-		post(Path.Web.SENSORS, SensorController.getSensors);
-		post(Path.Web.SENSORDATA, SensorController.getSensorData);
-		post(Path.Web.SENSORUPD, SensorController.updateSensorName);
-		
-		post(Path.Web.EFFECTS, EffectsController.getEffects);
-		post(Path.Web.BARS, EffectsController.getBars);
-		post(Path.Web.BAR, EffectsController.getBar);
-		post(Path.Web.BARADD, EffectsController.addBar);
-		post(Path.Web.BARDEL, EffectsController.deleteBar);
-		post(Path.Web.BARUPD, EffectsController.updateBar);
-		
-		post(Path.Web.GAUGES, GaugesController.getGauges);
-		post(Path.Web.GAUGE, GaugesController.getGauge);
-		post(Path.Web.GAUGEADD, GaugesController.addGauge);
-		post(Path.Web.GAUGEDEL, GaugesController.deleteGauge);
-		post(Path.Web.GAUGEUPD, GaugesController.updateGauge);
-		
-		post(Path.Web.USERS, UserController.getAllUsers);
-		post(Path.Web.USER, UserController.getUser);
-		post(Path.Web.USERGET, UserController.getUserByAccessId);
-		post(Path.Web.USERADD, UserController.createUser);
-		post(Path.Web.USERDEL, UserController.deleteUser);
-		post(Path.Web.USERUPD, UserController.changeUser);
-		post(Path.Web.USERCHANGEPASSWORD, UserController.changePassword);
-		
-		post(Path.Web.USERSBYROLE, UserController.getUsersByRole);
-		post(Path.Web.ROLES, UserController.getRoles);
-		post(Path.Web.USERADDROLE, UserController.addUserRole);
-		post(Path.Web.USERDELETEROLE, UserController.deleteUserRole);
+		get(PathUrls.Web.INDEX, IndexController.serveWebPack);
+		get(PathUrls.Web.AUTH, AuthController.serveAuth);
+		post(PathUrls.Web.AUTH, AuthController.serveAuthPost);
+
+		post(PathUrls.Web.DEVICE, DeviceController.getDevice);
+		post(PathUrls.Web.DEVICEUPD, DeviceController.updateDevice);
+		post(PathUrls.Web.SENSORS, SensorController.getSensors);
+		post(PathUrls.Web.SENSORDATA, SensorController.getSensorData);
+		post(PathUrls.Web.SENSORUPD, SensorController.updateSensorName);
+
+		post(PathUrls.Web.EFFECTS, EffectsController.getEffects);
+		post(PathUrls.Web.BARS, EffectsController.getBars);
+		post(PathUrls.Web.BAR, EffectsController.getBar);
+		post(PathUrls.Web.BARADD, EffectsController.addBar);
+		post(PathUrls.Web.BARDEL, EffectsController.deleteBar);
+		post(PathUrls.Web.BARUPD, EffectsController.updateBar);
+
+		post(PathUrls.Web.GAUGES, GaugesController.getGauges);
+		post(PathUrls.Web.GAUGE, GaugesController.getGauge);
+		post(PathUrls.Web.GAUGEADD, GaugesController.addGauge);
+		post(PathUrls.Web.GAUGEDEL, GaugesController.deleteGauge);
+		post(PathUrls.Web.GAUGEUPD, GaugesController.updateGauge);
+
+		post(PathUrls.Web.USERS, UserController.getAllUsers);
+		post(PathUrls.Web.USER, UserController.getUser);
+		post(PathUrls.Web.USERGET, UserController.getUserByAccessId);
+		post(PathUrls.Web.USERADD, UserController.createUser);
+		post(PathUrls.Web.USERDEL, UserController.deleteUser);
+		post(PathUrls.Web.USERUPD, UserController.changeUser);
+		post(PathUrls.Web.USERCHANGEPASSWORD, UserController.changePassword);
+
+		post(PathUrls.Web.USERSBYROLE, UserController.getUsersByRole);
+		post(PathUrls.Web.ROLES, UserController.getRoles);
+		post(PathUrls.Web.USERADDROLE, UserController.addUserRole);
+		post(PathUrls.Web.USERDELETEROLE, UserController.deleteUserRole);
+
+		post(PathUrls.Web.DEVICENETWORKSET, DeviceController.setNetworkSettings);
+		post(PathUrls.Web.DEVICENETWORKGET, DeviceController.getNetworkSettings);
+		writeUptime(options.updelay);
+	}
+
+	private static void writeUptime(int delay) {
+		String fileName = System.getProperty("user.dir") + File.separator + "uptime.txt";
+		Timer timer = new Timer(1000 * delay, new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				Path path = Paths.get(fileName);
+				try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
+						StandardOpenOption.CREATE)) {
+					writer.write(LocalDateTime.now().toString());
+
+				} catch (IOException e) {
+					// handle the exception
+					// basic handling
+					System.out.println(e.getMessage());
+
+				}
+			}
+		});
+		timer.start();
 	}
 
 	// Enables CORS on requests. This method is an initialization method and

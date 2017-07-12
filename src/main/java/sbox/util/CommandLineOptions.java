@@ -24,4 +24,6 @@ public class CommandLineOptions {
 
     @Parameter(names = {"--db-port"})
     public Integer dbPort = 3306;
+    @Parameter(names = {"--updelay"})
+    public Integer updelay = 10;
 }

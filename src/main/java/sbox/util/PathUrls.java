@@ -1,6 +1,6 @@
 package sbox.util;
 import lombok.*;
-public class Path {
+public class PathUrls {
 	 // The @Getter methods are needed in order to access
     // the variables from Velocity Templates
     public static class Web {
@@ -14,6 +14,8 @@ public class Path {
         /* DEVICE */
         @Getter public static final String DEVICE = "/device/";
         @Getter public static final String DEVICEUPD = "/device/change/";
+        @Getter public static final String DEVICENETWORKSET = "/device/network/set/";
+        @Getter public static final String DEVICENETWORKGET = "/device/network/";
         /* EFFECTS */
         @Getter public static final String EFFECTS = "/effects/";
         @Getter public static final String BARS = "/bars/";
@@ -39,6 +41,7 @@ public class Path {
         @Getter public static final String USERDELETEROLE = "/users/deleterole/";
         @Getter public static final String ROLES = "/roles/";
         @Getter public static final String USERSBYROLE = "/users/byrole/";
+		 
     }
 
     public static class Template {

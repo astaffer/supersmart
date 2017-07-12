@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import sbox.user.User;
 import sbox.user.UserController;
 import sbox.util.JsonUtil;
-import sbox.util.Path;
+import sbox.util.PathUrls;
 import sbox.util.ViewUtil;
 import spark.Request;
 import spark.Response;
@@ -24,7 +24,7 @@ public class AuthController {
 		response.status(HTTP_GOOD_REQUEST);
 		Map<String, Object> model = new HashMap<>();
 		// model.put("users", userDao.getAllUserNames());
-		return ViewUtil.render(request, model, Path.Template.LOGIN);
+		return ViewUtil.render(request, model, PathUrls.Template.LOGIN);
 	};
 	public static Route serveAuthPost = (Request request, Response response) -> {
 		Auth auth = new Auth();
