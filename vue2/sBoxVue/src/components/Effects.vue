@@ -1,5 +1,27 @@
 <template>
   <div class="effects">
+    <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
+      <md-dialog-title>Указать период</md-dialog-title>
+      <md-dialog-content>
+        <form>
+          <md-input-container>
+            <label>Дата от</label>
+            <md-input type="text" v-model="dateFromStr"></md-input>
+            <span class="md-error">Ошибка при заполнении</span>
+          </md-input-container>
+          <md-input-container>
+            <label>Дата до</label>
+            <md-input type="text" v-model="dateToStr"></md-input>
+            <span class="md-error">Ошибка при заполнении</span>
+          </md-input-container>
+        </form>
+      </md-dialog-content>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" @click.native="closeDialog('dialog2')">Отмена</md-button>
+        <md-button class="md-primary" @click.native="getEffectsCustom()">Применить</md-button>
+      </md-dialog-actions>
+    </md-dialog>
     <md-layout md-gutter>
       <md-layout md-flex="60" md-flex-offset="10">
         <md-button-toggle md-single class="md-accent">
@@ -9,11 +31,11 @@
           <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
           <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
           <md-button @click.native="getEffects(365,1)" >Год</md-button>
-          <md-button>{{ datesButtonLabel }}</md-button>
+          <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
         </md-button-toggle>   
       </md-layout>
     </md-layout>
-    <md-layout md-align="end" md-gutter>
+    <md-layout md-align="end" md-gutter style="margin-top:10px">
       <md-layout md-flex="30" >
         <md-button-toggle md-single class="md-accent">
           <md-button 
@@ -86,6 +108,8 @@ export default {
       dtc: {},
       dateFrom: {},
       dateTo: {},
+      dateFromStr: '',
+      dateToStr: '',
       eff: [],
       percents: []
     }
@@ -150,21 +174,19 @@ export default {
     datesButtonLabel: function () {
       var options = {
         year: 'numeric',
-        month: 'short',
+        month: 'numeric',
         day: 'numeric'
       }
-      var dateFromStr = this.dateFrom.toLocaleString('ru', options)
-      var dateToStr = this.getDate(0).toLocaleString('ru', options)
-      return `${dateFromStr}-${dateToStr}`
+      this.dateFromStr = this.dateFrom.toLocaleString('ru', options)
+      this.dateToStr = this.dateTo.toLocaleString('ru', options)
+      return `${this.dateFromStr}-${this.dateToStr}`
     }
   },
   mounted () {
     this.getEffects(0, 1)
   },
   methods: {
-    getEffects (daysBack, to) {
-      this.dateFrom = this.getDate(-daysBack)
-      this.dateTo = this.getDate(to)
+    getEffs () {
       effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour').then(response => {
         var effectsData = effects.prepareData(response.data)
         this.eff = effectsData.eff
@@ -186,11 +208,32 @@ export default {
         console.log(this.error)
       })
     },
+    getEffects (daysBack, to) {
+      this.dateFrom = this.getDate(-daysBack)
+      this.dateTo = this.getDate(to)
+      this.getEffs()
+    },
+    getEffectsCustom () {
+      this.getEffs()
+      this.closeDialog('dialog2')
+    },
     getDate (days) {
       var date = new Date()
       date.setHours(0, 0, 0, 0)
       var newDate = new Date(date.setTime(date.getTime() + days * 86400000))
       return newDate
+    },
+    openDialog (ref) {
+      this.$refs[ref].open()
+    },
+    closeDialog (ref) {
+      this.$refs[ref].close()
+    },
+    onOpen () {
+      console.log('Opened')
+    },
+    onClose (type) {
+      console.log('Closed', type)
     }
   },
   components: {

@@ -37,12 +37,16 @@
               <md-input v-model="selectedUser.user_email">{{selectedUser.user_email}}</md-input>
             </md-input-container>
             <md-button class="md-raised md-accent" @click.native="updateCreateUser(selectedUser)" >Применить</md-button>
-            <h1 class="md-title">Роли</h1>
+            
+            <h1 class="md-title">Роли
+            <md-button class="md-icon-button md-raised md-dense">
+                          <md-icon>add</md-icon></md-button></h1>
             <md-table>
               <md-table-header>
                 <md-table-row>
                 <md-table-head>Роль</md-table-head>
-                <md-table-head></md-table-head>
+                <md-table-head> 
+                </md-table-head>
                 </md-table-row>
               </md-table-header>
               <md-table-body>

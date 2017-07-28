@@ -44,8 +44,8 @@ export default {
   data () {
     return {
       msg: '',
-      ip: '',
-      mask: '',
+      ip: '10.0.0.1',
+      mask: '255.255.255.0',
       gateway: '',
       dns: '1.1.1.1',
       dhcp: false,
