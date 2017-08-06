@@ -50,13 +50,13 @@ export default {
       this.deviceInfo.id = response.data.device_id
       this.deviceInfo.name = response.data.device_name
     }, response => {
-      this.error = 'Error when get device data'
+      this.error = 'Ошибка получения данных устройства, сервис недоступен'
       console.log(this.error)
     })
     userservice.getUser(this).then(response => {
       this.user = response.data
     }, response => {
-      this.error = 'Error when get user data'
+      this.error = 'Ошибка получения данных пользователя, сервис недоступен'
       console.log(this.error)
     })
   },
@@ -66,7 +66,7 @@ export default {
         this.deviceInfo.id = response.data.device_id
         this.deviceInfo.name = response.data.device_name
       }, response => {
-        this.error = 'Error when get device data'
+        this.error = 'Ошибка получения данных устройства, сервис недоступен'
         console.log(this.error)
       })
     }

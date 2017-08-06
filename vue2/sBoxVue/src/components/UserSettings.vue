@@ -72,7 +72,7 @@ export default {
         auth.login(this, credentials, null)
         this.openDialog('dialog_user')
       }, response => {
-        this.error = 'Error when change pass'
+        this.error = 'Ошибка при изменении пароля'
       })
     },
     openDialog (ref) {

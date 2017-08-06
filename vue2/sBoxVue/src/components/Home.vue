@@ -12,18 +12,32 @@
 </md-layout>
 <md-layout md-align="center" md-gutter="10">
   <md-layout md-flex="35" md-align="center">
-    <md-button class="md-raised md-accent" @click.native="$router.push({ name: 'Login' })">Вход</md-button>
+    <md-button class="md-raised md-accent" v-if="!error" @click.native="$router.push({ name: 'Login' })">Вход</md-button>
+    <md-card class="md-warn" v-if="error">
+              <p>{{ error }}</p>
+   </md-card>
   </md-layout>
+   
 </md-layout>
 </div>
 </template>
 <script>
+import service from '../service'
 export default {
   name: 'home',
   data () {
     return {
-      msg: 'Добро пожаловать'
+      msg: 'Добро пожаловать',
+      error: ''
     }
+  },
+  mounted () {
+    this.$http.get(service.getStatusUrl()).then(response => {
+      this.error = ''
+    }, response => {
+      this.error = 'Ошибка подключения, сервис недоступен.'
+      console.log(this.error)
+    })
   }
 }
 </script>

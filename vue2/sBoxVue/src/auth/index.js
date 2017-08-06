@@ -20,10 +20,10 @@ export default {
           router.push({path: redirect})
         }
       } else {
-        context.error = 'Error:' + response.data.message
+        context.error = 'Ошибка:' + response.data.message
       }
     }, response => {
-      context.error = 'Error when auth attempt check the net'
+      context.error = 'Ошибка при попытке аутентификации, сервис или база данных не доступны.'
     // error callback
     })
   },

@@ -6,17 +6,14 @@
         <form>
           <md-input-container>
             <label>Дата от</label>
-            <md-input type="text" v-model="dateFromStr"></md-input>
-            <span class="md-error">Ошибка при заполнении</span>
+            <md-input v-model="dateFromStr"></md-input>
           </md-input-container>
           <md-input-container>
             <label>Дата до</label>
-            <md-input type="text" v-model="dateToStr"></md-input>
-            <span class="md-error">Ошибка при заполнении</span>
+            <md-input v-model="dateToStr"></md-input>
           </md-input-container>
         </form>
       </md-dialog-content>
-
       <md-dialog-actions>
         <md-button class="md-primary" @click.native="closeDialog('dialog2')">Отмена</md-button>
         <md-button class="md-primary" @click.native="getEffectsCustom()">Применить</md-button>
@@ -64,7 +61,6 @@
         <md-card class="md-warn" v-if="error">
                 <p>{{ error }}</p>
         </md-card>
-        
         <div class="chart-container" v-if="dataLoaded">
           <commitChart 
             :width = "800" 
@@ -101,6 +97,8 @@ export default {
   data () {
     return {
       msg: 'Эффективность',
+      dateFromStr: '',
+      dateToStr: '',
       error: '',
       dataLoaded: true,
       showTable: false,
@@ -108,8 +106,6 @@ export default {
       dtc: {},
       dateFrom: {},
       dateTo: {},
-      dateFromStr: '',
-      dateToStr: '',
       eff: [],
       percents: []
     }
@@ -172,13 +168,13 @@ export default {
       return s
     },
     datesButtonLabel: function () {
-      var options = {
+      /* var options = {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric'
-      }
-      this.dateFromStr = this.dateFrom.toLocaleString('ru', options)
-      this.dateToStr = this.dateTo.toLocaleString('ru', options)
+      } */
+      // this.dateFromStr = this.dateFrom.toLocaleString('ru', options)
+      // this.dateToStr = this.dateTo.toLocaleString('ru', options)
       return `${this.dateFromStr}-${this.dateToStr}`
     }
   },
@@ -204,18 +200,36 @@ export default {
             }]
         }
       }, response => {
-        this.error = 'Error when get effects data'
+        this.error = 'Ошибка при получении показателей, сервис недоступен'
         console.log(this.error)
       })
     },
     getEffects (daysBack, to) {
       this.dateFrom = this.getDate(-daysBack)
       this.dateTo = this.getDate(to)
+      var options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+      }
+      this.dateFromStr = this.dateFrom.toLocaleString('ru', options)
+      this.dateToStr = this.dateTo.toLocaleString('ru', options)
       this.getEffs()
     },
     getEffectsCustom () {
+      this.dateFrom = this.parseDateFromStr(this.dateFromStr)
+      this.dateTo = this.parseDateFromStr(this.dateToStr)
       this.getEffs()
       this.closeDialog('dialog2')
+    },
+    parseDateFromStr (dateStr) {
+      var dateArr = dateStr.split('.')
+      var date = new Date()
+      date.setYear(dateArr[2])
+      date.setMonth(dateArr[1] - 1)
+      date.setDate(dateArr[0])
+      date.setHours(0, 0, 0, 0)
+      return date
     },
     getDate (days) {
       var date = new Date()

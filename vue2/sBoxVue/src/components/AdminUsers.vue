@@ -5,6 +5,24 @@
   :md-ok-text="alert.ok"
   ref="dialog_network">
   </md-dialog-alert>
+  <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
+      <md-dialog-title>Выбрать роль</md-dialog-title>
+      <md-dialog-content>
+        <form>
+          <md-input-container>
+            <label>Роль</label>
+            <md-select v-model="addingRole">
+              <md-option v-for="role in roles" :key="role" v-bind:value="role">{{ role }}</md-option>
+            </md-select>
+            <span class="md-error">Ошибка при заполнении</span>
+          </md-input-container>
+        </form>
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button class="md-primary" @click.native="closeDialog('dialog2')">Отмена</md-button>
+        <md-button class="md-primary" @click.native="addUserRole()">Применить</md-button>
+      </md-dialog-actions>
+    </md-dialog>
    <md-layout md-gutter >
       <md-layout md-flex="33" md-flex-offset="20">
           <md-list class="custom-list md-triple-line settings">
@@ -39,7 +57,7 @@
             <md-button class="md-raised md-accent" @click.native="updateCreateUser(selectedUser)" >Применить</md-button>
             
             <h1 class="md-title">Роли
-            <md-button class="md-icon-button md-raised md-dense">
+            <md-button  @click.native="openDialog('dialog2')" id="fab" class="md-icon-button md-raised md-dense">
                           <md-icon>add</md-icon></md-button></h1>
             <md-table>
               <md-table-header>
@@ -53,7 +71,7 @@
                 <md-table-row v-for="role in selectedUser.roles" :key="role">
                   <md-table-cell>{{ role }}</md-table-cell>
                   <md-table-cell>
-                    <md-button class="md-icon-button">
+                    <md-button @click.native="deleteUserRole(role)" class="md-icon-button">
                       <md-icon>delete</md-icon>
                     </md-button>
                   </md-table-cell>
@@ -80,6 +98,7 @@ export default {
         user_email: '',
         roles: []
       },
+      addingRole: '',
       roles: [],
       error: '',
       alert: {
@@ -89,14 +108,7 @@ export default {
     }
   },
   mounted () {
-    userservice.getUsers(this).then(response => {
-      this.users = response.data
-      this.error = ''
-      this.showUser(this.users[0])
-    }, response => {
-      this.error = 'Error when get users data'
-      console.log(this.error)
-    })
+    this.readUsers()
     userservice.getRoles(this).then(response => {
       this.roles = response.data
       this.error = ''
@@ -108,6 +120,16 @@ export default {
   computed: {
   },
   methods: {
+    readUsers () {
+      userservice.getUsers(this).then(response => {
+        this.users = response.data
+        this.error = ''
+        this.showUser(this.users[0])
+      }, response => {
+        this.error = 'Ошибка при получении данных пользователей'
+        console.log(this.error)
+      })
+    },
     showUser (user) {
       this.selectedUser = user
       this.activeItem = user.user_id
@@ -129,17 +151,53 @@ export default {
         userservice.createUser(this, user).then(response => {
           this.error = ''
         }, response => {
-          this.error = 'Error when create user data'
+          this.error = 'Ошибка при создании пользователя, сервис недоступен'
           console.log(this.error)
         })
       } else {
         userservice.updateUser(this, user).then(response => {
           this.error = ''
         }, response => {
-          this.error = 'Error when upadate user data'
+          this.error = 'Ошибка при обновлении данных пользователя, сервис недоступен'
           console.log(this.error)
         })
       }
+    },
+    deleteUserRole (delrole) {
+      userservice.deleteUserRole(this, this.selectedUser, delrole).then(response => {
+        console.log(response.data)
+        this.selectedUser = response.data
+        function findUser (_userid) {
+          return function (element) {
+            return element.user_id === _userid
+          }
+        }
+        var user = this.users.filter(findUser(this.selectedUser.user_id))
+        user[0].roles = response.data.roles
+        this.error = ''
+      }, response => {
+        this.error = 'Error when get roles data'
+        console.log(this.error)
+      })
+    },
+    addUserRole () {
+      console.log(this.addingRole)
+      userservice.addUserRole(this, this.selectedUser, this.addingRole).then(response => {
+        console.log(response.data)
+        this.selectedUser = response.data
+        function findUser (_userid) {
+          return function (element) {
+            return element.user_id === _userid
+          }
+        }
+        var user = this.users.filter(findUser(this.selectedUser.user_id))
+        user[0].roles = response.data.roles
+        this.error = ''
+      }, response => {
+        this.error = 'Error when get roles data'
+        console.log(this.error)
+      })
+      this.closeDialog('dialog2')
     },
     openDialog (ref) {
       this.$refs[ref].open()

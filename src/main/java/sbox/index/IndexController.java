@@ -22,11 +22,15 @@ public class IndexController {
 			response.redirect("/index.html");
 		 return null;
 	};
+	public static Route getStatus = (Request request, Response response) -> {
+		response.status(HTTP_GOOD_REQUEST);
+		response.type(RESPONSE_TYPE);
+		return JsonUtil.dataToJson("online");
+	};
 	public static Route getMachineData = (Request request, Response response) -> {
 		response.status(HTTP_GOOD_REQUEST);
 		response.type(RESPONSE_TYPE);
-		return JsonUtil.dataToJson("Станок сушки");
-	  
+		return JsonUtil.dataToJson("Станок");
 };
 	 
 }

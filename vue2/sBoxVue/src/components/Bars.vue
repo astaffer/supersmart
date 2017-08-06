@@ -128,20 +128,23 @@ export default {
     }
   },
   mounted () {
-    barservice.getBars(this).then(response => {
-      this.bars = response.data
-    }, response => {
-      this.error = 'Error when get bar data'
-      console.log(this.error)
-    })
+    this.readBars()
     sensorservice.getAllSensors(this).then(response => {
       this.sensors = response.data
     }, response => {
-      this.error = 'Error when get sensors data'
+      this.error = 'Ошибка при получении данных датчиков'
       console.log(this.error)
     })
   },
   methods: {
+    readBars () {
+      barservice.getBars(this).then(response => {
+        this.bars = response.data
+      }, response => {
+        this.error = 'Ошибка при получении данных показателей'
+        console.log(this.error)
+      })
+    },
     hasAdminAccess () {
       return this.user.roles.includes('admin')
     },
@@ -162,6 +165,7 @@ export default {
     deleteBar (barId) {
       barservice.deleteBar(this, barId).then(response => {
         console.log(response.data)
+        this.readBars()
       }, response => {
         console.log('error')
       })
@@ -170,6 +174,7 @@ export default {
     createBar (bar) {
       barservice.createBar(this, bar).then(response => {
         console.log(response.data)
+        this.readBars()
       }, response => {
         console.log('error')
       })

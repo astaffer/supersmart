@@ -173,21 +173,24 @@ export default {
     }
   },
   mounted () {
-    Gauge.getGauges(this).then(response => {
-      this.gauges = response.data
-      console.log(this.gauges)
-    }, response => {
-      this.error = 'Error when get bar data'
-      console.log(this.error)
-    })
+    this.readGauges()
     sensorservice.getAllSensors(this).then(response => {
       this.sensors = response.data
     }, response => {
-      this.error = 'Error when get sensors data'
+      this.error = 'Ошибка при получении данных датчиков'
       console.log(this.error)
     })
   },
   methods: {
+    readGauges () {
+      Gauge.getGauges(this).then(response => {
+        this.gauges = response.data
+        console.log(this.gauges)
+      }, response => {
+        this.error = 'Ошибка при получении показателей, сервис недоступен'
+        console.log(this.error)
+      })
+    },
     hasAdminAccess () {
       return this.user.roles.includes('admin')
     },
@@ -207,6 +210,7 @@ export default {
     },
     deleteGauge (gaugeId) {
       Gauge.deleteGauge(this, gaugeId).then(response => {
+        this.readGauges()
       }, response => {
         console.log('error')
       })
@@ -214,6 +218,7 @@ export default {
     createGauge (gauge) {
       Gauge.createGauge(this, gauge).then(response => {
         gauge = response.data
+        this.readGauges()
       }, response => {
         console.log('error')
       })

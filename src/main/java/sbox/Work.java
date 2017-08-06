@@ -56,6 +56,7 @@ public class Work {
 		enableCORS("*", "GET,POST", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin");
 		// Set up routes
 		get(PathUrls.Web.INDEX, IndexController.serveWebPack);
+		get(PathUrls.Web.STATUS, IndexController.getStatus);
 		get(PathUrls.Web.AUTH, AuthController.serveAuth);
 		post(PathUrls.Web.AUTH, AuthController.serveAuthPost);
 

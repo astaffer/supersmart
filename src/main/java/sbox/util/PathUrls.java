@@ -5,6 +5,7 @@ public class PathUrls {
     // the variables from Velocity Templates
     public static class Web {
         @Getter public static final String INDEX = "/index/";
+        @Getter public static final String STATUS = "/status/";
         @Getter public static final String LOGOUT = "/logout/";
         @Getter public static final String AUTH = "/auth/";
         @Getter public static final String LIVE = "/live/";

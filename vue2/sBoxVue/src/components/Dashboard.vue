@@ -156,7 +156,7 @@ export default {
     device.getDeviceFromService(this).then(response => {
       this.deviceInfo = response.data.device_name + ' ' + response.data.device_id
     }, response => {
-      this.error = 'Error when get device data'
+      this.error = 'Ошибка при получении данных устройства'
       console.log(this.error)
     })
   },

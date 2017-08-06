@@ -55,19 +55,24 @@ export default {
       return context.$http.post(service.getUsersCreateUrl(), creds)
     }
   },
-  addUserRole (context, user) {
+  addUserRole (context, user, newrole) {
     if (auth.user.authenticated) {
       var creds = {
-        access_id: auth.getAccessId()
+        access_id: auth.getAccessId(),
+        username: user.user_name,
+        role: newrole
       }
       return context.$http.post(service.getUsersAddRoleUrl(), creds)
     }
   },
-  deleteUserRole (context, user) {
+  deleteUserRole (context, user, delrole) {
     if (auth.user.authenticated) {
       var creds = {
-        access_id: auth.getAccessId()
+        access_id: auth.getAccessId(),
+        username: user.user_name,
+        role: delrole
       }
+      console.log(creds)
       return context.$http.post(service.getUsersDeleteRoleUrl(), creds)
     }
   },

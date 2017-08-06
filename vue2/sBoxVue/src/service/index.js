@@ -1,5 +1,5 @@
 const HOST_NAME = location.hostname
-const HOST_PORT = '8080'
+const HOST_PORT = '80'
 const API_URL = 'http://' + HOST_NAME + ':' + HOST_PORT + '/'
 const LOGIN_URL = 'auth/'
 const SENSORS_URL = 'sensors/'
@@ -17,10 +17,13 @@ const BYROLE_URL = 'byrole/'
 const ADDROLE_URL = 'addrole/'
 const DELETEROLE_URL = 'deleterole/'
 const CHANGEPASS_URL = 'changepass/'
-
+const STATUS_URL = 'status/'
 export default {
   getApiUrl (api) {
     return API_URL + api
+  },
+  getStatusUrl () {
+    return this.getApiUrl(STATUS_URL)
   },
   getAuthUrl () {
     return this.getApiUrl(LOGIN_URL)

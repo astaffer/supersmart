@@ -43,7 +43,7 @@ export default {
       this.deviceInfo.id = response.data.device_id
       this.deviceInfo.name = response.data.device_name
     }, response => {
-      this.error = 'Error when get device data'
+      this.error = 'Ошибка при получении данных устройства'
       console.log(this.error)
     })
   },
@@ -54,7 +54,7 @@ export default {
         this.deviceInfo.name = response.data.device_name
         this.openDialog('dialog3')
       }, response => {
-        this.error = 'Error when get device data'
+        this.error = 'Ошибка при получении данных устройства'
         console.log(this.error)
       })
     },
