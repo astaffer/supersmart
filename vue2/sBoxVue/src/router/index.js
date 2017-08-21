@@ -9,6 +9,7 @@ import AdminUsers from '@/components/AdminUsers'
 import Effects from '@/components/Effects'
 import Services from '@/components/Services'
 import Properties from '@/components/Properties'
+import SideNav from '@/components/SideNav'
 
 Vue.use(Router)
 export default new Router({
@@ -60,6 +61,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/sidenav',
+      name: 'SideNav',
+      component: SideNav
     },
     {
       path: '*',

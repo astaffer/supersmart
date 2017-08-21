@@ -1,6 +1,9 @@
 <template>
-  <div id="app">
+  <div id="app" class="mainapp">
     <md-toolbar class="md-dense">
+      <md-button class="md-icon-button" @click.native="toggleLeftSidenav" v-if="user.authenticated">
+        <md-icon>menu</md-icon>
+      </md-button>
       <md-button class="md-icon-button" @click.native="$router.push({ name: 'Home' })">
         <md-icon>cloud</md-icon>
       </md-button>
@@ -18,6 +21,15 @@
         <md-icon>exit_to_app</md-icon>
       </md-button>
     </md-toolbar>
+    <md-sidenav class="md-left" ref="leftSidenav" @open="open('Left')" @close="close('Left')" v-if="user.authenticated">
+      <md-toolbar class="md-large">
+        <div class="md-toolbar-container">
+          <h3 class="md-title">Sidenav content</h3>
+        </div>
+      </md-toolbar>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi cupiditate esse necessitatibus beatae nobis, deserunt ut est fugit, tempora deleniti, eligendi commodi doloribus. Nemo, assumenda possimus, impedit inventore perferendis iusto!</p>
+    </md-sidenav>
     <router-view></router-view>
   </div>
 </template>
@@ -34,6 +46,15 @@ export default {
   methods: {
     logout () {
       auth.logout()
+    },
+    toggleLeftSidenav () {
+      this.$refs.leftSidenav.toggle()
+    },
+    open (ref) {
+      console.log('Opened: ' + ref)
+    },
+    close (ref) {
+      console.log('Closed: ' + ref)
     }
   }
 }
@@ -50,5 +71,12 @@ export default {
 html {
     overflow: -moz-scrollbars-vertical; 
     overflow-y: scroll;
+}
+@media (min-width: 1280px) {
+  .md-sidenav-content {
+    top: 0;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
+  }
 }
 </style>
