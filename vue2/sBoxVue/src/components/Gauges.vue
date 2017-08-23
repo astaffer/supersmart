@@ -10,7 +10,21 @@
               :md-ok-text="alert.ok"
               ref="dialog_gauge">
               </md-dialog-alert>
-
+            <md-dialog-alert
+              :md-content="alert.content_error"
+              :md-ok-text="alert.ok"
+              ref="dialog_gauge_error">
+              </md-dialog-alert>
+              <md-dialog-alert
+              :md-content="alert.content_add"
+              :md-ok-text="alert.ok"
+              ref="dialog_gauge_add">
+              </md-dialog-alert>
+              <md-dialog-alert
+              :md-content="alert.content_del"
+              :md-ok-text="alert.ok"
+              ref="dialog_gauge_add">
+              </md-dialog-alert>
           </md-card-header>
           <md-card-content>
             <md-layout md-gutter md-align="center">
@@ -68,6 +82,15 @@
                   </md-input-container>
                 </md-layout>
             </md-layout>
+            <md-layout md-gutter md-align="center">
+              <md-layout md-flex="33">
+                <md-input-container>
+                    <label>Дата старт</label>
+                    <md-input maxlength="10" v-model="newgauge.init_date"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                </md-input-container>
+              </md-layout>
+            </md-layout>
           </md-card-content>
           <md-card-actions>
             <md-button  @click.native="createGauge(newgauge)">Добавить</md-button>
@@ -82,63 +105,73 @@
           <md-card-content>
             <md-layout md-gutter md-align="center">
                 <md-layout md-flex="33">
-                <md-input-container>
-                  <label>Наименование</label>
-                  <md-input maxlength="30" v-model="gauge.gauge_label" :disabled="!hasAdminAccess()"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
-                <md-input-container>
-                  <label>Единицы</label>
-                  <md-input maxlength="10" v-model="gauge.gauge_unit" :disabled="!hasAdminAccess()"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
-                <md-input-container>
-                  <label>Начальное значение</label>
-                  <md-input type="number" v-model="gauge.init_value"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
+                  <md-input-container>
+                    <label>Наименование</label>
+                    <md-input maxlength="30" v-model="gauge.gauge_label" :disabled="!hasAdminAccess()"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
+                  <md-input-container>
+                    <label>Единицы</label>
+                    <md-input maxlength="10" v-model="gauge.gauge_unit" :disabled="!hasAdminAccess()"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
+                  <md-input-container>
+                    <label>Начальное значение</label>
+                    <md-input type="number" v-model="gauge.init_value"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
                 </md-layout>
                 <md-layout md-flex-offset="5">
-                <md-input-container>
-                  <label>Предельное значение</label>
-                  <md-input type="number" v-model="gauge.limit_value"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
-                
-                <md-input-container>
-                  <label>Датчик</label>
-                  <md-select v-model="gauge.sensor_id" :disabled="!hasAdminAccess()">
-                    <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
-                  </md-select>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
-                <md-input-container>
-                  <label>Порядковый номер</label>
-                  <md-input type="number" v-model="gauge.sort_order"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
-                
+                  <md-input-container>
+                    <label>Предельное значение</label>
+                    <md-input type="number" v-model="gauge.limit_value"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
+                  
+                  <md-input-container>
+                    <label>Датчик</label>
+                    <md-select v-model="gauge.sensor_id" :disabled="!hasAdminAccess()">
+                      <md-option v-for="sensor in sensors" :key="sensor.sensor_id" v-bind:value="sensor.sensor_id">{{ sensor.sensor_name }}</md-option>
+                    </md-select>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
+                  <md-input-container>
+                    <label>Порядковый номер</label>
+                    <md-input type="number" v-model="gauge.sort_order"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
                 </md-layout>
                 <md-layout md-flex-offset="5">
-                <md-input-container class="md-accent">
-                  <label>Зеленая зона</label>
-                  <md-input type="number" v-model="gauge.start_green"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
-                <md-input-container>
-                  <label>Оранжевая зона</label>
-                  <md-input type="number" v-model="gauge.start_yellow"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
-                <md-input-container>
-                  <label>Красная зона</label>
-                  <md-input type="number" v-model="gauge.start_red"></md-input>
-                  <span class="md-error">Ошибка при заполнении</span>
-                </md-input-container>
+                  <md-input-container class="md-accent">
+                    <label>Зеленая зона</label>
+                    <md-input type="number" v-model="gauge.start_green"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
+                  <md-input-container>
+                    <label>Оранжевая зона</label>
+                    <md-input type="number" v-model="gauge.start_yellow"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
+                  <md-input-container>
+                    <label>Красная зона</label>
+                    <md-input type="number" v-model="gauge.start_red"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                  </md-input-container>
+                  
                 </md-layout>
+            </md-layout>
+            <md-layout md-gutter md-align="center">
+              <md-layout md-flex="33">
+                <md-input-container>
+                    <label>Дата старт</label>
+                    <md-input maxlength="10" v-model="gauge.init_date" :disabled="!hasAdminAccess()"></md-input>
+                    <span class="md-error">Ошибка при заполнении</span>
+                </md-input-container>
+              </md-layout>
             </md-layout>
           </md-card-content>
           <md-card-actions>
+            <md-button @click.native="">Сбросить</md-button>
             <md-button @click.native="updateGauge(gauge)">Изменить</md-button>
             <md-button @click.native="deleteGauge(gauge.gauge_id)" v-if="hasAdminAccess()">Удалить</md-button>
           </md-card-actions>
@@ -150,7 +183,7 @@
 <script>
 import Gauge from '../gauges'
 import sensorservice from '../sensor'
-import DatePick from '../helpers/DatePick'
+import Util from '../util'
 export default {
   name: 'gaugeschange',
   props: {
@@ -159,7 +192,6 @@ export default {
       roles: []
     }
   },
-  components: { datepicker: DatePick },
   data () {
     return {
       error: '',
@@ -168,6 +200,9 @@ export default {
       newgauge: {},
       alert: {
         content: 'Показатель изменен!',
+        content_error: 'Ошибка при изменении показателя!',
+        content_add: 'Показатель добавлен!',
+        content_del: 'Показатель удален!',
         ok: 'OK'
       }
     }
@@ -201,16 +236,21 @@ export default {
       this.$refs[ref].close()
     },
     updateGauge (gauge) {
-      Gauge.updateGauge(this, gauge).then(response => {
+      let localGauge = Object.assign({}, gauge)
+      localGauge.init_date = Util.parseDateFromStr(gauge.init_date)
+      localGauge.mileage_date = Util.parseDateFromStr(gauge.mileage_date)
+      Gauge.updateGauge(this, localGauge).then(response => {
         gauge = response.data
         this.openDialog('dialog_gauge')
       }, response => {
+        this.openDialog('dialog_gauge_error')
         console.log('error')
       })
     },
     deleteGauge (gaugeId) {
       Gauge.deleteGauge(this, gaugeId).then(response => {
         this.readGauges()
+        this.openDialog('dialog_gauge_del')
       }, response => {
         console.log('error')
       })
@@ -219,6 +259,7 @@ export default {
       Gauge.createGauge(this, gauge).then(response => {
         gauge = response.data
         this.readGauges()
+        this.openDialog('dialog_gauge_add')
       }, response => {
         console.log('error')
       })

@@ -1,6 +1,7 @@
 <template>
   <div class="services md-align-center">
   	<md-layout md-gutter md-align="center">
+    Сервис
       <!--<md-layout md-flex="35" md-align="center">
         <h2>Журнал событий</h2>
         <md-list class="custom-list md-triple-line">

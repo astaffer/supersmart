@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="mainapp">
     <md-toolbar class="md-dense">
-      <md-button class="md-icon-button" @click.native="toggleLeftSidenav" v-if="user.authenticated">
+      <md-button class="md-icon-button menubutton" @click.native="toggleLeftSidenav" v-if="user.authenticated">
         <md-icon>menu</md-icon>
       </md-button>
       <md-button class="md-icon-button" @click.native="$router.push({ name: 'Home' })">
@@ -21,14 +21,23 @@
         <md-icon>exit_to_app</md-icon>
       </md-button>
     </md-toolbar>
-    <md-sidenav class="md-left" ref="leftSidenav" @open="open('Left')" @close="close('Left')" v-if="user.authenticated">
-      <md-toolbar class="md-large">
+    <md-sidenav class="md-left-fixed" ref="leftSidenav" @open="open('Left')" @close="close('Left')" v-if="user.authenticated">
+      <md-toolbar class="md-large md-transparent">
         <div class="md-toolbar-container">
-          <h3 class="md-title">Sidenav content</h3>
+          <h3 class="md-title">BrainBox</h3>
         </div>
       </md-toolbar>
-
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi cupiditate esse necessitatibus beatae nobis, deserunt ut est fugit, tempora deleniti, eligendi commodi doloribus. Nemo, assumenda possimus, impedit inventore perferendis iusto!</p>
+      <md-list>
+        <md-list-item @click.native="$router.push({ path: '/dashboard/effects' })">
+             Эффективность 
+        </md-list-item>
+        <md-list-item @click.native="$router.push({ path: '/dashboard/services' })">
+             Сервис 
+        </md-list-item>
+        <md-list-item @click.native="$router.push({ path: '/dashboard/properties' })">
+             Настройки 
+        </md-list-item>
+      </md-list>
     </md-sidenav>
     <router-view></router-view>
   </div>
@@ -72,11 +81,28 @@ html {
     overflow: -moz-scrollbars-vertical; 
     overflow-y: scroll;
 }
+.md-sidenav.md-left-fixed .md-sidenav-content {
+  left: 0;
+  transform: translate3D(-100%,0,0);
+  width: 200px;
+}
+.md-sidenav.md-left-fixed .md-toolbar {
+    min-height: 172px;
+    border-bottom: 1px solid rgba(0,0,0,.12);
+}
 @media (min-width: 1280px) {
-  .md-sidenav-content {
+  .md-sidenav.md-left-fixed .md-sidenav-content {
     top: 0;
     pointer-events: auto;
+    position: fixed;
     transform: translate3d(0, 0, 0);
+    box-shadow: 0 1px 5px rgba(0,0,0,.2), 0 2px 2px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12);
+  }
+  .mainapp {
+    padding-left: 200px;
+  }
+  .menubutton{
+    transform: scale(0);
   }
 }
 </style>

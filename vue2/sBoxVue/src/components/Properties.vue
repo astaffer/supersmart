@@ -1,5 +1,6 @@
 <template>
   <div class="props">
+  Настройки
 		<md-tabs md-fixed>
       <md-tab id="basic" md-label="Основное">
         <md-layout md-gutter md-align="center">

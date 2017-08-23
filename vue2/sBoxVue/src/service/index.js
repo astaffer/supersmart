@@ -1,5 +1,5 @@
 const HOST_NAME = location.hostname
-const HOST_PORT = '80'
+const HOST_PORT = '8080'
 const API_URL = 'http://' + HOST_NAME + ':' + HOST_PORT + '/'
 const LOGIN_URL = 'auth/'
 const SENSORS_URL = 'sensors/'

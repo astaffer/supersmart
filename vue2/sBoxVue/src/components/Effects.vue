@@ -1,5 +1,19 @@
 <template>
   <div class="effects">
+  <md-speed-dial md-open="hover" class="md-fab-bottom-right" md-theme="about">
+    <md-button class="md-fab" md-fab-trigger>
+      <md-icon md-icon-morph>close</md-icon>
+      <md-icon>share</md-icon>
+    </md-button>
+
+    <md-button class="md-fab md-primary md-mini md-clean">
+      <md-icon>email</md-icon>
+    </md-button>
+
+    <md-button class="md-fab md-primary md-mini md-clean">
+      <md-icon>content_copy</md-icon>
+    </md-button>
+  </md-speed-dial>
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
       <md-dialog-title>Указать период</md-dialog-title>
       <md-dialog-content>
@@ -20,7 +34,10 @@
       </md-dialog-actions>
     </md-dialog>
     <md-layout md-gutter>
-      <md-layout md-flex="60" md-flex-offset="10">
+      <md-layout md-flex="60" md-flex-offset="5">
+         Эффективность 
+      </md-layout>
+      <md-layout md-flex="60" md-flex-offset="5">
         <md-button-toggle md-single class="md-accent">
           <md-button @click.native="getEffects(0,1)" class="md-toggle">Сегодня</md-button>
           <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
@@ -32,7 +49,7 @@
         </md-button-toggle>   
       </md-layout>
     </md-layout>
-    <md-layout md-align="end" md-gutter style="margin-top:10px">
+    <!--<md-layout   md-gutter style="margin-top:10px">
       <md-layout md-flex="30" >
         <md-button-toggle md-single class="md-accent">
           <md-button 
@@ -56,19 +73,20 @@
         </md-button>
       </md-layout>
     </md-layout>
+    -->
     <md-layout md-gutter> 
-      <md-layout md-flex="80" md-flex-offset="10" v-if="!showTable">
+      <md-layout md-flex="60" style="margin-left:10px;margin-right:10px;" v-if="!showTable">
         <md-card class="md-warn" v-if="error">
                 <p>{{ error }}</p>
         </md-card>
         <div class="chart-container" v-if="dataLoaded">
           <commitChart 
-            :width = "800" 
+            :width = "600" 
             :chartData = this.dtc
             :options = this.charOpt></commitChart>
         </div> 
       </md-layout>
-      <md-layout md-flex="80" md-align="center" v-if="showTable">
+      <md-layout  style="margin-left:10px;margin-right:10px;"  v-if="!showTable">
         <md-table>
           <md-table-header>
             <md-table-row>
@@ -259,8 +277,8 @@ export default {
 .chart-container{
   min-height: 400px;
   max-height: 400px;
-  min-width: 800px;
-  max-width: 800px;
+  min-width: 700px;
+  max-width: 700px;
   position: relative;
 }
 .effects{
