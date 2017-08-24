@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="mainapp">
+  <div id="app" v-bind:class="{'mainapp': user.authenticated}" class="">
     <md-toolbar class="md-dense">
       <md-button class="md-icon-button menubutton" @click.native="toggleLeftSidenav" v-if="user.authenticated">
         <md-icon>menu</md-icon>
@@ -8,7 +8,7 @@
         <md-icon>cloud</md-icon>
       </md-button>
       <h2 class="md-title" style="flex: 1">BrainBox</h2>
-      <md-button class="md-icon-button"  @click.native="$router.push({ name: 'AdminUsers' })" v-if="user.authenticated">
+      <!--<md-button class="md-icon-button"  @click.native="$router.push({ name: 'AdminUsers' })" v-if="user.authenticated">
         <md-icon>accessibility</md-icon>
       </md-button>
       <md-button class="md-icon-button"  @click.native="$router.push({ path: '/dashboard/effects' })" v-if="user.authenticated">
@@ -17,14 +17,20 @@
       <md-button class="md-icon-button"  @click.native="$router.push({ name: 'Settings' })" v-if="user.authenticated">
         <md-icon>settings</md-icon>
       </md-button>
+      -->
       <md-button class="md-icon-button" v-if="user.authenticated" @click.native="logout()">
         <md-icon>exit_to_app</md-icon>
       </md-button>
     </md-toolbar>
     <md-sidenav class="md-left-fixed" ref="leftSidenav" @open="open('Left')" @close="close('Left')" v-if="user.authenticated">
-      <md-toolbar class="md-large md-transparent">
+      <md-toolbar class="md-large  " md-theme="wh">
         <div class="md-toolbar-container">
-          <h3 class="md-title">BrainBox</h3>
+          <div class="brainbox-logo" >
+            
+              <img src=".\assets\bb6.png"   alt="Brain Box logo">
+             
+            
+          </div>
         </div>
       </md-toolbar>
       <md-list>
@@ -35,6 +41,12 @@
              Сервис 
         </md-list-item>
         <md-list-item @click.native="$router.push({ path: '/dashboard/properties' })">
+             Параметры 
+        </md-list-item>
+        <md-list-item @click.native="$router.push({ path: '/adminusers' })">
+             Пользователи 
+        </md-list-item>
+        <md-list-item @click.native="$router.push({ path: '/settings' })">
              Настройки 
         </md-list-item>
       </md-list>
@@ -89,6 +101,19 @@ html {
 .md-sidenav.md-left-fixed .md-toolbar {
     min-height: 172px;
     border-bottom: 1px solid rgba(0,0,0,.12);
+}
+.brainbox-logo {
+  font-size: 24px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+ 
+}
+.brainbox-logo img {
+   margin-top: 100px;
+   width: 120px;
 }
 @media (min-width: 1280px) {
   .md-sidenav.md-left-fixed .md-sidenav-content {
