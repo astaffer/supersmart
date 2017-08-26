@@ -18,6 +18,7 @@ const ADDROLE_URL = 'addrole/'
 const DELETEROLE_URL = 'deleterole/'
 const CHANGEPASS_URL = 'changepass/'
 const STATUS_URL = 'status/'
+const CLEARDATA_URL = 'cleardata/'
 export default {
   getApiUrl (api) {
     return API_URL + api
@@ -33,6 +34,9 @@ export default {
   },
   getSensorUpdateUrl () {
     return this.getSensorsUrl() + UPDATE_URL
+  },
+  getSensorClearDataUrl () {
+    return this.getSensorsUrl() + CLEARDATA_URL
   },
   getEffectsUrl () {
     return this.getApiUrl(EFFECTS_URL)

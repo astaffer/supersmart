@@ -15,17 +15,32 @@
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
               <md-checkbox v-model="sensor.sensor_type" :disabled="!hasAdminAccess()">Тип:вещественный</md-checkbox>
+              <md-checkbox v-model="sensor.sensor_hide" :disabled="!hasAdminAccess()">Не отображать</md-checkbox>
           </md-card-content>
           <md-card-actions>
             <md-button  @click.native="updateSensor(sensor)" v-if="hasAdminAccess()">Изменить</md-button>
+            <md-button  @click.native="clearSensorData(sensor)" v-if="hasAdminAccess()">Очистить</md-button>
           </md-card-actions>
         </md-card>
       </md-layout>
       <md-dialog-alert
-  :md-content="alert.content"
-  :md-ok-text="alert.ok"
-  ref="dialog_sensor">
-  </md-dialog-alert>
+        :md-content="alert.content"
+        :md-ok-text="alert.ok"
+        ref="dialog_sensor">
+      </md-dialog-alert>
+       <md-dialog-alert
+        :md-content="alert.error"
+        :md-ok-text="alert.ok"
+        ref="dialog_error">
+      </md-dialog-alert>
+      <md-dialog-confirm
+        :md-title="confirm.title"
+        :md-content-html="confirm.contentHtml"
+        :md-ok-text="confirm.ok"
+        :md-cancel-text="confirm.cancel"
+        @close="onCloseClear"
+        ref="dialog_clear">
+      </md-dialog-confirm>
     </md-layout>
   </div>
 </template>
@@ -43,9 +58,17 @@ export default {
     return {
       error: '',
       sensorList: [],
+      sensorToClear: {},
       alert: {
         content: 'Датчик изменен!',
+        error: 'Ошибка при изменении данных датчика!',
         ok: 'OK'
+      },
+      confirm: {
+        title: 'Подтверждение операции',
+        contentHtml: 'Внимание! Данные датчика будут очищены без возможности восстановления.',
+        ok: 'Согласен',
+        cancel: 'Отмена'
       }
     }
   },
@@ -72,8 +95,22 @@ export default {
         sensor = response.data
         this.openDialog('dialog_sensor')
       }, response => {
-        console.log('error')
+        this.openDialog('dialog_error')
       })
+    },
+    clearSensorData (sensor) {
+      this.sensorToClear = sensor
+      this.openDialog('dialog_clear')
+    },
+    onCloseClear (type) {
+      if (type === 'ok') {
+        sensorservice.clearSensorData(this, this.sensorToClear).then(response => {
+          this.openDialog('dialog_sensor')
+        }, response => {
+          this.openDialog('dialog_error')
+        })
+      }
+      this.sensorToClear = {}
     }
   }
 }

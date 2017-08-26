@@ -1,7 +1,15 @@
 <template>
   <div>
-    <md-layout md-gutter md-align="center">
-      <md-layout md-align="center" md-flex="90" v-if="hasAdminAccess()">
+    <md-dialog-confirm
+      :md-title="confirm.title"
+      :md-content-html="confirm.contentHtml"
+      :md-ok-text="confirm.ok"
+      :md-cancel-text="confirm.cancel"
+      @close="onCloseClear"
+      ref="dialog_clear">
+    </md-dialog-confirm>
+    <md-layout md-gutter>
+      <md-layout  md-flex="65" v-if="hasAdminAccess()">
         <md-card md-with-hover style="width:90%">
           <md-card-header>
             <div class="md-title">Новый показатель</div>
@@ -9,21 +17,21 @@
               :md-content="alert.content"
               :md-ok-text="alert.ok"
               ref="dialog_gauge">
-              </md-dialog-alert>
+            </md-dialog-alert>
             <md-dialog-alert
               :md-content="alert.content_error"
               :md-ok-text="alert.ok"
               ref="dialog_gauge_error">
-              </md-dialog-alert>
+            </md-dialog-alert>
               <md-dialog-alert
               :md-content="alert.content_add"
               :md-ok-text="alert.ok"
               ref="dialog_gauge_add">
-              </md-dialog-alert>
+            </md-dialog-alert>
               <md-dialog-alert
               :md-content="alert.content_del"
               :md-ok-text="alert.ok"
-              ref="dialog_gauge_add">
+              ref="dialog_gauge_del">
               </md-dialog-alert>
           </md-card-header>
           <md-card-content>
@@ -97,10 +105,10 @@
           </md-card-actions>
         </md-card>
       </md-layout>
-      <md-layout md-align="center" v-for="gauge in gauges" :key="gauge.gauge_id" md-flex="90">
+      <md-layout v-for="gauge in gauges" :key="gauge.gauge_id" md-flex="65">
         <md-card md-with-hover style="width:90%">
           <md-card-header>
-            <div class="md-title">Показатель: {{ gauge.gauge_id }}</div>
+            <div class="md-title">Показатель: {{ gauge.gauge_id }} Текущее значение {{ gauge.gauge_value}}</div>
           </md-card-header>
           <md-card-content>
             <md-layout md-gutter md-align="center">
@@ -171,7 +179,7 @@
             </md-layout>
           </md-card-content>
           <md-card-actions>
-            <md-button @click.native="">Сбросить</md-button>
+            <md-button @click.native="clearGauge(gauge)">Сбросить</md-button>
             <md-button @click.native="updateGauge(gauge)">Изменить</md-button>
             <md-button @click.native="deleteGauge(gauge.gauge_id)" v-if="hasAdminAccess()">Удалить</md-button>
           </md-card-actions>
@@ -198,12 +206,19 @@ export default {
       gauges: [],
       sensors: [],
       newgauge: {},
+      gaugeToClear: {},
       alert: {
         content: 'Показатель изменен!',
         content_error: 'Ошибка при изменении показателя!',
         content_add: 'Показатель добавлен!',
         content_del: 'Показатель удален!',
         ok: 'OK'
+      },
+      confirm: {
+        title: 'Подтверждение операции',
+        contentHtml: 'Показатель будет обнулен',
+        ok: 'Согласен',
+        cancel: 'Отмена'
       }
     }
   },
@@ -256,13 +271,36 @@ export default {
       })
     },
     createGauge (gauge) {
-      Gauge.createGauge(this, gauge).then(response => {
+      let localGauge = Object.assign({}, gauge)
+      localGauge.init_date = Util.parseDateFromStr(gauge.init_date)
+      if (gauge.mileage_date) {
+        localGauge.mileage_date = Util.parseDateFromStr(gauge.mileage_date)
+      }
+      Gauge.createGauge(this, localGauge).then(response => {
         gauge = response.data
         this.readGauges()
         this.openDialog('dialog_gauge_add')
       }, response => {
         console.log('error')
       })
+    },
+    clearGauge (gauge) {
+      this.gaugeToClear = gauge
+      this.openDialog('dialog_clear')
+    },
+    onCloseClear (type) {
+      if (type === 'ok') {
+        let localGauge = Object.assign({}, this.gaugeToClear)
+        localGauge.init_date = Date.now()
+        localGauge.mileage_date = Util.parseDateFromStr(this.gaugeToClear.mileage_date)
+        Gauge.updateGauge(this, localGauge).then(response => {
+          this.gaugeToClear = response.data
+          this.openDialog('dialog_gauge')
+        }, response => {
+          this.openDialog('dialog_gauge_error')
+        })
+      }
+      this.gaugeToClear = {}
     }
   }
 }

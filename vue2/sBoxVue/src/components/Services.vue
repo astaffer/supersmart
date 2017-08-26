@@ -1,7 +1,10 @@
 <template>
-  <div class="services md-align-center">
-  	<md-layout md-gutter md-align="center">
-    Сервис
+  <div class="services">
+    <md-toolbar class="md-dense">      
+      <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+    </md-toolbar>
+  	<md-layout  md-gutter >
+
       <!--<md-layout md-flex="35" md-align="center">
         <h2>Журнал событий</h2>
         <md-list class="custom-list md-triple-line">
@@ -66,11 +69,18 @@
         </md-list>
       </md-layout>
       -->
-      <md-layout md-flex="20" v-for="(entry, index) in this.gData.gaugesOptions" :key="entry.gauge_id">
-        <radial-gauge 
-          v-bind:options="entry"
-          v-bind:value="gData.gaugesValues[index]">
-        </radial-gauge>
+      <md-layout md-flex="25" class="gauges" v-for="(entry, index) in this.gData.gaugesOptions" :key="entry.gauge_id">
+        <md-card md-with-hover>
+          <md-card-header>
+            <div class="md-title">{{ entry.title }}</div>
+          </md-card-header>
+          <md-card-content>
+            <radial-gauge 
+              v-bind:options="entry"
+              v-bind:value="gData.gaugesValues[index]">
+            </radial-gauge>
+          </md-card-content>
+        </md-card>
       </md-layout>
       <!--<md-layout md-flex="20" md-align="center">
         <radial-gauge :options="radOptions('Замена фильтров')" :value=radialValue2></radial-gauge>
@@ -84,11 +94,13 @@
 <script>
 import RadialGauge from '../vue-canvas-gauges'
 import Gauges from '../gauges'
+import device from '../device'
 export default {
   name: 'services',
   data () {
     return {
-      msg: 'Сервис',
+      caption: 'Сервис',
+      deviceInfo: '',
       radialOptions: {
         minValue: '0',
         maxValue: '40',
@@ -120,6 +132,12 @@ export default {
   },
   mounted () {
     this.readGauge()
+    device.getDeviceFromService(this).then(response => {
+      this.deviceInfo = response.data.device_name
+    }, response => {
+      this.error = 'Ошибка при получении данных устройства'
+      console.log(this.error)
+    })
   },
   methods: {
     radOptions (title) {
@@ -144,7 +162,7 @@ export default {
         }],
         animationDuration: 1500,
         animationRule: 'linear',
-        title: 'Насос водной завесы'
+        title: '_'
       }
       z.title = title
       return z
@@ -165,5 +183,9 @@ export default {
 <style>
 .services{
 	width: 100%;
+}
+.gauges{
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
 <div class="dash-form">
-{{ deviceInfo }}
   <!--<md-layout >
       <p class="head-text" md-align="end"> {{ deviceInfo }}</p> 
       <md-card class="md-warn" v-if="error">
@@ -170,14 +169,17 @@ export default {
 </script>
 <style>
 .dash-form{
-  margin-top: 5px;
+  margin-top: 0px;
+}
+.md-tabs .md-tab {
+  padding: 2px;
 }
 .chart-container{
   min-height: 400px;
   min-width: 800px;
 }
 .dash-router{
-  padding-top: 10px;
+  padding-top: 0px;
 }
 .head-text{
   font-size: 20px;

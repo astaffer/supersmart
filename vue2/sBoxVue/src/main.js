@@ -27,6 +27,11 @@ Vue.material.registerTheme({
   },
   contact: {
     primary: 'teal'
+  },
+  prop: {
+    primary: 'green',
+    accent: 'light-blue',
+    warn: 'orange'
   }
 })
 Vue.config.productionTip = false

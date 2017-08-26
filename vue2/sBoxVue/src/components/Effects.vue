@@ -1,5 +1,8 @@
 <template>
   <div class="effects">
+  <md-toolbar class="md-dense">      
+      <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+  </md-toolbar>
   <md-speed-dial md-open="hover" class="md-fab-bottom-right" md-theme="about">
     <md-button class="md-fab" md-fab-trigger>
       <md-icon md-icon-morph>close</md-icon>
@@ -34,10 +37,7 @@
       </md-dialog-actions>
     </md-dialog>
     <md-layout md-gutter>
-      <md-layout md-flex="60" md-flex-offset="5">
-         Эффективность 
-      </md-layout>
-      <md-layout md-flex="60" md-flex-offset="5">
+      <md-layout md-flex="60" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
           <md-button @click.native="getEffects(0,1)" class="md-toggle">Сегодня</md-button>
           <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
@@ -110,11 +110,13 @@
 <script>
 import CommitChart from '../charts/CommitChart'
 import effects from '../effects'
+import device from '../device'
 export default {
   name: 'effects',
   data () {
     return {
-      msg: 'Эффективность',
+      caption: 'Эффективность',
+      deviceInfo: '',
       dateFromStr: '',
       dateToStr: '',
       error: '',
@@ -198,6 +200,12 @@ export default {
   },
   mounted () {
     this.getEffects(0, 1)
+    device.getDeviceFromService(this).then(response => {
+      this.deviceInfo = response.data.device_name
+    }, response => {
+      this.error = 'Ошибка при получении данных устройства'
+      console.log(this.error)
+    })
   },
   methods: {
     getEffs () {
@@ -283,5 +291,8 @@ export default {
 }
 .effects{
   width: 100%;
+}
+.top-5{
+  padding-top:5px;
 }
 </style>

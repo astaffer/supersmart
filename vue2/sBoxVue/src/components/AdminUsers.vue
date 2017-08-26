@@ -5,6 +5,9 @@
   :md-ok-text="alert.ok"
   ref="dialog_network">
   </md-dialog-alert>
+   <md-toolbar class="md-dense">      
+      <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+    </md-toolbar>
   <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
       <md-dialog-title>Выбрать роль</md-dialog-title>
       <md-dialog-content>
@@ -86,10 +89,13 @@
 </template>
 <script>
 import userservice from '../user'
+import device from '../device'
 export default {
   name: 'adminusers',
   data () {
     return {
+      caption: 'Пользователи',
+      deviceInfo: '',
       users: [],
       activeItem: '',
       selectedUser: {
@@ -108,6 +114,12 @@ export default {
     }
   },
   mounted () {
+    device.getDeviceFromService(this).then(response => {
+      this.deviceInfo = response.data.device_name
+    }, response => {
+      this.error = 'Ошибка при получении данных устройства'
+      console.log(this.error)
+    })
     this.readUsers()
     userservice.getRoles(this).then(response => {
       this.roles = response.data
@@ -210,7 +222,7 @@ export default {
 </script>
 <style scoped>
 .settings {
-  width: 98%;
+  width: 100%;
 }
 .md-card{
   margin-bottom: 10px;

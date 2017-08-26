@@ -1,6 +1,9 @@
 <template>
   <div class="props">
-  Настройки
+    <md-toolbar class="md-dense">      
+      <h2 class="md-title" style="flex: 1">{{deviceInfo.name}}: {{caption}}</h2>
+    </md-toolbar>
+    <md-theme md-name="wh">
 		<md-tabs md-fixed>
       <md-tab id="basic" md-label="Основное">
         <md-layout md-gutter md-align="center">
@@ -19,6 +22,7 @@
         <sensorschange :user=user></sensorschange>
       </md-tab>
 		</md-tabs>
+    </md-theme>
   </div>
 </template>
 <script>
@@ -34,7 +38,7 @@ export default {
   data () {
     return {
       error: '',
-      msg: 'Параметры',
+      caption: 'Параметры',
       deviceInfo: {
         id: '',
         name: ''
