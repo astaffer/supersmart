@@ -5,9 +5,11 @@
   :md-ok-text="alert.ok"
   ref="dialog_network">
   </md-dialog-alert>
-   <md-toolbar class="md-dense">      
+  <md-toolbar class="md-dense">      
+    <div class="head-title">
       <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
-    </md-toolbar>
+    </div>
+  </md-toolbar>
   <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
       <md-dialog-title>Выбрать роль</md-dialog-title>
       <md-dialog-content>

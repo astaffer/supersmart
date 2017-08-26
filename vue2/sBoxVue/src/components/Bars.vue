@@ -3,10 +3,35 @@
    <md-layout md-gutter >
     <md-layout md-flex="30" >
       <md-dialog-alert
-  :md-content="alert.content"
-  :md-ok-text="alert.ok"
-  ref="dialog_bar">
-  </md-dialog-alert>
+        :md-content="alert.content"
+        :md-ok-text="alert.ok"
+        ref="dialog_bar">
+      </md-dialog-alert>
+      <md-dialog-alert
+        :md-content="alert.content_error"
+        :md-ok-text="alert.ok"
+        ref="dialog_bar_error">
+      </md-dialog-alert>
+      <md-dialog-alert
+        :md-content="alert.content_add"
+        :md-ok-text="alert.ok"
+        ref="dialog_bar_add">
+      </md-dialog-alert>
+      <md-dialog-alert
+        :md-content="alert.content_del"
+        :md-ok-text="alert.ok"
+        ref="dialog_bar_del">
+      </md-dialog-alert>
+      <md-dialog-alert
+        :md-content="alert.content_add_error"
+        :md-ok-text="alert.ok"
+        ref="dialog_bar_add_error">
+      </md-dialog-alert>
+      <md-dialog-alert
+        :md-content="alert.content_del_error"
+        :md-ok-text="alert.ok"
+        ref="dialog_bar_del_error">
+      </md-dialog-alert>
     </md-layout>
    </md-layout>
    <md-layout md-gutter md-align="center">
@@ -123,6 +148,11 @@ export default {
       sensors: [],
       alert: {
         content: 'Показатель изменен!',
+        content_error: 'Ошибка при изменении показателя!',
+        content_add: 'Показатель добавлен!',
+        content_del: 'Показатель удален!',
+        content_add_error: 'Ошибка при добавлении показателя!',
+        content_del_error: 'Ошибка при удалении показателя!',
         ok: 'OK'
       }
     }
@@ -142,7 +172,7 @@ export default {
         this.bars = response.data
       }, response => {
         this.error = 'Ошибка при получении данных показателей'
-        console.log(this.error)
+        // console.log(this.error)
       })
     },
     hasAdminAccess () {
@@ -159,26 +189,31 @@ export default {
         bar = response.data
         this.openDialog('dialog_bar')
       }, response => {
-        console.log('error')
+        // console.log('error')
+        this.openDialog('dialog_bar_error')
       })
     },
     deleteBar (barId) {
       barservice.deleteBar(this, barId).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
+        this.openDialog('dialog_bar_del')
         this.readBars()
       }, response => {
-        console.log('error')
+        // console.log('error')
+        this.openDialog('dialog_bar_del_error')
       })
-      console.log(barId)
+      // console.log(barId)
     },
     createBar (bar) {
       barservice.createBar(this, bar).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
+        this.openDialog('dialog_bar_add')
         this.readBars()
       }, response => {
-        console.log('error')
+        this.openDialog('dialog_bar_add_error')
+        // console.log('error')
       })
-      console.log(bar)
+      // console.log(bar)
     }
   }
 }

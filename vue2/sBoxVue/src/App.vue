@@ -13,13 +13,11 @@
       </md-button>
     </md-toolbar>
     <div class="menubutton">
-      <md-toolbar >
         <md-button class="md-icon-button" @click.native="toggleLeftSidenav" v-if="user.authenticated">
             <md-icon>menu</md-icon>
         </md-button>
-      </md-toolbar>
     </div>
-    <md-sidenav class="md-left-fixed" ref="leftSidenav" @open="open('Left')" @close="close('Left')" v-if="user.authenticated">
+    <md-sidenav class="md-left-fixed" ref="leftSidenav"  v-if="user.authenticated">
       <md-toolbar class="md-large  " md-theme="wh">
         <div class="md-toolbar-container">
           <div class="brainbox-logo" >
@@ -68,12 +66,6 @@ export default {
     },
     toggleLeftSidenav () {
       this.$refs.leftSidenav.toggle()
-    },
-    open (ref) {
-      console.log('Opened: ' + ref)
-    },
-    close (ref) {
-      console.log('Closed: ' + ref)
     }
   }
 }
@@ -113,10 +105,20 @@ html {
    margin-top: 100px;
    width: 120px;
 }
+.mainapp {
+  position: relative;
+}
 .menubutton {
     /* transform: scale(0); */
     display: block;
-  }
+    position: absolute;
+    z-index: 10;
+    left: 0px;
+    top: 2px;
+}
+.head-title {
+  padding-left: 30px;
+}
 @media (min-width: 1280px) {
   .md-sidenav.md-left-fixed .md-sidenav-content {
     top: 0;
@@ -131,6 +133,9 @@ html {
   .menubutton {
     /* transform: scale(0); */
     display: none;
+  }
+  .head-title {
+    padding-left: 0px;
   }
 }
 </style>

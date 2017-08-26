@@ -1,6 +1,7 @@
 const HOST_NAME = location.hostname
-const HOST_PORT = '8080'
+const HOST_PORT = '80'
 const API_URL = 'http://' + HOST_NAME + ':' + HOST_PORT + '/'
+const DEV_API_URL = 'http://' + HOST_NAME + ':' + '8080' + '/'
 const LOGIN_URL = 'auth/'
 const SENSORS_URL = 'sensors/'
 const EFFECTS_URL = 'effects/'
@@ -21,6 +22,9 @@ const STATUS_URL = 'status/'
 const CLEARDATA_URL = 'cleardata/'
 export default {
   getApiUrl (api) {
+    if (process.env.NODE_ENV === 'development') {
+      return DEV_API_URL + api
+    }
     return API_URL + api
   },
   getStatusUrl () {

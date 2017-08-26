@@ -35,8 +35,9 @@ public class DeviceController {
 		}
 		response.status(200);
 		response.type("application/json");
+		DeviceData dev =device.getDevice();
 		DeviceModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.changeData(device.device_id, device.device_name));
+		return JsonUtil.dataToJson(model.changeData(dev.device_id, dev.device_name,dev.device_shifts));
 	};
 	public static Route getNetworkSettings = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();

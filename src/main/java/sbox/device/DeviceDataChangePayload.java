@@ -4,8 +4,7 @@ import sbox.util.IValidable;
 @Data
 public class DeviceDataChangePayload implements IValidable {
 	String access_id;
-	int device_id;
-	String device_name;
+	DeviceData device;
 	@Override
 	public boolean isValid() {
 		// TODO Auto-generated method stub

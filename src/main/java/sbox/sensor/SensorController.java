@@ -22,7 +22,7 @@ public class SensorController {
 		response.status(200);
 		response.type("application/json");
 		SensorModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getAllSensors());
+		return JsonUtil.dataToJson(model.getAllSensors(sensor.filter));
 	};
 	public static Route getSensorData = (Request request, Response response) -> {
 		int sensor = Integer.parseInt(request.params(":id"));
@@ -49,5 +49,18 @@ public class SensorController {
 		response.type("application/json");
 		SensorModel model = new Sql2oModel(sql2o);
 		return JsonUtil.dataToJson(model.updateSensor(sensorData.getSensor()));
+	};
+	public static Route clearSensorData = (Request request, Response response) -> {
+		 
+		ObjectMapper mapper = new ObjectMapper();
+		UpdateSensorDataPayload sensorData = mapper.readValue(request.body(), UpdateSensorDataPayload.class);
+		if (!sensorData.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		SensorModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.clearSensor(sensorData.getSensor()));
 	};
 }

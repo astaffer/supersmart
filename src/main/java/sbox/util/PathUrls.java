@@ -12,6 +12,7 @@ public class PathUrls {
         @Getter public static final String SENSORDATA = "/sensor/:id/data";
         @Getter public static final String SENSORS = "/sensors/";
         @Getter public static final String SENSORUPD = "/sensors/change/";
+        @Getter public static final String SENSORCLR = "/sensors/cleardata/";
         /* DEVICE */
         @Getter public static final String DEVICE = "/device/";
         @Getter public static final String DEVICEUPD = "/device/change/";

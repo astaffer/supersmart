@@ -1,7 +1,9 @@
 <template>
   <div class="settings">
     <md-toolbar class="md-dense">      
-      <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+      <div class="head-title">
+        <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+      </div>
     </md-toolbar>
     <md-layout md-gutter md-align="center">
       <md-layout md-flex="33" md-flex-medium="33">

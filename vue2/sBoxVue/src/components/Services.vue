@@ -1,7 +1,9 @@
 <template>
   <div class="services">
-    <md-toolbar class="md-dense">      
-      <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+    <md-toolbar class="md-dense"> 
+      <div class="head-title">     
+        <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+      </div>
     </md-toolbar>
   	<md-layout  md-gutter >
 
@@ -69,7 +71,7 @@
         </md-list>
       </md-layout>
       -->
-      <md-layout md-flex="25" class="gauges" v-for="(entry, index) in this.gData.gaugesOptions" :key="entry.gauge_id">
+      <md-layout  md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" class="gauges" v-for="(entry, index) in this.gData.gaugesOptions" :key="entry.gauge_id">
         <md-card md-with-hover>
           <md-card-header>
             <div class="md-title">{{ entry.title }}</div>

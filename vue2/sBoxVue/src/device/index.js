@@ -9,12 +9,11 @@ export default {
       return context.$http.post(service.getDeviceUrl(), creds)
     }
   },
-  setDeviceName (context, device) {
+  updateDevice (context, deviceInfo) {
     if (auth.user.authenticated) {
       var creds = {
         access_id: auth.getAccessId(),
-        device_id: device.id,
-        device_name: device.name
+        device: deviceInfo
       }
       return context.$http.post(service.getDeviceUpdateUrl(), creds)
     }

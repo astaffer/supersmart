@@ -1,25 +1,35 @@
 <template>
   <div class="props">
     <md-toolbar class="md-dense">      
-      <h2 class="md-title" style="flex: 1">{{deviceInfo.name}}: {{caption}}</h2>
+      <div class="head-title">
+        <h2 class="md-title" style="flex: 1">{{deviceInfo.name}}: {{caption}}</h2>
+      </div>
     </md-toolbar>
     <md-theme md-name="wh">
 		<md-tabs md-fixed>
       <md-tab id="basic" md-label="Основное">
-        <md-layout md-gutter md-align="center">
-          <md-layout md-flex="70">
-          <devicechange></devicechange>
+        <md-theme md-name="default">
+          <md-layout md-gutter md-align="center">
+            <md-layout md-flex="70">
+            <devicechange></devicechange>
+            </md-layout>
           </md-layout>
-        </md-layout>
+        </md-theme>
       </md-tab>
 			<md-tab id="effects" md-label="эффективность">
-        <barschange :user=user></barschange>
+        <md-theme md-name="default">
+          <barschange :user=user></barschange>
+        </md-theme>
 			</md-tab>
 			<md-tab id="gauges" md-label="сервис">
-			  <gaugeschange :user=user></gaugeschange>
+        <md-theme md-name="default">
+			   <gaugeschange :user=user></gaugeschange>
+         </md-theme>
 			</md-tab>
       <md-tab id="sensors" md-label="датчики">
-        <sensorschange :user=user></sensorschange>
+        <md-theme md-name="default">
+          <sensorschange :user=user></sensorschange>
+        </md-theme>
       </md-tab>
 		</md-tabs>
     </md-theme>

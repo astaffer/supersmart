@@ -1,5 +1,6 @@
 package sbox.sql;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,9 +33,14 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	}
 
 	@Override
-	public List<Sensor> getAllSensors() {
+	public List<Sensor> getAllSensors(String filter) {
 		try (Connection conn = sql2o.open()) {
-			List<Sensor> sensors = conn.createQuery("SELECT sensor_id, sensor_name, sensor_type FROM sensor")
+			String whereclause="";
+			if (filter != "")
+			{
+				whereclause ="where "+filter;
+			}
+			List<Sensor> sensors = conn.createQuery("SELECT sensor_id, sensor_name, sensor_type, sensor_hide FROM sensor "+whereclause)
 					.executeAndFetch(Sensor.class);
 			return sensors;
 		}
@@ -42,7 +48,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 
 	public Sensor getSensor(int id) {
 		try (Connection conn = sql2o.open()) {
-			Sensor sensor = conn.createQuery("SELECT sensor_id,sensor_name,sensor_type FROM sensor where sensor_id=:id")
+			Sensor sensor = conn.createQuery("SELECT sensor_id,sensor_name,sensor_type, sensor_hide FROM sensor where sensor_id=:id")
 					.addParameter("id", id).executeAndFetch(Sensor.class).get(0);
 			return sensor;
 		}
@@ -91,17 +97,17 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public DeviceData getData() {
 		try (Connection conn = sql2o.open()) {
-			DeviceData device = conn.createQuery("SELECT device_id, device_name  FROM device limit 1")
+			DeviceData device = conn.createQuery("SELECT device_id, device_name, device_shifts  FROM device limit 1")
 					.executeAndFetch(DeviceData.class).get(0);
 			return device;
 		}
 	}
 
 	@Override
-	public DeviceData changeData(int device_id, String device_name) {
+	public DeviceData changeData(int device_id, String device_name, float device_shifts ) {
 		try (Connection conn = sql2o.open()) {
-			conn.createQuery("UPDATE device SET device_name=:devicename where device_id=:id")
-					.addParameter("devicename", device_name).addParameter("id", device_id).executeUpdate();
+			conn.createQuery("UPDATE device SET device_name=:devicename, device_shifts=:shifts where device_id=:id")
+					.addParameter("devicename", device_name).addParameter("id", device_id).addParameter("shifts", device_shifts).executeUpdate();
 		}
 		return getData();
 	}
@@ -184,9 +190,9 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 
 	@Override
 	public EffectsData addBar(EffectsData bar) {
-		int bar_id = 0;
+		long bar_id = 0;
 		try (Connection conn = sql2o.open()) {
-			bar_id = (int) conn
+			bar_id =  (long) conn
 					.createQuery("INSERT INTO effectsbar (`bar_label`,`bar_color`,`bar_type`,`sensor_id`,`sort_order`)"
 							+ "VALUES(:bar_label,:bar_color,:bar_type,:sensor_id,:sort_order)")
 					.addParameter("bar_label", bar.getBar_label() == null ? "bar" : bar.getBar_label())
@@ -196,7 +202,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 					.addParameter("sort_order", bar.getSort_order() == 0 ? "0" : bar.getSort_order()).executeUpdate()
 					.getKey();
 		}
-		return getBar(bar_id);
+		return getBar((int)bar_id);
 	}
 
 	@Override
@@ -459,7 +465,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			 conn.createQuery("DELETE FROM userrole WHERE user_id=:userid and role_id=:roleid")
 					.addParameter("userid", user.getUser_id())
 					.addParameter("roleid", roleid)
-					.executeUpdate().getKey();
+					.executeUpdate();
 		}
 		return getUserByUsername(username);
 	}
@@ -476,6 +482,10 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			sql.append("sensor_type = :sensor_type,");
 			params.put("sensor_type", sensorData.getSensor_type());
 		}
+		if (sensorData.getSensor_hide()!= null) {
+			sql.append("sensor_hide = :sensor_hide,");
+			params.put("sensor_hide", sensorData.getSensor_hide());
+		}
 		sql.deleteCharAt(sql.length() - 1);
 
 		sql.append(" where sensor_id = :id");
@@ -488,6 +498,28 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 				}
 
 				query.addParameter("id", sensorData.getSensor_id()).executeUpdate();
+			}
+		}
+		return getSensor(sensorData.getSensor_id());
+	}
+
+	@Override
+	public Sensor clearSensor(Sensor sensorData) {
+		try (Connection conn = sql2o.open()) {
+			final Calendar cal = Calendar.getInstance();
+		    cal.add(Calendar.DATE, -1);
+			if(!sensorData.getSensor_type())
+			{
+				conn.createQuery("DELETE FROM intdata WHERE sensor_id=:sensorid")
+				.addParameter("sensorid", sensorData.getSensor_id())
+				.executeUpdate();
+				
+				conn.createQuery("INSERT INTO intdata (`int_id`,`sensor_id`,`int_date`,`int_value`) VALUES(:intid,:sensorid,:intdate,:intvalue)")
+				.addParameter("intid", sensorData.getSensor_id())
+				.addParameter("sensorid", sensorData.getSensor_id())
+				.addParameter("intdate",cal.getTime())
+				.addParameter("intvalue", 0)
+				.executeUpdate();
 			}
 		}
 		return getSensor(sensorData.getSensor_id());

@@ -7,6 +7,7 @@
         <md-card md-with-hover style="width:90%">
           <md-card-header>
             <div class="md-title">Датчик: {{ sensor.sensor_id }}</div>
+            <div class="md-subhead">Сигнал: {{sensor.sensor_value}}</div>
           </md-card-header>
           <md-card-content>
             <md-input-container>
@@ -73,7 +74,7 @@ export default {
     }
   },
   mounted () {
-    sensorservice.getAllSensors(this).then(response => {
+    sensorservice.getAllSensorsWithHidden(this).then(response => {
       this.sensorList = response.data
     }, response => {
       this.error = 'Error when get sensors data'

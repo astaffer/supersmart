@@ -23,10 +23,16 @@
               :md-ok-text="alert.ok"
               ref="dialog_gauge_error">
             </md-dialog-alert>
-              <md-dialog-alert
+            <md-dialog-alert
               :md-content="alert.content_add"
               :md-ok-text="alert.ok"
               ref="dialog_gauge_add">
+              </md-dialog-alert>
+              <md-dialog-alert
+              :md-content="alert.content_add_error"
+              :md-ok-text="alert.ok"
+              ref="dialog_gauge_add_error">
+              </md-dialog-alert>
             </md-dialog-alert>
               <md-dialog-alert
               :md-content="alert.content_del"
@@ -108,7 +114,8 @@
       <md-layout v-for="gauge in gauges" :key="gauge.gauge_id" md-flex="65">
         <md-card md-with-hover style="width:90%">
           <md-card-header>
-            <div class="md-title">Показатель: {{ gauge.gauge_id }} Текущее значение {{ gauge.gauge_value}}</div>
+            <div class="md-title">Показатель: {{ gauge.gauge_id }}  </div>
+            <div class="md-subhead">Текущее значение: {{ gauge.value}}</div>
           </md-card-header>
           <md-card-content>
             <md-layout md-gutter md-align="center">
@@ -210,6 +217,7 @@ export default {
       alert: {
         content: 'Показатель изменен!',
         content_error: 'Ошибка при изменении показателя!',
+        content_add_error: 'Ошибка при добавлении показателя!',
         content_add: 'Показатель добавлен!',
         content_del: 'Показатель удален!',
         ok: 'OK'
@@ -233,9 +241,9 @@ export default {
   },
   methods: {
     readGauges () {
-      Gauge.getGauges(this).then(response => {
+      Gauge.getGauges(this, new Date()).then(response => {
         this.gauges = response.data
-        console.log(this.gauges)
+        // console.log(this.gauges)
       }, response => {
         this.error = 'Ошибка при получении показателей, сервис недоступен'
         console.log(this.error)
@@ -256,6 +264,7 @@ export default {
       localGauge.mileage_date = Util.parseDateFromStr(gauge.mileage_date)
       Gauge.updateGauge(this, localGauge).then(response => {
         gauge = response.data
+        this.readGauges()
         this.openDialog('dialog_gauge')
       }, response => {
         this.openDialog('dialog_gauge_error')
@@ -282,6 +291,7 @@ export default {
         this.openDialog('dialog_gauge_add')
       }, response => {
         console.log('error')
+        this.openDialog('dialog_gauge_add_error')
       })
     },
     clearGauge (gauge) {

@@ -1,26 +1,28 @@
 <template>
   <div class="effects">
-  <md-toolbar class="md-dense">      
-      <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
-  </md-toolbar>
-  <md-speed-dial md-open="hover" class="md-fab-bottom-right" md-theme="about">
-    <md-button class="md-fab" md-fab-trigger>
-      <md-icon md-icon-morph>close</md-icon>
-      <md-icon>share</md-icon>
-    </md-button>
+    <md-toolbar class="md-dense">
+      <div class="head-title">
+        <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+      </div>
+    </md-toolbar>
+    <md-speed-dial md-open="hover" class="md-fab-bottom-right" md-theme="about">
+      <md-button class="md-fab" md-fab-trigger>
+        <md-icon md-icon-morph>close</md-icon>
+        <md-icon>share</md-icon>
+      </md-button>
 
-    <md-button class="md-fab md-primary md-mini md-clean">
-      <md-icon>email</md-icon>
-    </md-button>
+      <md-button class="md-fab md-primary md-mini md-clean">
+        <md-icon>email</md-icon>
+      </md-button>
 
-    <md-button class="md-fab md-primary md-mini md-clean">
-      <md-icon>content_copy</md-icon>
-    </md-button>
-  </md-speed-dial>
+      <md-button class="md-fab md-primary md-mini md-clean">
+        <md-icon>content_copy</md-icon>
+      </md-button>
+    </md-speed-dial>
+     
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
       <md-dialog-title>Указать период</md-dialog-title>
       <md-dialog-content>
-        <form>
           <md-input-container>
             <label>Дата от</label>
             <md-input v-model="dateFromStr"></md-input>
@@ -29,13 +31,13 @@
             <label>Дата до</label>
             <md-input v-model="dateToStr"></md-input>
           </md-input-container>
-        </form>
       </md-dialog-content>
       <md-dialog-actions>
         <md-button class="md-primary" @click.native="closeDialog('dialog2')">Отмена</md-button>
         <md-button class="md-primary" @click.native="getEffectsCustom()">Применить</md-button>
       </md-dialog-actions>
     </md-dialog>
+     
     <md-layout md-gutter>
       <md-layout md-flex="60" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
@@ -48,6 +50,24 @@
           <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
         </md-button-toggle>   
       </md-layout>
+      <!-- <md-layout md-flex="60" md-gutter md-flex-offset="5">
+        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="20" >
+          <md-input-container>
+            <label>Дата от</label>
+            <md-input v-model="dateStr.from"></md-input>
+          </md-input-container>
+        </md-layout>
+        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="20" md-flex-offset="5">
+          <md-input-container>
+            <label>Дата до</label>
+            <md-input v-model="dateStr.to"></md-input>
+          </md-input-container>
+          </md-layout>
+        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33">
+          <md-button @click.native="getEffectsCustom()">OK</md-button>
+        </md-layout>
+      </md-layout>
+      -->
     </md-layout>
     <!--<md-layout   md-gutter style="margin-top:10px">
       <md-layout md-flex="30" >
@@ -210,6 +230,13 @@ export default {
   methods: {
     getEffs () {
       effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour').then(response => {
+        var options = {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        }
+        this.dateFromStr = this.dateFrom.toLocaleString('ru', options)
+        this.dateToStr = this.dateTo.toLocaleString('ru', options)
         var effectsData = effects.prepareData(response.data)
         this.eff = effectsData.eff
         this.someData = effectsData.data
@@ -233,13 +260,6 @@ export default {
     getEffects (daysBack, to) {
       this.dateFrom = this.getDate(-daysBack)
       this.dateTo = this.getDate(to)
-      var options = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-      }
-      this.dateFromStr = this.dateFrom.toLocaleString('ru', options)
-      this.dateToStr = this.dateTo.toLocaleString('ru', options)
       this.getEffs()
     },
     getEffectsCustom () {
@@ -281,7 +301,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .chart-container{
   min-height: 400px;
   max-height: 400px;
@@ -294,5 +314,8 @@ export default {
 }
 .top-5{
   padding-top:5px;
+}
+.md-input-container {
+  margin: 0;
 }
 </style>

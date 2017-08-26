@@ -65,6 +65,7 @@ public class Work {
 		post(PathUrls.Web.SENSORS, SensorController.getSensors);
 		post(PathUrls.Web.SENSORDATA, SensorController.getSensorData);
 		post(PathUrls.Web.SENSORUPD, SensorController.updateSensorName);
+		post(PathUrls.Web.SENSORCLR, SensorController.clearSensorData);
 
 		post(PathUrls.Web.EFFECTS, EffectsController.getEffects);
 		post(PathUrls.Web.BARS, EffectsController.getBars);

@@ -24,7 +24,7 @@ export default {
         access_id: auth.getAccessId(),
         bar: barUnit
       }
-      console.log(creds)
+      // console.log(creds)
       return context.$http.post(service.getBarsCreateUrl(), creds)
     }
   },

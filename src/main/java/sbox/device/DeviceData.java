@@ -7,4 +7,5 @@ import lombok.Value;
 public class DeviceData {
 	int device_id;
 	String device_name;
+	float device_shifts;
 }

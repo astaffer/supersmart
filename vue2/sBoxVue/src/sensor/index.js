@@ -4,7 +4,17 @@ export default {
   getAllSensors (context) {
     if (auth.user.authenticated) {
       var creds = {
-        access_id: auth.getAccessId()
+        access_id: auth.getAccessId(),
+        filter: 'sensor_hide = 0'
+      }
+      return context.$http.post(service.getSensorsUrl(), creds)
+    }
+  },
+  getAllSensorsWithHidden (context) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        filter: ''
       }
       return context.$http.post(service.getSensorsUrl(), creds)
     }
