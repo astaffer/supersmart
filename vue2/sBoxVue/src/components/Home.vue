@@ -1,25 +1,24 @@
 <template>
-<div class="hello">
-<md-layout md-align="center" md-gutter="10">
-  <md-layout class="header" md-flex="70" md-flex-medium="70" md-flex-xsmall="100" md-flex-small="70" md-align="center">
-    <h1>{{ msg }}</h1> 
-  </md-layout>
-</md-layout>
-<md-layout md-align="center" md-gutter="10">
-  <md-layout md-flex="35" md-align="center" class="logoframe">
-  <img src="..\assets\bb6.png" class="imglogo" alt="">
-  </md-layout>
-</md-layout>
-<md-layout md-align="center" md-gutter="10">
-  <md-layout md-flex="35" md-align="center">
-    <md-button class="md-raised md-accent" v-if="!error" @click.native="$router.push({ name: 'Login' })">Вход</md-button>
-    <md-card class="md-warn" v-if="error">
-              <p>{{ error }}</p>
-   </md-card>
-  </md-layout>
-   
-</md-layout>
-</div>
+  <div class="hello">
+    <md-layout md-gutter md-align="center">
+      <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="50">
+        <div class="drow">
+          <h1>{{ title }}</h1>
+        </div>
+        <div class="drow">
+          <img src="..\assets\bb6.png" class="imglogo" alt="">
+        </div>
+        <div class="drow">
+           <md-button class="md-raised md-accent" v-if="!error" @click.native="$router.push({ name: 'Login' })">Вход</md-button>
+        </div>
+        <div class="drow">
+          <md-card class="md-warn" v-if="error">
+                    <p>{{ error }}</p>
+          </md-card>
+        </div>
+      </md-layout>
+    </md-layout>
+  </div>
 </template>
 <script>
 import service from '../service'
@@ -27,7 +26,8 @@ export default {
   name: 'home',
   data () {
     return {
-      msg: 'Добро пожаловать',
+      title: 'Добро пожаловать',
+      subtitle: 'Brain Box Internet of Things',
       error: ''
     }
   },
@@ -41,17 +41,19 @@ export default {
   }
 }
 </script>
-<style>
-.imglogo{
-  min-width: 200px;
+<style scoped>
+.drow {
+  width: 100%;
   text-align: center;
-  display: inline-block;
 }
-.header{
-  margin-top: 50px;
-  margin-bottom: 30px;
+@media (min-width: 1280px) {
+  .hello {
+    padding-top: 70px;
+  }
 }
-.logoframe{
-  margin-bottom: 20px;
+@media (min-width: 1280px) {
+  .hello {
+    padding-top: 70px;
+  }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 <div class="login-form">
-  <md-layout md-gutter>
-    <md-layout md-flex="33" md-flex-medium="33" md-flex-offset="33">
+  <md-layout md-gutter md-align="center">
+    <md-layout md-flex-xsmall="80" md-flex-small="50" md-flex-medium="33"  md-flex-large="25" md-align="center">
       <md-card style="width:100%" md-with-hover>
         <md-card-content>
           <form >
@@ -65,8 +65,22 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .login-form{
   margin-top: 100px;
+}
+@media (max-width: 944px) {
+  .md-flex-small-50 {
+    min-width: 50%;
+    -ms-flex: 0 1 50%;
+    flex: 0 1 50%;
+  }
+}
+@media (max-width: 600px) {
+  .md-flex-xsmall-80 {
+      min-width: 80%;
+      -ms-flex: 0 1 80%;
+      flex: 0 1 80%;
+  }
 }
 </style>

@@ -9,8 +9,8 @@
       ref="dialog_clear">
     </md-dialog-confirm>
     <md-layout md-gutter>
-      <md-layout  md-flex="65" v-if="hasAdminAccess()">
-        <md-card md-with-hover style="width:90%">
+      <md-layout  md-flex-medium="70" md-flex-xsmall="100" md-flex-small="100" v-if="hasAdminAccess()">
+        <md-card md-with-hover style="width:100%">
           <md-card-header>
             <div class="md-title">Новый показатель</div>
             <md-dialog-alert
@@ -111,8 +111,8 @@
           </md-card-actions>
         </md-card>
       </md-layout>
-      <md-layout v-for="gauge in gauges" :key="gauge.gauge_id" md-flex="65">
-        <md-card md-with-hover style="width:90%">
+      <md-layout v-for="gauge in gauges" :key="gauge.gauge_id" md-flex-medium="70" md-flex-xsmall="100" md-flex-small="100">
+        <md-card md-with-hover style="width:100%">
           <md-card-header>
             <div class="md-title">Показатель: {{ gauge.gauge_id }}  </div>
             <div class="md-subhead">Текущее значение: {{ gauge.value}}</div>
@@ -315,3 +315,19 @@ export default {
   }
 }
 </script>
+<style scoped>
+@media (max-width: 944px) {
+  .md-flex-small-100 {
+    min-width: 100%;
+    -ms-flex: 0 1 100%;
+    flex: 0 1 100%;
+  }    
+}
+@media (max-width: 600px) {
+  .md-flex-xsmall-100 {
+      min-width: 100%;
+      -ms-flex: 0 1 100%;
+      flex: 0 1 100%;
+  }
+}
+</style>

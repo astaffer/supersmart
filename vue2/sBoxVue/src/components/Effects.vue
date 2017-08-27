@@ -1,10 +1,5 @@
 <template>
   <div class="effects">
-    <md-toolbar class="md-dense">
-      <div class="head-title">
-        <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
-      </div>
-    </md-toolbar>
     <md-speed-dial md-open="hover" class="md-fab-bottom-right" md-theme="about">
       <md-button class="md-fab" md-fab-trigger>
         <md-icon md-icon-morph>close</md-icon>
@@ -19,7 +14,6 @@
         <md-icon>content_copy</md-icon>
       </md-button>
     </md-speed-dial>
-     
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
       <md-dialog-title>Указать период</md-dialog-title>
       <md-dialog-content>
@@ -37,9 +31,14 @@
         <md-button class="md-primary" @click.native="getEffectsCustom()">Применить</md-button>
       </md-dialog-actions>
     </md-dialog>
-     
+    <md-toolbar class="md-dense">
+      <div class="head-title">
+        <h2 class="md-title" style="flex: 1">{{deviceInfo}}: {{caption}}</h2>
+      </div>
+    </md-toolbar>
+
     <md-layout md-gutter>
-      <md-layout md-flex="60" md-flex-offset="5" class="top-5">
+      <md-layout md-flex="30" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
           <md-button @click.native="getEffects(0,1)" class="md-toggle">Сегодня</md-button>
           <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
@@ -50,52 +49,9 @@
           <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
         </md-button-toggle>   
       </md-layout>
-      <!-- <md-layout md-flex="60" md-gutter md-flex-offset="5">
-        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="20" >
-          <md-input-container>
-            <label>Дата от</label>
-            <md-input v-model="dateStr.from"></md-input>
-          </md-input-container>
-        </md-layout>
-        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="20" md-flex-offset="5">
-          <md-input-container>
-            <label>Дата до</label>
-            <md-input v-model="dateStr.to"></md-input>
-          </md-input-container>
-          </md-layout>
-        <md-layout md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33">
-          <md-button @click.native="getEffectsCustom()">OK</md-button>
-        </md-layout>
-      </md-layout>
-      -->
     </md-layout>
-    <!--<md-layout   md-gutter style="margin-top:10px">
-      <md-layout md-flex="30" >
-        <md-button-toggle md-single class="md-accent">
-          <md-button 
-            class="md-icon-button" 
-            v-bind:class="{'md-toggle': !showTable}"
-            @click.native="showTable=false">
-            <md-icon>assessment</md-icon>
-          </md-button>
-          <md-button 
-            class="md-icon-button" 
-            v-bind:class="{'md-toggle': showTable}"
-            @click.native="showTable=true">
-            <md-icon>view_list</md-icon>
-          </md-button>
-        </md-button-toggle>
-        <md-button class="md-icon-button">
-          <md-icon>file_download</md-icon>
-        </md-button>
-        <md-button class="md-icon-button">
-          <md-icon>share</md-icon>
-        </md-button>
-      </md-layout>
-    </md-layout>
-    -->
     <md-layout md-gutter> 
-      <md-layout md-flex="60" style="margin-left:10px;margin-right:10px;" v-if="!showTable">
+      <md-layout md-flex-xsmall="100" md-flex-small="100" >
         <md-card class="md-warn" v-if="error">
                 <p>{{ error }}</p>
         </md-card>
@@ -106,7 +62,7 @@
             :options = this.charOpt></commitChart>
         </div> 
       </md-layout>
-      <md-layout  style="margin-left:10px;margin-right:10px;"  v-if="!showTable">
+      <md-layout class="min-400">
         <md-table>
           <md-table-header>
             <md-table-row>
@@ -117,8 +73,8 @@
           </md-table-header>
           <md-table-body>
             <md-table-row v-for="entry in this.eff" :key="entry.bar_id">
-              <md-table-cell>{{ entry.bar_label }}</md-table-cell>
-              <md-table-cell md-numeric>{{ entry.hours }}</md-table-cell>
+              <md-table-cell nowrap >{{ entry.bar_label }}</md-table-cell>
+              <md-table-cell md-numeric >{{ entry.hours }}</md-table-cell>
               <md-table-cell>{{ percents[entry.bar_id-1] }}</md-table-cell>
             </md-table-row>
           </md-table-body>
@@ -302,7 +258,16 @@ export default {
 }
 </script>
 <style scoped>
+canvas {
+  width: 100% !important;
+  max-width: 600px;
+  height: auto !important;
+}
 .chart-container{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 30px;
   min-height: 400px;
   max-height: 400px;
   min-width: 700px;
@@ -317,5 +282,11 @@ export default {
 }
 .md-input-container {
   margin: 0;
+}
+.min-400 {
+  min-width: 400px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>

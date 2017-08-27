@@ -3,7 +3,7 @@
    <md-layout md-gutter >
    </md-layout>
    <md-layout md-gutter md-align="center">
-      <md-layout md-align="center" v-for="sensor in sensorList" :key="sensor.sensor_id" md-flex="25">
+      <md-layout md-align="center" v-for="sensor in sensorList" :key="sensor.sensor_id" md-flex-medium="25" md-flex-xsmall="100" md-flex-small="50">
         <md-card md-with-hover style="width:90%">
           <md-card-header>
             <div class="md-title">Датчик: {{ sensor.sensor_id }}</div>
@@ -116,3 +116,26 @@ export default {
   }
 }
 </script>
+<style scoped>
+@media (max-width: 1264px) {
+  .md-flex-medium-25 {
+      min-width: 25%;
+      -ms-flex: 0 1 25%;
+      flex: 0 1 25%;
+  }
+}
+@media (max-width: 944px) {
+  .md-flex-small-50 {
+      min-width: 50%;
+      -ms-flex: 0 1 50%;
+      flex: 0 1 50%;
+  }
+}
+@media (max-width: 600px) {
+  .md-flex-xsmall-100 {
+      min-width: 100%;
+      -ms-flex: 0 1 100%;
+      flex: 0 1 100%;
+  }
+}
+</style>

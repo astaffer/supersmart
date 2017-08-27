@@ -35,7 +35,7 @@
     </md-layout>
    </md-layout>
    <md-layout md-gutter md-align="center">
-      <md-layout md-align="center" md-flex="25" v-if="hasAdminAccess()">
+      <md-layout md-align="center" md-flex-medium="25" md-flex-xsmall="100" md-flex-small="50" v-if="hasAdminAccess()">
         <md-card md-with-hover style="width:90%" >
           <md-card-header>
             <div class="md-title">Новый показатель</div>
@@ -80,7 +80,7 @@
           </md-card-actions>
         </md-card>
       </md-layout>
-      <md-layout md-align="center" v-for="bar in bars" :key="bar.bar_id" md-flex="25">
+      <md-layout md-align="center" v-for="bar in bars" :key="bar.bar_id" md-flex-medium="25" md-flex-xsmall="100" md-flex-small="50">
         <md-card md-with-hover style="width:90%">
           <md-card-header>
             <div class="md-title">Показатель: {{ bar.bar_id }}</div>
@@ -218,3 +218,26 @@ export default {
   }
 }
 </script>
+<style scoped>
+@media (max-width: 1264px) {
+  .md-flex-medium-25 {
+      min-width: 25%;
+      -ms-flex: 0 1 25%;
+      flex: 0 1 25%;
+  }
+}
+@media (max-width: 944px) {
+  .md-flex-small-50 {
+      min-width: 50%;
+      -ms-flex: 0 1 50%;
+      flex: 0 1 50%;
+  }
+}
+@media (max-width: 600px) {
+  .md-flex-xsmall-100 {
+      min-width: 100%;
+      -ms-flex: 0 1 100%;
+      flex: 0 1 100%;
+  }
+}
+</style>

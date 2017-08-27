@@ -107,6 +107,7 @@ html {
 }
 .mainapp {
   position: relative;
+  height: 100%;
 }
 .menubutton {
     /* transform: scale(0); */
