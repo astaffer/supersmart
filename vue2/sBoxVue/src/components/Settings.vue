@@ -6,10 +6,10 @@
       </div>
     </md-toolbar>
     <md-layout md-gutter md-align="center">
-      <md-layout md-flex="33" md-flex-medium="33">
+      <md-layout md-flex="50" md-flex-medium="50" md-flex-xsmall="100" md-flex-small="100">
        <userschange></userschange>
       </md-layout>
-      <md-layout md-flex="33" md-flex-medium="33">
+      <md-layout md-flex="50" md-flex-medium="50" md-flex-xsmall="100" md-flex-small="100">
        <networkchange></networkchange>
       </md-layout>
     </md-layout>
@@ -44,5 +44,19 @@ export default {
 }
 .md-card{
   margin-bottom: 10px;
+}
+@media (max-width: 944px) {
+  .md-flex-small-100 {
+    min-width: 100%;
+    -ms-flex: 0 1 100%;
+    flex: 0 1 100%;
+  }    
+}
+@media (max-width: 600px) {
+  .md-flex-xsmall-100 {
+      min-width: 100%;
+      -ms-flex: 0 1 100%;
+      flex: 0 1 100%;
+  }
 }
 </style>

@@ -38,15 +38,31 @@
     </md-toolbar>
 
     <md-layout md-gutter>
-      <md-layout md-flex="30" md-flex-offset="5" class="top-5">
+      <md-layout md-flex="80" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
-          <md-button @click.native="getEffects(0,1)" class="md-toggle">Сегодня</md-button>
-          <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
-          <md-button @click.native="getEffects(7,1)" >Неделя</md-button>
-          <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
-          <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
-          <md-button @click.native="getEffects(365,1)" >Год</md-button>
-          <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
+          <md-layout>
+            <md-layout >
+              <md-button @click.native="getEffects(0,1)" class="md-toggle">Сегодня</md-button>
+            </md-layout>
+            <md-layout>
+              <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
+            </md-layout>
+            <md-layout>
+              <md-button @click.native="getEffects(7,1)" >Неделя</md-button>
+            </md-layout>
+            <md-layout >
+              <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
+            </md-layout>
+            <md-layout >
+              <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
+            </md-layout>
+            <md-layout >
+              <md-button @click.native="getEffects(365,1)" >Год</md-button>
+            </md-layout>
+            <md-layout>
+              <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
+            </md-layout>
+          </md-layout>
         </md-button-toggle>   
       </md-layout>
     </md-layout>
@@ -62,20 +78,20 @@
             :options = this.charOpt></commitChart>
         </div> 
       </md-layout>
-      <md-layout class="min-400">
+      <md-layout class="min-200">
         <md-table>
           <md-table-header>
             <md-table-row>
-              <md-table-head>Показатель</md-table-head>
-              <md-table-head md-numeric>Часы</md-table-head>
-              <md-table-head md-numeric>%</md-table-head>
+              <md-table-head class="short">Показатель</md-table-head>
+              <md-table-head md-numeric class="short">Часы</md-table-head>
+              <md-table-head md-numeric class="short">%</md-table-head>
             </md-table-row>
           </md-table-header>
           <md-table-body>
             <md-table-row v-for="entry in this.eff" :key="entry.bar_id">
-              <md-table-cell nowrap >{{ entry.bar_label }}</md-table-cell>
-              <md-table-cell md-numeric >{{ entry.hours }}</md-table-cell>
-              <md-table-cell>{{ percents[entry.bar_id-1] }}</md-table-cell>
+              <md-table-cell class="short" nowrap >{{ entry.bar_label }}</md-table-cell>
+              <md-table-cell class="short"  md-numeric >{{ entry.hours }}</md-table-cell>
+              <md-table-cell class="short" >{{ percents[entry.bar_id-1] }}</md-table-cell>
             </md-table-row>
           </md-table-body>
         </md-table>
@@ -283,10 +299,64 @@ canvas {
 .md-input-container {
   margin: 0;
 }
-.min-400 {
-  min-width: 400px;
+.min-200 {
+  min-width: 200px;
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
+}
+.md-table .md-table-cell {
+  height: 24px;
+}
+@media (max-width: 944px) {
+  .chart-container {
+    min-height: 300px;
+    max-height: 300px;
+    min-width: 500px;
+    max-width: 500px;
+  }
+}
+@media (max-width: 600px) {
+  .chart-container {
+    min-height: 400px;
+    max-height: 400px;
+    min-width: 350px;
+    max-width: 350px;
+  }
+}
+@media (max-width: 420px) {
+  
+  .chart-container {
+    min-height: 350px;
+    max-height: 350px;
+    min-width: 250px;
+    max-width: 250px;
+  }
+  .md-fab-bottom-right{
+    display: none;
+  }
+}
+</style>
+<style>
+@media (max-width: 420px) {
+  .md-table .md-table-cell.short .md-table-cell-container {
+    padding: 3px 10px 3px 7px;
+  }
+  .md-table .md-table-head-text.md-test {
+    height: 16px;
+    padding-right: 10px;
+    padding-left: 7px;
+    line-height: 10px;
+  }
+  .md-table .md-table-head.short .md-table-head-container{
+    padding: 8px 0;
+    height: 28px;
+  }
+  .md-table .md-table-head.short:last-child .md-table-head-container .md-table-head-text {
+    padding-right: 12px;
+  }
+  .md-table .md-table-cell.short:last-child .md-table-cell-container {
+    padding-right: 12px;
+}
 }
 </style>

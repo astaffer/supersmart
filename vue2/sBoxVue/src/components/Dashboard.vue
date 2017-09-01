@@ -1,22 +1,5 @@
 <template>
 <div class="dash-form">
-  <!--<md-layout >
-      <p class="head-text" md-align="end"> {{ deviceInfo }}</p> 
-      <md-card class="md-warn" v-if="error">
-        <p>{{ error }}</p>
-    </md-card>
-  </md-layout>
-  -->
-  <!--<md-layout md-gutter>
-    <md-layout md-flex="100" md-align="center">
-      <md-button-toggle md-single class="md-accent">
-        <md-button v-bind:class="{ 'md-toggle': effectsActive() }" @click.native="$router.push({ path: '/dashboard/effects' })">Эффективность</md-button>
-        <md-button @click.native="$router.push({ path: '/dashboard/services' })">Сервис</md-button>
-        <md-button @click.native="$router.push({ path: '/dashboard/properties' })">Настройки</md-button>
-      </md-button-toggle>
-    </md-layout>
-  </md-layout>
-  -->
   <md-layout md-gutter class="dash-router" md-align="center">
     <md-layout  md-align="center">
       <router-view></router-view>
