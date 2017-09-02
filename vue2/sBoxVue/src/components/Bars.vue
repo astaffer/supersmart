@@ -120,8 +120,14 @@
             </md-input-container>
           </md-card-content>
           <md-card-actions>
+           <md-layout md-gutter>
+              <md-layout>
             <md-button  @click.native="updateBar(bar)" >Изменить</md-button>
+            </md-layout>
+            <md-layout>
             <md-button @click.native="deleteBar(bar.bar_id)" v-if="hasAdminAccess()">Удалить</md-button>
+            </md-layout>
+            </md-layout>
           </md-card-actions>
         </md-card>
       </md-layout>

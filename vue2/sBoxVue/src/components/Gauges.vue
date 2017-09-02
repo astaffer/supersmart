@@ -207,9 +207,17 @@
             </md-layout>
           </md-card-content>
           <md-card-actions>
-            <md-button @click.native="clearGauge(gauge)">Сбросить</md-button>
-            <md-button @click.native="updateGauge(gauge)">Изменить</md-button>
-            <md-button @click.native="deleteGauge(gauge.gauge_id)" v-if="hasAdminAccess()">Удалить</md-button>
+          <md-layout md-gutter>
+            <md-layout>
+              <md-button @click.native="clearGauge(gauge)">Сбросить</md-button>
+            </md-layout>
+            <md-layout >
+              <md-button @click.native="updateGauge(gauge)">Изменить</md-button>
+            </md-layout>
+            <md-layout>
+              <md-button @click.native="deleteGauge(gauge.gauge_id)" v-if="hasAdminAccess()">Удалить</md-button>
+            </md-layout>
+          </md-layout>
           </md-card-actions>
         </md-card>
       </md-layout>

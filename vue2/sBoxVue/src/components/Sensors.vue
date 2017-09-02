@@ -19,8 +19,14 @@
               <md-checkbox v-model="sensor.sensor_hide" :disabled="!hasAdminAccess()">Не отображать</md-checkbox>
           </md-card-content>
           <md-card-actions>
-            <md-button  @click.native="updateSensor(sensor)" v-if="hasAdminAccess()">Изменить</md-button>
-            <md-button  @click.native="clearSensorData(sensor)" v-if="hasAdminAccess()">Очистить</md-button>
+            <md-layout md-gutter>
+              <md-layout>
+                <md-button  @click.native="updateSensor(sensor)" v-if="hasAdminAccess()">Изменить</md-button>
+              </md-layout>
+              <md-layout>  
+                <md-button  @click.native="clearSensorData(sensor)" v-if="hasAdminAccess()">Очистить</md-button>
+              </md-layout>
+            </md-layout>
           </md-card-actions>
         </md-card>
       </md-layout>

@@ -1,19 +1,5 @@
 <template>
   <div class="effects">
-    <md-speed-dial md-open="hover" class="md-fab-bottom-right" md-theme="about">
-      <md-button class="md-fab" md-fab-trigger>
-        <md-icon md-icon-morph>close</md-icon>
-        <md-icon>share</md-icon>
-      </md-button>
-
-      <md-button class="md-fab md-primary md-mini md-clean">
-        <md-icon>email</md-icon>
-      </md-button>
-
-      <md-button class="md-fab md-primary md-mini md-clean">
-        <md-icon>content_copy</md-icon>
-      </md-button>
-    </md-speed-dial>
     <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
       <md-dialog-title>Указать период</md-dialog-title>
       <md-dialog-content>
@@ -40,9 +26,17 @@
     <md-layout md-gutter>
       <md-layout md-flex="80" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
+        <md-button @click.native="getEffects(0,1)" class="md-toggle" >Сегодня</md-button>
+        <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
+        <md-button @click.native="getEffects(7,1)" >Неделя</md-button>
+        <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
+        <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
+        <md-button @click.native="getEffects(365,1)" >Год</md-button>
+        <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
+        <!-- 
           <md-layout>
             <md-layout >
-              <md-button @click.native="getEffects(0,1)" class="md-toggle">Сегодня</md-button>
+              <md-button @click.native="getEffects(0,1)" class="md-toggle" >Сегодня</md-button>
             </md-layout>
             <md-layout>
               <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
@@ -63,7 +57,8 @@
               <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
             </md-layout>
           </md-layout>
-        </md-button-toggle>   
+          -->
+        </md-button-toggle> 
       </md-layout>
     </md-layout>
     <md-layout md-gutter> 
@@ -279,6 +274,9 @@ canvas {
   max-width: 600px;
   height: auto !important;
 }
+.md-button-toggle {
+    display: block;
+}
 .chart-container{
   margin-left: 10px;
   margin-right: 10px;
@@ -300,7 +298,7 @@ canvas {
   margin: 0;
 }
 .min-200 {
-  min-width: 200px;
+  min-width: 300px;
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
@@ -318,8 +316,8 @@ canvas {
 }
 @media (max-width: 600px) {
   .chart-container {
-    min-height: 400px;
-    max-height: 400px;
+    min-height: 250px;
+    max-height: 250px;
     min-width: 350px;
     max-width: 350px;
   }
@@ -327,8 +325,8 @@ canvas {
 @media (max-width: 420px) {
   
   .chart-container {
-    min-height: 350px;
-    max-height: 350px;
+    min-height: 170px;
+    max-height: 170px;
     min-width: 250px;
     max-width: 250px;
   }
@@ -357,6 +355,9 @@ canvas {
   }
   .md-table .md-table-cell.short:last-child .md-table-cell-container {
     padding-right: 12px;
-}
+  }
+  .min-200 {
+    min-width: 200px;
+  }
 }
 </style>

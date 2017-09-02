@@ -6,32 +6,33 @@
       </div>
     </md-toolbar>
     <md-theme md-name="wh">
-		<md-tabs md-fixed>
-      <md-tab id="basic" md-label="Основное">
-        <md-theme md-name="default">
-          <md-layout md-gutter md-align="center">
-            <md-layout md-flex="70">
-            <devicechange></devicechange>
+    <div class="tabs">
+  		<md-tabs>
+        <md-tab id="basic" md-label="Основное">
+          <md-theme md-name="default">
+             
+              <devicechange></devicechange>
+               
             </md-layout>
-          </md-layout>
-        </md-theme>
-      </md-tab>
-			<md-tab id="effects" md-label="эффективность">
-        <md-theme md-name="default">
-          <barschange :user=user></barschange>
-        </md-theme>
-			</md-tab>
-			<md-tab id="gauges" md-label="сервис">
-        <md-theme md-name="default">
-			   <gaugeschange :user=user></gaugeschange>
-         </md-theme>
-			</md-tab>
-      <md-tab id="sensors" md-label="датчики">
-        <md-theme md-name="default">
-          <sensorschange :user=user></sensorschange>
-        </md-theme>
-      </md-tab>
-		</md-tabs>
+          </md-theme>
+        </md-tab>
+  			<md-tab id="effects" md-label="эффективность">
+          <md-theme md-name="default">
+            <barschange :user=user></barschange>
+          </md-theme>
+  			</md-tab>
+  			<md-tab id="gauges" md-label="сервис">
+          <md-theme md-name="default">
+  			   <gaugeschange :user=user></gaugeschange>
+           </md-theme>
+  			</md-tab>
+        <md-tab id="sensors" md-label="датчики">
+          <md-theme md-name="default">
+            <sensorschange :user=user></sensorschange>
+          </md-theme>
+        </md-tab>
+  		</md-tabs>
+      </div>
     </md-theme>
   </div>
 </template>
@@ -91,5 +92,13 @@ export default {
 <style>
 .props{
   width: 100%;
+}
+@media (max-width: 424px) {
+  .tabs .md-tabs .md-tabs-navigation {
+    display: block ;
+  }
+  .tabs .md-tabs .md-tab-indicator {
+    display: none;
+  }
 }
 </style>
