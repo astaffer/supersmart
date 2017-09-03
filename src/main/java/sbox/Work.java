@@ -22,6 +22,7 @@ import org.sql2o.Sql2o;
 import com.beust.jcommander.JCommander;
 
 import sbox.auth.AuthController;
+import sbox.configuration.ConfigurationController;
 import sbox.device.DeviceController;
 import sbox.effects.EffectsController;
 import sbox.gauges.GaugesController;
@@ -95,6 +96,8 @@ public class Work {
 
 		post(PathUrls.Web.DEVICENETWORKSET, DeviceController.setNetworkSettings);
 		post(PathUrls.Web.DEVICENETWORKGET, DeviceController.getNetworkSettings);
+		post(PathUrls.Web.CONFIGSGET, ConfigurationController.getConfigurations);
+		post(PathUrls.Web.CONFIGSAVE, ConfigurationController.saveConfiguration);
 		writeUptime(options.updelay);
 	}
 

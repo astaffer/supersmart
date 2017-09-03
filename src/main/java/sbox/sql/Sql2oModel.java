@@ -1,5 +1,10 @@
 package sbox.sql;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +15,14 @@ import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.jdbc.Util;
+
+import sbox.configuration.ConfigurationData;
+import sbox.configuration.ConfigurationDataSQL;
+import sbox.configuration.ConfigurationModel;
 import sbox.device.DeviceData;
 import sbox.device.DeviceModel;
 import sbox.effects.EffectsData;
@@ -20,8 +33,9 @@ import sbox.sensor.*;
 import sbox.user.User;
 import sbox.user.UserModel;
 import sbox.user.UserPayload;
+import sbox.util.JsonUtil;
 
-public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel, UserModel {
+public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel, UserModel, ConfigurationModel {
 
 	private Sql2o sql2o;
 	public static final String DELETEOK = "OK";
@@ -363,15 +377,15 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 
 	@Override
 	public User createUser(String username, String newSalt, String newHashedPassword, String email) {
-		long user_id = 0;
+		 
 		try (Connection conn = sql2o.open()) {
-			user_id = (long) conn
+			 conn
 					.createQuery("INSERT INTO users (`user_name`,`user_email`,`access_id`,`salt`)"
 							+ "VALUES(:username,:useremail,:accessid,:salt)")
 					.addParameter("username", username == null ? "newuser" : username)
 					.addParameter("useremail", email == null ? "" : email)
 					.addParameter("accessid", newHashedPassword == null ? "" : newHashedPassword)
-					.addParameter("salt", newSalt == null ? "" : newSalt).executeUpdate().getKey();
+					.addParameter("salt", newSalt == null ? "" : newSalt).executeUpdate();
 		}
 		return getUserByUsername(username);
 	}
@@ -436,7 +450,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 
 	@Override
 	public User addUserRole(String username, String role) {
-		long user_id = 0;
+ 
 		User user = getUserByUsername(username);
 		try (Connection conn = sql2o.open()) {
 			
@@ -444,11 +458,11 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 					.addParameter("rolename", role)
 					.executeAndFetch(String.class).get(0);
 			int roleid = Integer.parseInt(roleidstr);
-			user_id = (long) conn.createQuery("INSERT INTO userrole (`user_id`,`role_id`)"
+			 conn.createQuery("INSERT INTO userrole (`user_id`,`role_id`)"
 							+ "VALUES(:userid,:roleid)")
 					.addParameter("userid", user.getUser_id())
 					.addParameter("roleid", roleid)
-					.executeUpdate().getKey();
+					.executeUpdate();
 		}
 		return getUserByUsername(username);
 	}
@@ -523,5 +537,67 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			}
 		}
 		return getSensor(sensorData.getSensor_id());
+	}
+
+	@Override
+	public ConfigurationData saveConfiguration(String configuration_name) {
+		long config_id = 0;
+		ConfigurationData configurationData = new ConfigurationData();
+		configurationData.setConfig_name(configuration_name);
+		configurationData.setSensors(getAllSensors(""));
+		configurationData.setEffects(getBars());
+		configurationData.setGauges(getGauges(new Date()));
+		configurationData.setDevice(getData());
+		
+		try (Connection conn = sql2o.open()) {
+			
+			config_id =  (long) conn
+					.createQuery("INSERT INTO `configuration`(`config_name`,`effects`,`sensors`,`device`,`gauges`)"
+							+ "VALUES(:config_name,:effects,:sensors,:device,:gauges)")
+					.addParameter("config_name", configurationData.getConfig_name() == null ? "conf" : configurationData.getConfig_name())
+					.addParameter("effects", JsonUtil.dataToJson(configurationData.getEffects()) == null ? "" :  JsonUtil.dataToJson(configurationData.getEffects()))
+					.addParameter("sensors", JsonUtil.dataToJson(configurationData.getSensors()) == null ? "" :  JsonUtil.dataToJson(configurationData.getSensors()))
+					.addParameter("device", JsonUtil.dataToJson(configurationData.getDevice()) == null ? "" :  JsonUtil.dataToJson(configurationData.getDevice()))
+					.addParameter("gauges", JsonUtil.dataToJson(configurationData.getGauges()) == null ? "" :  JsonUtil.dataToJson(configurationData.getGauges()))
+					.executeUpdate()
+					.getKey();
+			configurationData.setConfig_id((int)config_id);
+		}
+		 return configurationData;
+ 
+	}
+
+	@Override
+	public List<ConfigurationData> getConfigurations() {
+		List<ConfigurationData> configs =  new ArrayList<ConfigurationData>();
+		try (Connection conn = sql2o.open()) {
+			
+			ObjectMapper mapper = new ObjectMapper();
+			SimpleDateFormat myDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+			mapper.setDateFormat(myDateFormat);
+			List<ConfigurationDataSQL> configsSql = conn.createQuery("SELECT `config_id`, `config_name`, `effects`,`sensors`,`device`,`gauges` FROM  `configuration`")
+					.executeAndFetch(ConfigurationDataSQL.class);
+			for (ConfigurationDataSQL cs : configsSql) {
+				ConfigurationData data = new ConfigurationData();
+				data.setConfig_id(cs.getConfig_id());
+				data.setConfig_name(cs.getConfig_name());
+				data.setDevice(mapper.readValue(cs.getDevice(),DeviceData.class));
+				data.setEffects(Arrays.asList(mapper.readValue(cs.getEffects(),EffectsData[].class)));
+				data.setGauges(Arrays.asList(mapper.readValue(cs.getGauges(),GaugesData[].class)));
+				data.setSensors(Arrays.asList(mapper.readValue(cs.getSensors(),Sensor[].class)));
+				configs.add(data);
+			}
+			
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return configs;
 	}
 }
