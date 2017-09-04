@@ -59,7 +59,20 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			return sensors;
 		}
 	}
-
+	public Sensor addSensor(Sensor sensor) {
+		long sensr_id = sensor.getSensor_id();
+		try (Connection conn = sql2o.open()) {
+			 conn
+					.createQuery("INSERT INTO `sensor` (`sensor_id`,`sensor_name`,`sensor_type`,`sensor_hide`)"
+							+ "VALUES(:sensorid,:sensorname,:sensortype,:sensorhide)")
+					.addParameter("sensorid", sensor.getSensor_id())
+					.addParameter("sensorname", sensor.getSensor_name())
+					.addParameter("sensortype", sensor.getSensor_type())
+					.addParameter("sensorhide",  sensor.getSensor_hide())
+					.executeUpdate();
+		}
+		return getSensor((int)sensr_id);
+	}
 	public Sensor getSensor(int id) {
 		try (Connection conn = sql2o.open()) {
 			Sensor sensor = conn.createQuery("SELECT sensor_id,sensor_name,sensor_type, sensor_hide FROM sensor where sensor_id=:id")
@@ -320,7 +333,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 							"INSERT INTO servicegauge (`gauge_label`,`gauge_unit`,`sort_order`,`init_value`,`limit_value`,`start_green`,`start_yellow`,`start_red`,`sensor_id`,`init_date`,`mileage_date`)"
 									+ "VALUES(:gauge_label,:gauge_unit,:sort_order,:init_value,:limit_value,:start_green,:start_yellow,:start_red,:sensor_id,:init_date,:mileage_date)")
 					.addParameter("gauge_label", gauge.getGauge_label() == null ? "bar" : gauge.getGauge_label())
-					.addParameter("gauge_unit", gauge.getGauge_unit() == null ? "часов" : gauge.getGauge_unit())
+					.addParameter("gauge_unit", gauge.getGauge_unit() == null ? "Ñ‡Ð°Ñ�Ð¾Ð²" : gauge.getGauge_unit())
 					.addParameter("init_value", gauge.getInit_value() == 0 ? 0 : gauge.getInit_value())
 					.addParameter("limit_value", gauge.getLimit_value() == 0 ? 0 : gauge.getLimit_value())
 					.addParameter("start_green", gauge.getStart_green() == 0 ? 0 : gauge.getStart_green())
@@ -568,15 +581,21 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	}
 
 	@Override
-	public List<ConfigurationData> getConfigurations() {
+	public List<ConfigurationData> getConfigurations(int config_id) {
 		List<ConfigurationData> configs =  new ArrayList<ConfigurationData>();
 		try (Connection conn = sql2o.open()) {
 			
 			ObjectMapper mapper = new ObjectMapper();
 			SimpleDateFormat myDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 			mapper.setDateFormat(myDateFormat);
-			List<ConfigurationDataSQL> configsSql = conn.createQuery("SELECT `config_id`, `config_name`, `effects`,`sensors`,`device`,`gauges` FROM  `configuration`")
+			Query query = conn.createQuery("SELECT `config_id`, `config_name`, `effects`,`sensors`,`device`,`gauges` FROM  `configuration`");
+			if (config_id > 0) {
+				query = conn.createQuery("SELECT `config_id`, `config_name`, `effects`,`sensors`,`device`,`gauges` FROM  `configuration` WHERE `config_id` = :configid")
+						.addParameter("configid", config_id);
+			}
+			List<ConfigurationDataSQL> configsSql = query
 					.executeAndFetch(ConfigurationDataSQL.class);
+			
 			for (ConfigurationDataSQL cs : configsSql) {
 				ConfigurationData data = new ConfigurationData();
 				data.setConfig_id(cs.getConfig_id());
@@ -599,5 +618,36 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			e.printStackTrace();
 		}
 		return configs;
+	}
+
+	@Override
+	public ConfigurationData applyConfigurations(int config_id) {
+		ConfigurationData config = getConfigurations(config_id).get(0);
+		try (Connection conn = sql2o.open()) {
+			conn.createQuery("DELETE FROM sensor").executeUpdate();
+			conn.createQuery("DELETE FROM servicegauge").executeUpdate();
+			conn.createQuery("DELETE FROM effectsbar").executeUpdate();
+		}
+		DeviceData device = config.getDevice();
+		changeData(device.getDevice_id(),device.getDevice_name(),device.getDevice_shifts());
+		for (Sensor sensor : config.getSensors()) {
+			addSensor(sensor);
+		}
+		for (EffectsData bar : config.getEffects()) {
+			addBar(bar);
+		}
+		for (GaugesData gauge : config.getGauges()) {
+			addGauge(gauge);
+		}
+		return config;
+	}
+
+	@Override
+	public String deleteConfiguration(int config_id) {
+		try (Connection conn = sql2o.open()) {
+			conn.createQuery("DELETE FROM configuration WHERE config_id=:configid").addParameter("configid", config_id)
+					.executeUpdate();
+		}
+		return getConfigurations(config_id).isEmpty() ? DELETEOK : DELETEERROR;
 	}
 }

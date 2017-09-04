@@ -40,6 +40,9 @@
         </md-list-item>
         <md-list-item @click.native="$router.push({ path: '/settings' })">
              <md-icon>settings</md-icon><span>Настройки </span>
+        </md-list-item>
+        <md-list-item @click.native="$router.push({ path: '/configurations' })">
+             <md-icon>next_week</md-icon><span>Конфигурация </span>
              <md-divider class="md-inset"></md-divider>
         </md-list-item>
         <md-list-item @click.native="logout()">

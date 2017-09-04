@@ -35,6 +35,32 @@ public class ConfigurationController {
 		response.status(200);
 		response.type("application/json");
 		ConfigurationModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getConfigurations());
+		return JsonUtil.dataToJson(model.getConfigurations(0));
+	};
+	public static Route applyConfiguration = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		ConfigurationsPayload config = mapper.readValue(request.body(), ConfigurationsPayload.class);
+		if (!config.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		
+		response.status(200);
+		response.type("application/json");
+		ConfigurationModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.applyConfigurations(config.getConfig_id()));
+	};
+	public static Route removeConfiguration = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		ConfigurationsPayload config = mapper.readValue(request.body(), ConfigurationsPayload.class);
+		if (!config.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		
+		response.status(200);
+		response.type("application/json");
+		ConfigurationModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.deleteConfiguration(config.getConfig_id()));
 	};
 }

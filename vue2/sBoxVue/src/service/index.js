@@ -8,9 +8,12 @@ const EFFECTS_URL = 'effects/'
 const GAUGES_URL = 'gauges/'
 const BARS_URL = 'bars/'
 const DEVICE_URL = 'device/'
+const CONFIGS_URL = 'configs/'
 const UPDATE_URL = 'change/'
 const CREATE_URL = 'add/'
 const DELETE_URL = 'delete/'
+const SAVE_URL = 'save/'
+const APPLY_URL = 'apply/'
 const GET_URL = 'get/'
 const USERS_URL = 'users/'
 const ROLES_URL = 'roles/'
@@ -104,6 +107,18 @@ export default {
   },
   getUsersUpdateUrl () {
     return this.getApiUrl(USERS_URL) + UPDATE_URL
+  },
+  getConfigsUrl () {
+    return this.getApiUrl(CONFIGS_URL)
+  },
+  getConfigApplyUrl () {
+    return this.getApiUrl(CONFIGS_URL) + APPLY_URL
+  },
+  getConfigDeleteUrl () {
+    return this.getApiUrl(CONFIGS_URL) + DELETE_URL
+  },
+  getConfigSaveUrl () {
+    return this.getApiUrl(CONFIGS_URL) + SAVE_URL
   }
 
 }

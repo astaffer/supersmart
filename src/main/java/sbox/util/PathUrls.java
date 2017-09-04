@@ -44,7 +44,9 @@ public class PathUrls {
         @Getter public static final String ROLES = "/roles/";
         @Getter public static final String USERSBYROLE = "/users/byrole/";
         /*Configuration*/
-        @Getter public static final String CONFIGSAVE = "/config/save/";
+        @Getter public static final String CONFIGSAVE = "/configs/save/";
+        @Getter public static final String CONFIGAPPLY = "/configs/apply/";
+        @Getter public static final String CONFIGDEL = "/configs/delete/";
         @Getter public static final String CONFIGSGET = "/configs/";
     }
 

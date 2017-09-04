@@ -98,6 +98,8 @@ public class Work {
 		post(PathUrls.Web.DEVICENETWORKGET, DeviceController.getNetworkSettings);
 		post(PathUrls.Web.CONFIGSGET, ConfigurationController.getConfigurations);
 		post(PathUrls.Web.CONFIGSAVE, ConfigurationController.saveConfiguration);
+		post(PathUrls.Web.CONFIGAPPLY, ConfigurationController.applyConfiguration);
+		post(PathUrls.Web.CONFIGDEL, ConfigurationController.removeConfiguration);
 		writeUptime(options.updelay);
 	}
 

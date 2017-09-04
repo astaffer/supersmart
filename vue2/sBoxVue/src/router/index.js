@@ -10,7 +10,7 @@ import Effects from '@/components/Effects'
 import Services from '@/components/Services'
 import Properties from '@/components/Properties'
 import SideNav from '@/components/SideNav'
-
+import Configurations from '@/components/Configurations'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -49,6 +49,12 @@ export default new Router({
       path: '/settings',
       name: 'Settings',
       component: Settings,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/configurations',
+      name: 'Configurations',
+      component: Configurations,
       meta: { requiresAuth: true }
     },
     {
