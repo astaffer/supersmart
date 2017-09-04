@@ -1,4 +1,4 @@
-CREATE TABLE `configuration` (
+﻿CREATE TABLE `configuration` (
   `config_id` int(11) NOT NULL AUTO_INCREMENT,
   `config_name` varchar(45) NOT NULL,
   `effects` varchar(5000) NOT NULL,

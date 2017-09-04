@@ -333,7 +333,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 							"INSERT INTO servicegauge (`gauge_label`,`gauge_unit`,`sort_order`,`init_value`,`limit_value`,`start_green`,`start_yellow`,`start_red`,`sensor_id`,`init_date`,`mileage_date`)"
 									+ "VALUES(:gauge_label,:gauge_unit,:sort_order,:init_value,:limit_value,:start_green,:start_yellow,:start_red,:sensor_id,:init_date,:mileage_date)")
 					.addParameter("gauge_label", gauge.getGauge_label() == null ? "bar" : gauge.getGauge_label())
-					.addParameter("gauge_unit", gauge.getGauge_unit() == null ? "Ñ‡Ð°Ñ�Ð¾Ð²" : gauge.getGauge_unit())
+					.addParameter("gauge_unit", gauge.getGauge_unit() == null ? "часов" : gauge.getGauge_unit())
 					.addParameter("init_value", gauge.getInit_value() == 0 ? 0 : gauge.getInit_value())
 					.addParameter("limit_value", gauge.getLimit_value() == 0 ? 0 : gauge.getLimit_value())
 					.addParameter("start_green", gauge.getStart_green() == 0 ? 0 : gauge.getStart_green())
