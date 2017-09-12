@@ -29,13 +29,15 @@ import sbox.effects.EffectsData;
 import sbox.effects.EffectsModel;
 import sbox.gauges.GaugesData;
 import sbox.gauges.GaugesModel;
+import sbox.index.IntValue;
+import sbox.index.PureDataModel;
 import sbox.sensor.*;
 import sbox.user.User;
 import sbox.user.UserModel;
 import sbox.user.UserPayload;
 import sbox.util.JsonUtil;
 
-public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel, UserModel, ConfigurationModel {
+public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, DeviceModel, UserModel, ConfigurationModel, PureDataModel {
 
 	private Sql2o sql2o;
 	public static final String DELETEOK = "OK";
@@ -649,5 +651,13 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 					.executeUpdate();
 		}
 		return getConfigurations(config_id).isEmpty() ? DELETEOK : DELETEERROR;
+	}
+
+	@Override
+	public List<IntValue> getPureData() {
+		try (Connection conn = sql2o.open()) {
+			List<IntValue> values = conn.createQuery("SELECT sensor_id,date_start,date_end,int_value FROM sbox.int_values order by date_start desc,  sensor_id").executeAndFetch(IntValue.class);
+			return values;
+		}
 	}
 }

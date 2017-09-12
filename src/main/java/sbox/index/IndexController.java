@@ -1,7 +1,12 @@
 package sbox.index;
 
+import static sbox.Work.sql2o;
+
 import java.util.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import sbox.sql.Sql2oModel;
 import sbox.util.JsonUtil;
 import sbox.util.PathUrls;
 import sbox.util.ViewUtil;
@@ -31,6 +36,19 @@ public class IndexController {
 		response.status(HTTP_GOOD_REQUEST);
 		response.type(RESPONSE_TYPE);
 		return JsonUtil.dataToJson("Станок");
-};
+	};
+	public static Route getPureData = (Request request, Response response) -> {
+		// ObjectMapper mapper = new ObjectMapper();
+		//ConfigurationsPayload config = mapper.readValue(request.body(), ConfigurationsPayload.class);
+		/*if (!config.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		*/
+		response.status(200);
+		response.type("application/json");
+		PureDataModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJsonDateExtended(model.getPureData());
+	};
 	 
 }

@@ -45,6 +45,10 @@
              <md-icon>next_week</md-icon><span>Конфигурация </span>
              <md-divider class="md-inset"></md-divider>
         </md-list-item>
+        <md-list-item @click.native="$router.push({ path: '/puredata' })">
+             <md-icon>account_balance</md-icon><span>Текущие данные </span>
+             <md-divider class="md-inset"></md-divider>
+        </md-list-item>
         <md-list-item @click.native="logout()">
              <md-icon class="md-warn">exit_to_app</md-icon><span>Выход</span> 
         </md-list-item>

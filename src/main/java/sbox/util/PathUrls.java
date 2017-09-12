@@ -48,6 +48,8 @@ public class PathUrls {
         @Getter public static final String CONFIGAPPLY = "/configs/apply/";
         @Getter public static final String CONFIGDEL = "/configs/delete/";
         @Getter public static final String CONFIGSGET = "/configs/";
+        /*UTIL*/
+        @Getter public static final String PUREDATA = "/util/puredata/";
     }
 
     public static class Template {

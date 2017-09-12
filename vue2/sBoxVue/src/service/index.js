@@ -23,12 +23,16 @@ const DELETEROLE_URL = 'deleterole/'
 const CHANGEPASS_URL = 'changepass/'
 const STATUS_URL = 'status/'
 const CLEARDATA_URL = 'cleardata/'
+const PUREDATA_URL = 'util/puredata/'
 export default {
   getApiUrl (api) {
     if (process.env.NODE_ENV === 'development') {
       return DEV_API_URL + api
     }
     return API_URL + api
+  },
+  getPureDataUrl () {
+    return this.getApiUrl(PUREDATA_URL)
   },
   getStatusUrl () {
     return this.getApiUrl(STATUS_URL)

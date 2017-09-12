@@ -100,6 +100,8 @@ public class Work {
 		post(PathUrls.Web.CONFIGSAVE, ConfigurationController.saveConfiguration);
 		post(PathUrls.Web.CONFIGAPPLY, ConfigurationController.applyConfiguration);
 		post(PathUrls.Web.CONFIGDEL, ConfigurationController.removeConfiguration);
+		
+		post(PathUrls.Web.PUREDATA, IndexController.getPureData);
 		writeUptime(options.updelay);
 	}
 
