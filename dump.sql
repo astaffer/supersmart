@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `configuration`
+--
+
+DROP TABLE IF EXISTS `configuration`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `configuration` (
+  `config_id` int(11) NOT NULL AUTO_INCREMENT,
+  `config_name` varchar(45) NOT NULL,
+  `effects` varchar(5000) NOT NULL,
+  `sensors` varchar(5000) NOT NULL,
+  `device` varchar(5000) NOT NULL,
+  `gauges` varchar(5000) NOT NULL,
+  PRIMARY KEY (`config_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `configuration`
+--
+
+LOCK TABLES `configuration` WRITE;
+/*!40000 ALTER TABLE `configuration` DISABLE KEYS */;
+INSERT INTO `configuration` VALUES (1,'theFirst','[ {\r\n  \"bar_id\" : 1,\r\n  \"bar_label\" : \"План\",\r\n  \"bar_color\" : \"255, 99, 132\",\r\n  \"bar_type\" : \"Plan\",\r\n  \"sensor_id\" : 0,\r\n  \"sort_order\" : 1,\r\n  \"hours\" : 0\r\n}, {\r\n  \"bar_id\" : 2,\r\n  \"bar_label\" : \"Время включения\",\r\n  \"bar_color\" : \"54, 162, 235\",\r\n  \"bar_type\" : \"SensorOn\",\r\n  \"sensor_id\" : 1,\r\n  \"sort_order\" : 2,\r\n  \"hours\" : 0\r\n}, {\r\n  \"bar_id\" : 3,\r\n  \"bar_label\" : \"Время работы\",\r\n  \"bar_color\" : \"255, 206, 86\",\r\n  \"bar_type\" : \"SensorOn\",\r\n  \"sensor_id\" : 3,\r\n  \"sort_order\" : 3,\r\n  \"hours\" : 0\r\n}, {\r\n  \"bar_id\" : 4,\r\n  \"bar_label\" : \"Свет\",\r\n  \"bar_color\" : \"75, 192, 192\",\r\n  \"bar_type\" : \"SensorOn\",\r\n  \"sensor_id\" : 2,\r\n  \"sort_order\" : 4,\r\n  \"hours\" : 0\r\n}, {\r\n  \"bar_id\" : 5,\r\n  \"bar_label\" : \"Завеса\",\r\n  \"bar_color\" : \"153, 102, 255\",\r\n  \"bar_type\" : \"SensorOn\",\r\n  \"sensor_id\" : 4,\r\n  \"sort_order\" : 5,\r\n  \"hours\" : 0\r\n}, {\r\n  \"bar_id\" : 6,\r\n  \"bar_label\" : \"Вентиляция\",\r\n  \"bar_color\" : \"255, 159, 64\",\r\n  \"bar_type\" : \"SensorOn\",\r\n  \"sensor_id\" : 3,\r\n  \"sort_order\" : 6,\r\n  \"hours\" : 0\r\n}, {\r\n  \"bar_id\" : 7,\r\n  \"bar_label\" : \"Нет Завеса – насос\",\r\n  \"bar_color\" : \"75, 192, 12\",\r\n  \"bar_type\" : \"SensorOff\",\r\n  \"sensor_id\" : 4,\r\n  \"sort_order\" : 7,\r\n  \"hours\" : 0\r\n}, {\r\n  \"bar_id\" : 13,\r\n  \"bar_label\" : \"ЧЧЧ\",\r\n  \"bar_color\" : \"255, 99, 132\",\r\n  \"bar_type\" : \"SensorOn\",\r\n  \"sensor_id\" : 4,\r\n  \"sort_order\" : 1,\r\n  \"hours\" : 0\r\n} ]','[ {\r\n  \"sensor_id\" : 1,\r\n  \"sensor_name\" : \"Общее питание\",\r\n  \"sensor_type\" : false,\r\n  \"sensor_hide\" : false\r\n}, {\r\n  \"sensor_id\" : 2,\r\n  \"sensor_name\" : \"Циркуляция нагрева\",\r\n  \"sensor_type\" : false,\r\n  \"sensor_hide\" : false\r\n}, {\r\n  \"sensor_id\" : 3,\r\n  \"sensor_name\" : \"Тены\",\r\n  \"sensor_type\" : false,\r\n  \"sensor_hide\" : false\r\n}, {\r\n  \"sensor_id\" : 4,\r\n  \"sensor_name\" : \"Гидростанция\",\r\n  \"sensor_type\" : false,\r\n  \"sensor_hide\" : false\r\n}, {\r\n  \"sensor_id\" : 5,\r\n  \"sensor_name\" : \"Давление набрано\",\r\n  \"sensor_type\" : false,\r\n  \"sensor_hide\" : false\r\n}, {\r\n  \"sensor_id\" : 6,\r\n  \"sensor_name\" : \"Свободный вход\",\r\n  \"sensor_type\" : false,\r\n  \"sensor_hide\" : true\r\n} ]','{\r\n  \"device_id\" : 1,\r\n  \"device_name\" : \"Покрасочная камера\",\r\n  \"device_shifts\" : 1.0\r\n}','[ {\r\n  \"gauge_id\" : 2,\r\n  \"gauge_label\" : \"Показатель\",\r\n  \"gauge_unit\" : \"часы\",\r\n  \"sort_order\" : 1,\r\n  \"limit_value\" : 1000,\r\n  \"init_value\" : 10,\r\n  \"start_green\" : 120,\r\n  \"start_yellow\" : 20,\r\n  \"start_red\" : 500,\r\n  \"sensor_id\" : 1,\r\n  \"init_date\" : \"26.04.2017\",\r\n  \"mileage_date\" : \"26.08.2017\",\r\n  \"value\" : 0,\r\n  \"mileage_value\" : 0\r\n}, {\r\n  \"gauge_id\" : 3,\r\n  \"gauge_label\" : \"Сервис\",\r\n  \"gauge_unit\" : \"Часы\",\r\n  \"sort_order\" : 2,\r\n  \"limit_value\" : 500,\r\n  \"init_value\" : 10,\r\n  \"start_green\" : 100,\r\n  \"start_yellow\" : 20,\r\n  \"start_red\" : 300,\r\n  \"sensor_id\" : 1,\r\n  \"init_date\" : \"01.06.2017\",\r\n  \"mileage_date\" : \"26.08.2017\",\r\n  \"value\" : 0,\r\n  \"mileage_value\" : 0\r\n} ]');
+/*!40000 ALTER TABLE `configuration` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `decdata`
 --
 
@@ -81,7 +109,7 @@ CREATE TABLE `effectsbar` (
   `sensor_id` tinyint(4) NOT NULL,
   `sort_order` tinyint(4) NOT NULL,
   PRIMARY KEY (`bar_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,50 +118,39 @@ CREATE TABLE `effectsbar` (
 
 LOCK TABLES `effectsbar` WRITE;
 /*!40000 ALTER TABLE `effectsbar` DISABLE KEYS */;
-INSERT INTO `effectsbar` VALUES (1,'План','255, 99, 132','Plan',0,1),(2,'Время включения','54, 162, 235','SensorOn',1,2),(3,'Время работы','255, 206, 86','SensorOn',3,3),(4,'Свет','75, 192, 192','SensorOn',2,4),(5,'Завеса','153, 102, 255','SensorOn',4,5),(6,'Вентиляция','255, 159, 64','SensorOn',3,6),(7,'Нет Завеса – насос','75, 192, 12','SensorOff',4,7),(13,'ЧЧЧ','255, 99, 132','SensorOn',4,1);
+INSERT INTO `effectsbar` VALUES (1,'План','255, 99, 132','Plan',0,1),(2,'Время включения','54, 162, 235','SensorOn',1,2),(3,'Время работы','255, 206, 86','SensorOn',1,3),(4,'Ц','255, 205, 255','SensorOn',2,4);
 /*!40000 ALTER TABLE `effectsbar` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Temporary table structure for view `int_values`
+-- Table structure for table `int_data`
 --
 
-DROP TABLE IF EXISTS `int_values`;
-/*!50001 DROP VIEW IF EXISTS `int_values`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `int_values` (
-  `sensor_id` tinyint NOT NULL,
-  `date_start` tinyint NOT NULL,
-  `date_end` tinyint NOT NULL,
-  `int_value` tinyint NOT NULL
-) ENGINE=InnoDB */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `intdata`
---
-
-DROP TABLE IF EXISTS `intdata`;
+DROP TABLE IF EXISTS `int_data`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `intdata` (
+CREATE TABLE `int_data` (
   `int_id` int(11) NOT NULL AUTO_INCREMENT,
   `sensor_id` tinyint(4) NOT NULL,
-  `int_date` datetime NOT NULL,
-  `int_value` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`int_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=201 DEFAULT CHARSET=utf8;
+  `prev_stop_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `stop_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `delta_date` int(11) NOT NULL DEFAULT '0',
+  `complete` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`int_id`),
+  UNIQUE KEY `int_id_UNIQUE` (`int_id`),
+  KEY `sensor_id_INDEX` (`sensor_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `intdata`
+-- Dumping data for table `int_data`
 --
 
-LOCK TABLES `intdata` WRITE;
-/*!40000 ALTER TABLE `intdata` DISABLE KEYS */;
-INSERT INTO `intdata` VALUES (1,1,'2017-08-25 14:31:56',0),(3,3,'2017-08-25 13:36:27',0),(102,4,'2016-07-28 16:31:32',0),(103,6,'2017-05-28 11:49:35',0),(105,4,'2017-05-16 14:32:29',0),(106,4,'2017-12-20 23:54:29',1),(107,4,'2016-09-15 00:14:53',1),(108,6,'2017-10-31 14:16:52',1),(109,5,'2017-11-29 22:56:34',0),(110,5,'2017-04-02 10:26:42',1),(111,6,'2017-07-22 11:50:52',1),(113,5,'2017-06-10 16:38:12',1),(115,2,'2017-07-03 03:03:19',0),(117,6,'2016-08-14 02:53:23',1),(119,2,'2016-07-20 21:26:11',0),(120,6,'2017-07-06 08:17:51',1),(121,5,'2017-10-01 11:21:52',1),(124,4,'2017-04-19 06:07:32',0),(125,5,'2018-01-25 02:13:59',1),(127,2,'2016-06-21 07:01:58',0),(128,5,'2017-09-02 00:01:32',0),(132,2,'2016-11-13 22:48:42',1),(133,4,'2016-11-04 04:53:50',0),(134,4,'2017-11-21 14:50:01',0),(135,6,'2017-12-29 23:45:47',0),(137,4,'2016-07-07 13:55:51',1),(138,2,'2018-01-31 06:55:01',0),(139,6,'2017-09-19 01:09:36',0),(140,2,'2016-11-04 07:57:23',1),(141,5,'2017-02-05 03:03:37',0),(142,6,'2017-02-20 16:57:49',1),(145,6,'2017-06-03 01:53:41',0),(146,6,'2016-09-21 03:30:21',1),(148,4,'2017-01-17 04:44:53',0),(151,6,'2016-12-14 01:08:32',1),(153,2,'2017-11-11 23:14:27',1),(155,2,'2017-07-22 06:48:41',0),(157,2,'2017-03-18 19:09:55',0),(158,6,'2016-08-08 07:45:57',1),(159,5,'2018-01-10 22:35:19',0),(160,5,'2016-11-25 22:12:34',1),(163,2,'2016-09-02 05:38:14',0),(165,6,'2018-03-06 10:19:28',0),(166,6,'2016-06-25 23:10:24',1),(167,2,'2016-04-15 00:07:43',1),(168,4,'2018-04-03 13:18:40',0),(169,6,'2018-04-03 06:54:28',0),(170,6,'2016-04-19 17:14:06',1),(171,5,'2016-07-22 10:50:56',0),(172,6,'2017-10-21 12:46:30',1),(174,6,'2016-09-26 07:25:33',0),(175,5,'2018-03-16 05:18:13',1),(179,6,'2017-04-14 16:36:09',1),(180,5,'2017-11-13 19:51:20',1),(181,4,'2017-10-14 02:47:51',1),(182,6,'2018-03-18 19:12:23',0),(184,6,'2017-09-12 10:19:55',1),(185,4,'2017-03-07 18:31:14',0),(187,4,'2018-02-06 18:42:50',1),(189,5,'2017-04-14 23:23:47',0),(191,6,'2017-02-23 16:27:19',1),(192,5,'2016-10-11 06:34:35',0),(193,5,'2018-03-30 04:51:15',0),(194,4,'2016-08-30 21:40:47',1),(196,5,'2016-06-03 21:28:22',0),(197,6,'2017-11-11 21:38:03',0),(198,6,'2017-02-17 08:34:53',1),(200,2,'2017-06-19 10:07:11',0);
-/*!40000 ALTER TABLE `intdata` ENABLE KEYS */;
+LOCK TABLES `int_data` WRITE;
+/*!40000 ALTER TABLE `int_data` DISABLE KEYS */;
+INSERT INTO `int_data` VALUES (1,1,'2017-09-24 01:25:49','2017-09-24 01:25:49','2017-09-24 11:26:00',36011,1),(2,1,'2017-09-24 11:26:00','2017-09-24 11:26:02','2017-09-24 11:26:19',17,1),(3,1,'2017-09-24 11:26:19','2017-09-24 11:26:22','2017-09-24 11:26:29',7,1),(4,1,'2017-09-24 11:26:29','2017-09-24 11:26:29','2017-09-24 11:26:39',10,1),(5,1,'2017-09-24 11:26:39','2017-09-24 11:26:49','2017-09-24 11:26:59',10,1),(6,1,'2017-09-24 11:26:59','2017-09-24 11:27:09','2017-09-24 11:27:19',10,1),(7,1,'2017-09-24 11:27:19','2017-09-24 11:27:20','2017-09-24 11:27:30',10,1),(8,1,'2017-09-24 11:27:30','2017-09-24 11:27:40','2017-09-24 11:27:50',10,1),(9,1,'2017-09-24 11:27:50','2017-09-24 11:27:51','2017-09-24 11:28:00',9,1),(10,1,'2017-09-24 11:28:00','2017-09-24 11:28:10','2017-09-24 11:28:20',10,1),(11,1,'2017-09-24 11:28:20','2017-09-24 11:28:21','2017-09-24 11:28:40',19,1),(12,1,'2017-09-24 11:28:40','2017-09-24 11:28:41','2017-09-24 11:28:50',9,1),(13,1,'2017-09-24 11:28:50','2017-09-24 11:28:51','2017-09-24 11:28:59',8,1),(14,1,'2017-09-24 11:28:59','2017-09-24 11:29:21','2017-09-24 11:29:31',10,1),(15,1,'2017-09-24 11:29:31','2017-09-24 11:29:41','2017-09-24 11:29:41',0,0);
+/*!40000 ALTER TABLE `int_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -216,7 +233,7 @@ CREATE TABLE `servicegauge` (
 
 LOCK TABLES `servicegauge` WRITE;
 /*!40000 ALTER TABLE `servicegauge` DISABLE KEYS */;
-INSERT INTO `servicegauge` VALUES (2,'Показатель','часы',1,10,1000,120,20,500,1,'2017-04-26 00:00:00','2017-08-26 00:00:00'),(3,'Сервис','Часы',2,10,500,100,20,300,1,'2017-06-01 00:00:00','2017-08-26 00:00:00');
+INSERT INTO `servicegauge` VALUES (2,'Показатель','часы',1,10,1000,120,20,500,1,'2017-09-05 19:42:28','2017-08-26 00:00:00'),(3,'Сервис','Часы',2,10,500,100,20,300,1,'2017-09-05 19:44:50','2017-08-26 00:00:00');
 /*!40000 ALTER TABLE `servicegauge` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -244,7 +261,7 @@ CREATE TABLE `time_dimension` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `td_ymd_idx` (`year`,`month`,`day`),
   UNIQUE KEY `td_dbdate_idx` (`db_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -325,15 +342,16 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `count_hours`(sensorid int,fromdate date, todate date) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `count_hours`(sensorid int,fromdate datetime, todate datetime) RETURNS int(11)
 BEGIN
 	DECLARE result int;
 	DECLARE sensorType int;
     DECLARE deviceshifts float;
+    DECLARE TD datetime;
     SET @deviceshifts = (SELECT device_shifts FROM device limit 1);
-    
+    SET @TD = NOW();
 	IF sensorid = 0 then SET @result= (
-								SELECT floor(sum(work_hours*@deviceshifts)) FROM sbox.time_dimension WHERE db_date >=fromdate AND db_date <todate
+								SELECT floor(sum(work_hours*@deviceshifts*3600)) FROM sbox.time_dimension WHERE db_date >=fromdate AND db_date <todate
 								);
 	ELSE    
 		BEGIN                        
@@ -342,33 +360,24 @@ BEGIN
 			IF @sensorType IS NOT NULL 
 				THEN 
 					IF @sensorType = 0 THEN
-							SET @result = ( SELECT
-									floor(sum(
-									time_to_sec(timediff(case when date_end > todate then todate else date_end end,
-									case when date_start < fromdate then fromdate else date_start end
-									))/3600)) as caks
-								 FROM sbox.int_values
-								where 
-									sensor_id = sensorid and 
-									fromdate < date_end and
-									todate > date_start and
-									int_value = 1);
-					ELSE 
-						SET @result = (select count(*)
-							from (SELECT 
-								date( dec_date )
-								,hour( dec_date )
-								, count(*)
-							FROM 
-								sbox.decdata
-							WHERE sensor_id = sensorid
-								AND dec_date >=fromdate
-								AND dec_date <todate
-							GROUP BY 
-								hour( dec_date )
-								,date( dec_date )
-							HAVING 
-								count(*) > 0) HOURS);
+							SET @result = ( SELECT  sum(
+									time_to_sec(
+												timediff(
+													(case when complete = 1 and stop_date > todate 
+														then todate 
+														when complete = 0 and todate  > @TD
+														then @TD
+														when complete = 0 and todate  <= @TD
+														then todate
+														else stop_date end),
+													case when start_date < fromdate 
+														then fromdate 
+														else start_date end)))
+									FROM sbox.int_data  
+									where 
+										sensor_id = sensorid and 
+										fromdate < stop_date and
+										todate > start_date);
 					END IF;
 			END IF;
 		END;
@@ -390,7 +399,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `effects`(fromdate date, todate date)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `effects`(fromdate datetime, todate datetime)
 BEGIN
 SELECT 
 	bar_id,
@@ -476,25 +485,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Final view structure for view `int_values`
---
-
-/*!50001 DROP TABLE IF EXISTS `int_values`*/;
-/*!50001 DROP VIEW IF EXISTS `int_values`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `int_values` AS (select `base`.`sensor_id` AS `sensor_id`,min(`base`.`int_date`) AS `date_start`,(select `intdata`.`int_date` from `intdata` where ((`intdata`.`sensor_id` = `base`.`sensor_id`) and (`intdata`.`int_date` > `base`.`int_date`) and (`intdata`.`int_value` <> `base`.`int_value`)) order by `intdata`.`int_date` limit 1) AS `date_end`,`base`.`int_value` AS `int_value` from `intdata` `base` group by `base`.`sensor_id`,`base`.`int_value`,`date_end`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -505,4 +495,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-08-27  9:41:32
+-- Dump completed on 2017-09-24 22:18:47
