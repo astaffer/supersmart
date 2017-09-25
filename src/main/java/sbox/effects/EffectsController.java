@@ -22,7 +22,7 @@ public class EffectsController {
 		response.status(200);
 		response.type("application/json");
 		EffectsModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJson(model.getEffects(effects.dateFrom,effects.dateTo));
+		return JsonUtil.dataToJson(model.getEffects(effects.dateFrom,effects.dateTo, effects.detail));
 	};
 	public static Route getBars = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();

@@ -18,15 +18,15 @@
               <md-table-head class="short">Датчик</md-table-head>
               <md-table-head md-numeric class="short">Время старт</md-table-head>
               <md-table-head md-numeric class="short">Время финиш</md-table-head>
-              <md-table-head md-numeric class="short">Сигнал</md-table-head>
+              <md-table-head md-numeric class="short">Дельта, с</md-table-head>
             </md-table-row>
           </md-table-header>
           <md-table-body>
             <md-table-row v-for="entry in intvalues" :key="entry.id">
               <md-table-cell class="short" nowrap >{{ entry.sensor_id }}</md-table-cell>
-              <md-table-cell class="short"  md-numeric >{{ entry.date_start }}</md-table-cell>
-              <md-table-cell class="short" >{{ entry.date_end }}</md-table-cell>
-              <md-table-cell class="short" >{{ entry.int_value }}</md-table-cell>
+              <md-table-cell class="short"  md-numeric >{{ entry.start_date }}</md-table-cell>
+              <md-table-cell class="short" >{{ entry.stop_date }}</md-table-cell>
+              <md-table-cell class="short" >{{ entry.delta_date }}</md-table-cell>
             </md-table-row>
           </md-table-body>
         </md-table>
@@ -52,8 +52,8 @@ export default {
       this.$http.post(service.getPureDataUrl()).then(response => {
         this.intvalues = response.data
         this.intvalues.forEach(function (element, index, array) {
-          element.date_start = new Date(Date.parse(element.date_start)).toLocaleString('ru-Ru', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
-          element.date_end = new Date(Date.parse(element.date_end)).toLocaleString('ru-Ru', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })
+          element.start_date = new Date(Date.parse(element.start_date)).toLocaleString('ru-Ru', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })
+          element.stop_date = new Date(Date.parse(element.stop_date)).toLocaleString('ru-Ru', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })
         })
       }, response => {
         this.error = 'Ошибка при получении данных'

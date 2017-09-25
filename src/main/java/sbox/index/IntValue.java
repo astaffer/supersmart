@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class IntValue {
 	int sensor_id;
-	Date date_start;
-	Date date_end;
-	int int_value;
+	Date start_date;
+	Date stop_date;
+	int delta_date;
 }

@@ -10,5 +10,5 @@ public class EffectsData {
 	EffectsType bar_type;
 	int sensor_id;
 	int sort_order;
-	int hours;
+	double hours;
 }

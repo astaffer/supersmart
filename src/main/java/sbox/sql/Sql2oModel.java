@@ -1,7 +1,6 @@
 package sbox.sql;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,11 +104,15 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	}
 
 	@Override
-	public List<EffectsData> getEffects(Date dateFrom, Date dateTo) {
+	public List<EffectsData> getEffects(Date dateFrom, Date dateTo,Detail detail) {
 		try (Connection conn = sql2o.open()) {
 			List<EffectsData> effects = conn.createQuery("CALL effects(:dateFrom,:dateTo);")
 					.addParameter("dateFrom", dateFrom).addParameter("dateTo", dateTo)
 					.executeAndFetch(EffectsData.class);
+			
+			for (EffectsData effectsData : effects) {
+				effectsData.setHours(effectsData.getHours()/detail.getValue());
+			}
 			return effects;
 		}
 	}
@@ -656,7 +659,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public List<IntValue> getPureData() {
 		try (Connection conn = sql2o.open()) {
-			List<IntValue> values = conn.createQuery("SELECT sensor_id,date_start,date_end,int_value FROM sbox.int_values order by date_start desc,  sensor_id").executeAndFetch(IntValue.class);
+			List<IntValue> values = conn.createQuery("SELECT sensor_id,start_date,stop_date,delta_date FROM sbox.int_data order by start_date desc,  sensor_id").executeAndFetch(IntValue.class);
 			return values;
 		}
 	}

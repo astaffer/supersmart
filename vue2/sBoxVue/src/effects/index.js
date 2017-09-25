@@ -29,14 +29,15 @@ export default {
     })[0]
     this.effectsData.data = this.effects.map(function (effect) {
       if (effect.bar_type === 'Plan') {
-        return effect.hours
+        return Math.round(effect.hours * 100) / 100
       }
-      return effect.hours
+      return Math.round(effect.hours * 100) / 100
       // return effect.bar_type === 'SensorOff' ? plan.hours - effect.hours : effect.hours
     })
     this.effectsData.percents = this.effectsData.data.map(function (item) {
       return plan.hours > 0 ? Math.round(item / plan.hours * 100) : 0
     })
+    this.effectsData.percents[0] = plan.hours > 0 ? 100 : 0
     return this.effectsData
   },
   getEffects (context, datefrom, dateto, detail) {

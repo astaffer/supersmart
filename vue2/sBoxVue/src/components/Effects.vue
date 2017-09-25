@@ -33,31 +33,20 @@
         <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
         <md-button @click.native="getEffects(365,1)" >Год</md-button>
         <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
-        <!-- 
-          <md-layout>
-            <md-layout >
-              <md-button @click.native="getEffects(0,1)" class="md-toggle" >Сегодня</md-button>
-            </md-layout>
-            <md-layout>
-              <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
-            </md-layout>
-            <md-layout>
-              <md-button @click.native="getEffects(7,1)" >Неделя</md-button>
-            </md-layout>
-            <md-layout >
-              <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
-            </md-layout>
-            <md-layout >
-              <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
-            </md-layout>
-            <md-layout >
-              <md-button @click.native="getEffects(365,1)" >Год</md-button>
-            </md-layout>
-            <md-layout>
-              <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
-            </md-layout>
-          </md-layout>
-          -->
+        </md-button-toggle> 
+      </md-layout>
+    </md-layout>
+    <md-layout md-gutter>
+      <md-layout md-flex="80" md-flex-offset="5" class="top-5">
+        <md-button-toggle md-single class="md-accent">
+        <md-button @click.native="changeDetail('second')" class="md-toggle" >Секунды</md-button>
+        <md-button @click.native="changeDetail('minute')"  >Минуты</md-button>
+        <md-button @click.native="changeDetail('hour')" >Часы</md-button>
+        <md-button @click.native="changeDetail('day')" >Дни</md-button>
+        <md-button @click.native="changeDetail('week')" >Недели</md-button>
+        <md-button @click.native="changeDetail('month')" >Месяцы</md-button>
+        <md-button @click.native="changeDetail('quarter')" >Кварталы</md-button>
+        <md-button @click.native="changeDetail('year')" >Годы</md-button>
         </md-button-toggle> 
       </md-layout>
     </md-layout>
@@ -78,14 +67,14 @@
           <md-table-header>
             <md-table-row>
               <md-table-head class="short">Показатель</md-table-head>
-              <md-table-head md-numeric class="short">Часы</md-table-head>
+              <md-table-head md-numeric class="short">{{ detaillabel }}</md-table-head>
               <md-table-head md-numeric class="short">%</md-table-head>
             </md-table-row>
           </md-table-header>
           <md-table-body>
             <md-table-row v-for="entry in this.eff" :key="entry.bar_id">
               <md-table-cell class="short" nowrap >{{ entry.bar_label }}</md-table-cell>
-              <md-table-cell class="short"  md-numeric >{{ entry.hours }}</md-table-cell>
+              <md-table-cell class="short"  md-numeric >{{ Math.round(entry.hours * 100) / 100  }}</md-table-cell>
               <md-table-cell class="short" >{{ percents[entry.bar_id-1] }}</md-table-cell>
             </md-table-row>
           </md-table-body>
@@ -114,7 +103,9 @@ export default {
       dateFrom: {},
       dateTo: {},
       eff: [],
-      percents: []
+      percents: [],
+      detail: 'second',
+      detaillabel: 'Сек'
     }
   },
   computed: {
@@ -196,7 +187,7 @@ export default {
   },
   methods: {
     getEffs () {
-      effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), 'hour').then(response => {
+      effects.getEffects(this, this.dateFrom.toISOString(), this.dateTo.toISOString(), this.detail).then(response => {
         var options = {
           year: 'numeric',
           month: 'numeric',
@@ -227,6 +218,36 @@ export default {
     getEffects (daysBack, to) {
       this.dateFrom = this.getDate(-daysBack)
       this.dateTo = this.getDate(to)
+      this.getEffs()
+    },
+    changeDetail (_detail) {
+      this.detail = _detail
+      switch (_detail) {
+        case 'second':
+          this.detaillabel = 'Секунд'
+          break
+        case 'minute':
+          this.detaillabel = 'Минут'
+          break
+        case 'hour':
+          this.detaillabel = 'Часов'
+          break
+        case 'day':
+          this.detaillabel = 'Дней'
+          break
+        case 'week':
+          this.detaillabel = 'Недель'
+          break
+        case 'month':
+          this.detaillabel = 'Месяцев'
+          break
+        case 'quarter':
+          this.detaillabel = 'Кварталов'
+          break
+        case 'year':
+          this.detaillabel = 'Лет'
+          break
+      }
       this.getEffs()
     },
     getEffectsCustom () {
