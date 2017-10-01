@@ -122,6 +122,9 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			List<GaugesData> gauges = conn.createQuery("CALL gauges(:dateTo);").addParameter("dateTo", dateTo)
 					.executeAndFetch(GaugesData.class);
+			for (GaugesData gaugesData : gauges) {
+				gaugesData.setValue(gaugesData.getValue()/gaugesData.getDetail().getValue());
+			}
 			return gauges;
 		}
 	}
@@ -242,7 +245,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			List<GaugesData> gauges = conn
 					.createQuery(
-							"SELECT  `gauge_id`,`gauge_label`, `gauge_unit`,`sort_order`,`init_value`, `limit_value`,`start_green`, `start_yellow`,`start_red`, `sensor_id`,`init_date`,`mileage_date`"
+							"SELECT  `gauge_id`,`gauge_label`, `gauge_unit`,`sort_order`,`init_value`, `limit_value`,`start_green`, `start_yellow`,`start_red`, `sensor_id`,`init_date`,`mileage_date`, `detail`"
 									+ "FROM `servicegauge` WHERE gauge_id=:gauge_id limit 1")
 					.addParameter("gauge_id", gauge_id).executeAndFetch(GaugesData.class);
 			GaugesData gauge = null;
@@ -335,10 +338,10 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			gauge_id = (long) conn
 					.createQuery(
-							"INSERT INTO servicegauge (`gauge_label`,`gauge_unit`,`sort_order`,`init_value`,`limit_value`,`start_green`,`start_yellow`,`start_red`,`sensor_id`,`init_date`,`mileage_date`)"
-									+ "VALUES(:gauge_label,:gauge_unit,:sort_order,:init_value,:limit_value,:start_green,:start_yellow,:start_red,:sensor_id,:init_date,:mileage_date)")
+							"INSERT INTO servicegauge (`gauge_label`,`gauge_unit`,`sort_order`,`init_value`,`limit_value`,`start_green`,`start_yellow`,`start_red`,`sensor_id`,`init_date`,`mileage_date`,`detail`)"
+									+ "VALUES(:gauge_label,:gauge_unit,:sort_order,:init_value,:limit_value,:start_green,:start_yellow,:start_red,:sensor_id,:init_date,:mileage_date,:detail)")
 					.addParameter("gauge_label", gauge.getGauge_label() == null ? "bar" : gauge.getGauge_label())
-					.addParameter("gauge_unit", gauge.getGauge_unit() == null ? "часов" : gauge.getGauge_unit())
+					.addParameter("gauge_unit", gauge.getGauge_unit() == null ? "" : gauge.getGauge_unit())
 					.addParameter("init_value", gauge.getInit_value() == 0 ? 0 : gauge.getInit_value())
 					.addParameter("limit_value", gauge.getLimit_value() == 0 ? 0 : gauge.getLimit_value())
 					.addParameter("start_green", gauge.getStart_green() == 0 ? 0 : gauge.getStart_green())
@@ -349,6 +352,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 							gauge.getMileage_date() == null ? new Date() : gauge.getMileage_date())
 					.addParameter("sensor_id", gauge.getSensor_id() == 0 ? "0" : gauge.getSensor_id())
 					.addParameter("sort_order", gauge.getSort_order() == 0 ? "0" : gauge.getSort_order())
+					.addParameter("detail", gauge.getDetail())
 					.executeUpdate().getKey();
 		}
 		return getGauge((int) gauge_id);
@@ -657,9 +661,12 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	}
 
 	@Override
-	public List<IntValue> getPureData() {
+	public List<IntValue> getPureData(int pagesize, int pagenumber) {
 		try (Connection conn = sql2o.open()) {
-			List<IntValue> values = conn.createQuery("SELECT sensor_id,start_date,stop_date,delta_date FROM sbox.int_data order by start_date desc,  sensor_id").executeAndFetch(IntValue.class);
+			List<IntValue> values = conn.createQuery("SELECT sensor_id,start_date,stop_date,delta_date FROM sbox.int_data order by start_date desc,  sensor_id limit :offset,:size")
+					.addParameter("offset", (pagenumber-1)*pagesize)
+					.addParameter("size", pagesize)
+					.executeAndFetch(IntValue.class);
 			return values;
 		}
 	}

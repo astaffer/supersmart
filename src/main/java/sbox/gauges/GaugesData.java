@@ -3,6 +3,7 @@ package sbox.gauges;
 import java.util.Date;
 
 import lombok.Data;
+import sbox.sensor.Detail;
 @Data
 public class GaugesData {
 	int gauge_id;
@@ -19,4 +20,5 @@ public class GaugesData {
 	Date mileage_date;
 	int value;
 	int mileage_value;
+	Detail detail;
 }

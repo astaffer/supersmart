@@ -38,17 +38,12 @@ public class IndexController {
 		return JsonUtil.dataToJson("Станок");
 	};
 	public static Route getPureData = (Request request, Response response) -> {
-		// ObjectMapper mapper = new ObjectMapper();
-		//ConfigurationsPayload config = mapper.readValue(request.body(), ConfigurationsPayload.class);
-		/*if (!config.isValid()) {
-			response.status(HTTP_BAD_REQUEST);
-			return "";
-		}
-		*/
-		response.status(200);
+		ObjectMapper mapper = new ObjectMapper();
+		IntValuePayload value = mapper.readValue(request.body(), IntValuePayload.class);
+ 		response.status(HTTP_GOOD_REQUEST);
 		response.type("application/json");
 		PureDataModel model = new Sql2oModel(sql2o);
-		return JsonUtil.dataToJsonDateExtended(model.getPureData());
+		return JsonUtil.dataToJsonDateExtended(model.getPureData(value.getPageSize(),value.getPageNumber()));
 	};
 	 
 }
