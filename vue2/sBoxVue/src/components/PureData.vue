@@ -12,6 +12,7 @@
      </md-layout>
      <md-layout md-gutter>
       <md-layout md-flex = "70" md-flex-small="90" md-flex-xsmall="100">
+        <md-table-card>
         <md-table>
           <md-table-header>
             <md-table-row>
@@ -30,6 +31,15 @@
             </md-table-row>
           </md-table-body>
         </md-table>
+        <md-table-pagination
+             :md-size=page.size
+              :md-total=total
+              :md-page="1"
+            md-label="Строк"
+            md-separator="из"
+            :md-page-options=ff
+            @pagination="onPagination"></md-table-pagination>
+          </md-table-card>
         </md-layout>
         </md-layout>
  </div>
@@ -41,16 +51,33 @@ export default {
   data () {
     return {
       msg: 'hello',
-      intvalues: []
+      intvalues: [],
+      sensorList: [],
+      ff: [10, 25, 50],
+      page: {
+        'page': 1,
+        'size': 10
+      },
+      total: 1000000
     }
   },
   mounted () {
-    this.getPureData()
+    this.getPureData(this.page)
   },
   methods: {
-    getPureData () {
-      this.$http.post(service.getPureDataUrl()).then(response => {
-        this.intvalues = response.data
+    onPagination (page) {
+      console.log(page)
+      this.page = page
+      this.getPureData(page)
+    },
+    getPureData (page) {
+      var param = {
+        pageSize: page.size,
+        pageNumber: page.page
+      }
+      this.$http.post(service.getPureDataUrl(), param).then(response => {
+        this.intvalues = response.data.data
+        this.total = response.data.total
         this.intvalues.forEach(function (element, index, array) {
           element.start_date = new Date(Date.parse(element.start_date)).toLocaleString('ru-Ru', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })
           element.stop_date = new Date(Date.parse(element.stop_date)).toLocaleString('ru-Ru', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })

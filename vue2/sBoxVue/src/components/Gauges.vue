@@ -51,10 +51,13 @@
                   </md-input-container>
                 </md-layout>
                 <md-layout md-flex="33" md-flex-small="50" md-flex-xsmall="100" >
-                  <md-input-container>
-                    <label>Единицы</label>
-                    <md-input maxlength="10" v-model="newgauge.gauge_unit"></md-input>
-                    <span class="md-error">Ошибка при заполнении</span>
+                   <md-input-container>
+                      <label>Единицы</label>
+                      <md-select v-model="newgauge.detail" :disabled="!hasAdminAccess()">
+                      <md-option v-for="detail in details" :key="detail.key" v-bind:value="detail.key">
+                      {{ detail.value }}</md-option>
+                    </md-select>
+                      <span class="md-error">Ошибка при заполнении</span>
                   </md-input-container>
                 </md-layout>
                 <md-layout md-flex="33" md-flex-small="50" md-flex-xsmall="100" >
@@ -138,10 +141,13 @@
                   </md-input-container>
                 </md-layout>
                 <md-layout md-flex="33" md-flex-small="50" md-flex-xsmall="100" >
-                  <md-input-container>
-                    <label>Единицы</label>
-                    <md-input maxlength="10" v-model="gauge.gauge_unit" :disabled="!hasAdminAccess()"></md-input>
-                    <span class="md-error">Ошибка при заполнении</span>
+                   <md-input-container>
+                      <label>Единицы</label>
+                      <md-select v-model="gauge.detail" :disabled="!hasAdminAccess()">
+                      <md-option v-for="detail in details" :key="detail.key" v-bind:value="detail.key">
+                      {{ detail.value }}</md-option>
+                    </md-select>
+                      <span class="md-error">Ошибка при заполнении</span>
                   </md-input-container>
                 </md-layout>
                 <md-layout md-flex="33" md-flex-small="50" md-flex-xsmall="100" >
@@ -196,8 +202,10 @@
                   </md-input-container>
                 </md-layout>
                 <md-layout md-flex="33" md-flex-small="50" md-flex-xsmall="100" >  
+
                 </md-layout>
                 <md-layout md-flex="33" md-flex-small="50" md-flex-xsmall="100" >
+                 
                   <md-input-container>
                       <label>Дата старт</label>
                       <md-input maxlength="10" v-model="gauge.init_date" :disabled="!hasAdminAccess()"></md-input>
@@ -240,6 +248,7 @@ export default {
     return {
       error: '',
       gauges: [],
+      details: [],
       sensors: [],
       newgauge: {},
       gaugeToClear: {},
@@ -260,6 +269,7 @@ export default {
     }
   },
   mounted () {
+    this.details = Gauge.details()
     this.readGauges()
     sensorservice.getAllSensors(this).then(response => {
       this.sensors = response.data

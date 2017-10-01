@@ -29,6 +29,7 @@ import sbox.effects.EffectsModel;
 import sbox.gauges.GaugesData;
 import sbox.gauges.GaugesModel;
 import sbox.index.IntValue;
+import sbox.index.PureData;
 import sbox.index.PureDataModel;
 import sbox.sensor.*;
 import sbox.user.User;
@@ -303,6 +304,10 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		if (gauge.getSort_order() >= 0) {
 			sql.append("sort_order = :sort_order,");
 			params.put("sort_order", gauge.getSort_order());
+		}
+		if (gauge.getDetail() != null) {
+			sql.append("detail = :detail,");
+			params.put("detail", gauge.getDetail());
 		}
 		// remove last comma.
 		sql.deleteCharAt(sql.length() - 1);
@@ -661,13 +666,19 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	}
 
 	@Override
-	public List<IntValue> getPureData(int pagesize, int pagenumber) {
+	public PureData getPureData(int pagesize, int pagenumber) {
+		PureData data = new PureData();
+		data.setSize(pagesize);
+		data.setPage(pagenumber);
 		try (Connection conn = sql2o.open()) {
-			List<IntValue> values = conn.createQuery("SELECT sensor_id,start_date,stop_date,delta_date FROM sbox.int_data order by start_date desc,  sensor_id limit :offset,:size")
+			List<IntValue> values = conn.createQuery("SELECT sensor_id,start_date,stop_date,delta_date FROM  int_data order by start_date desc,  sensor_id limit :offset,:size")
 					.addParameter("offset", (pagenumber-1)*pagesize)
 					.addParameter("size", pagesize)
 					.executeAndFetch(IntValue.class);
-			return values;
+			long count = conn.createQuery("SELECT COUNT(*) FROM int_data").executeScalar(Long.class);
+			data.setTotal(count);
+			data.setData(values);
+			return data;
 		}
 	}
 }

@@ -1,9 +1,13 @@
+const detailsList = [{key: 'second', value: 'Секунды'}, {key: 'minute', value: 'Минуты'}, {key: 'hour', value: 'Часы'}, {key: 'day', value: 'Дни'}, {key: 'week', value: 'Недели'}, {key: 'month', value: 'Месяцы'}, {key: 'quarter', value: 'Кварталы'}, {key: 'year', value: 'Годы'}]
 import service from '../service'
 import auth from '../auth'
 export default {
   gaugesData: {
     gaugesValues: [],
     gaugesOptions: []
+  },
+  details () {
+    return detailsList
   },
   prepareData (data) {
     this.gaugesData.gaugesValues = data.map(function (gauge) {
@@ -17,7 +21,7 @@ export default {
       var gaugeOption = {
         minValue: '0',
         maxValue: gauge.limit_value,
-        units: gauge.gauge_unit,
+        units: detailsList.find(i => i.key === gauge.detail).value,
         width: 200,
         height: 200,
         valueBox: true,

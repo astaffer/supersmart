@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface PureDataModel {
 
-	List<IntValue> getPureData(int size,int number);
+	PureData getPureData(int size,int number);
 
 }
