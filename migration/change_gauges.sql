@@ -28,3 +28,4 @@ END$$
 
 DELIMITER ;
 
+update servicegauge set detail='hour';

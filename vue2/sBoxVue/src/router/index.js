@@ -12,6 +12,7 @@ import Properties from '@/components/Properties'
 import SideNav from '@/components/SideNav'
 import Configurations from '@/components/Configurations'
 import PureData from '@/components/PureData'
+import Temp from '@/components/Temp'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -79,6 +80,19 @@ export default new Router({
       path: '/sidenav',
       name: 'SideNav',
       component: SideNav
+    },
+    {
+      path: '/temp',
+      name: 'Temp',
+      component: Temp,
+      children: [
+        {
+          name: 'gauges',
+          path: 'gauges',
+          component: Services,
+          meta: { requiresAuth: true }
+        }
+      ]
     },
     {
       path: '*',

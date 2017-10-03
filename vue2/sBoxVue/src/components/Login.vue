@@ -1,7 +1,7 @@
 <template>
 <div class="login-form">
   <md-layout md-gutter md-align="center">
-    <md-layout md-flex-xsmall="80" md-flex-small="50" md-flex-medium="33"  md-flex-large="25" md-align="center">
+    <md-layout md-flex-xsmall="80" md-flex-small="50" md-flex-medium="33"  md-flex-large="25" md-flex-xlarge="20" md-align="center">
       <md-card style="width:100%" md-with-hover>
         <md-card-content>
           <form >
