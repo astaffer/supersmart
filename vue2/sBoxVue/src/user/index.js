@@ -48,7 +48,7 @@ export default {
       var creds = {
         access_id: auth.getAccessId(),
         username: user.user_name,
-        password: 'password',
+        password: user.user_password,
         email: user.user_email,
         roles: user.roles
       }
@@ -79,9 +79,21 @@ export default {
   deleteUser (context, user) {
     if (auth.user.authenticated) {
       var creds = {
-        access_id: auth.getAccessId()
+        access_id: auth.getAccessId(),
+        username: user.user_name
       }
       return context.$http.post(service.getUsersDeleteUrl(), creds)
+    }
+  },
+  updateUser (context, user) {
+    if (auth.user.authenticated) {
+      var creds = {
+        access_id: auth.getAccessId(),
+        username: user.user_name,
+        password: user.user_password,
+        email: user.user_email
+      }
+      return context.$http.post(service.getUsersUpdateUrl(), creds)
     }
   }
 }

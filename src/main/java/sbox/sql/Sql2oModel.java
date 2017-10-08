@@ -439,8 +439,27 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 
 	@Override
 	public User updateUser(UserPayload user) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<>();
+		StringBuilder sql = new StringBuilder("update users set ");
+		if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+			sql.append("user_email = :user_email,");
+			params.put("user_email", user.getEmail());
+		}
+		sql.deleteCharAt(sql.length() - 1);
+
+		sql.append(" where user_name = :id");
+		if (!params.isEmpty()) {
+			try (Connection conn = sql2o.open()) {
+				Query query = conn.createQuery(sql.toString());
+
+				for (String key : params.keySet()) {
+					query.addParameter(key, params.get(key));
+				}
+
+				query.addParameter("id", user.getUsername()).executeUpdate();
+			}
+		}
+		return getUserByUsername(user.getUsername());
 	}
 
 	@Override

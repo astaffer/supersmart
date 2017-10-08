@@ -109,13 +109,15 @@ public class UserController {
 			response.status(HTTP_BAD_REQUEST);
 			return "";
 		}
-		if (!authenticate(user.getUsername(), user.getPassword())) {
-			response.status(HTTP_BAD_REQUEST);
-			return "";
+		UserModel model = new Sql2oModel(sql2o);
+		if(user.getUsername()!="admin" && user.getPassword()!= null && !user.getPassword().isEmpty() )
+		{
+			String newSalt = BCrypt.gensalt();
+			String newHashedPassword = BCrypt.hashpw(user.getPassword(), newSalt);
+			model.changePassword(user.getUsername(), newSalt, newHashedPassword);
 		}
 		response.status(200);
 		response.type("application/json");
-		UserModel model = new Sql2oModel(sql2o);
 		return JsonUtil.dataToJson(model.updateUser(user));
 	};
 

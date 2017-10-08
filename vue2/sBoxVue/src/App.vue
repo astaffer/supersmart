@@ -23,6 +23,9 @@
           <div class="brainbox-logo" >
               <img src=".\assets\bb6.png"   alt="Brain Box logo">
           </div>
+          <div class="user-data">
+            <h5>Пользователь: {{userdata.user_name}}</h5>
+          </div>
         </div>
       </md-toolbar>
       <md-list>
@@ -32,6 +35,7 @@
         <md-list-item @click.native="$router.push({ path: '/dashboard/services' })">
              <md-icon>data_usage</md-icon><span>Сервис </span>
         </md-list-item>
+        <div v-if="useraccessonly">
         <md-list-item @click.native="$router.push({ path: '/dashboard/properties' })">
              <md-icon>star</md-icon><span>Параметры </span>
         </md-list-item>
@@ -49,6 +53,7 @@
              <md-icon>account_balance</md-icon><span>Текущие данные </span>
              <md-divider class="md-inset"></md-divider>
         </md-list-item>
+        </div>
         <md-list-item @click.native="logout()">
              <md-icon class="md-warn">exit_to_app</md-icon><span>Выход</span> 
         </md-list-item>
@@ -60,15 +65,45 @@
 
 <script>
 import auth from './auth'
+import userservice from './user'
 export default {
   name: 'app',
   data () {
     return {
-      user: auth.user
+      user: auth.user,
+      userdata: {
+        roles: [],
+        user_name: ''
+      }
     }
   },
+  computed: {
+    useraccessonly: function () {
+      return !this.userdata.roles.includes('user')
+    }
+  },
+  mounted () {
+    this.getUserRoles()
+  },
+  updated () {
+    this.getUserRoles()
+  },
   methods: {
+    getUserRoles () {
+      if (this.user.authenticated && this.userdata.user_name === '') {
+        userservice.getUser(this).then(response => {
+          this.userdata = response.data
+        }, response => {
+          this.error = 'Ошибка получения данных пользователя, сервис недоступен.'
+          console.log(this.error)
+        })
+      }
+    },
     logout () {
+      this.userdata = {
+        roles: [],
+        user_name: ''
+      }
       auth.logout()
     },
     toggleLeftSidenav () {
@@ -106,11 +141,16 @@ html {
   align-items: center;
   justify-content: center;
   flex-flow: column;
- 
 }
 .brainbox-logo img {
    margin-top: 100px;
    width: 120px;
+}
+.user-data {
+  position: absolute;
+  z-index: 10;
+  left: 0px;
+  top: 130px;
 }
 .mainapp {
   position: relative;

@@ -2,7 +2,7 @@
 // URL and endpoint constants
 import router from '../router'
 import service from '../service'
-// const HOST_NAME = 'divay.ru' // location.hostname
+
 export default {
 
   // User object will let us check authentication status
