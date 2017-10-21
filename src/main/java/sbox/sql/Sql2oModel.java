@@ -88,16 +88,14 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			Integer value = conn
 					.createQuery(
-							"SELECT SUM(int_value) as value FROM intdata where sensor_id = :sensorid and int_date>:fromdate and int_date<:todate")
+							"SELECT SUM(delta_date) as value FROM int_data where sensor_id = :sensorid and start_date>:fromdate and stop_date<:todate")
 					.addParameter("sensorid", sensorId).addParameter("fromdate", dateFrom)
 					.addParameter("todate", dateTo).executeScalar(Integer.class);
-			Sensor sensor = conn
-					.createQuery(
-							"SELECT SUM(int_value) as value FROM intdata where sensor_id = :sensorid and int_date>:fromdate and int_date<:todate")
-					.addParameter("sensorid", sensorId).executeAndFetch(Sensor.class).get(0);
+			Sensor sensor = conn.createQuery("SELECT sensor_id,sensor_name,sensor_type, sensor_hide FROM sensor where sensor_id=:id")
+					.addParameter("id", sensorId).executeAndFetch(Sensor.class).get(0);
 			SensorData data = new SensorData();
 			data.setSensor(sensor);
-			data.setData(value);
+			data.setData(value/detail.getValue());
 			data.setDetail(detail);
 			return data;
 		}
@@ -567,18 +565,22 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	public Sensor clearSensor(Sensor sensorData) {
 		try (Connection conn = sql2o.open()) {
 			final Calendar cal = Calendar.getInstance();
-		    cal.add(Calendar.DATE, -1);
+		    //cal.add(Calendar.DATE, -1);
 			if(!sensorData.getSensor_type())
 			{
-				conn.createQuery("DELETE FROM intdata WHERE sensor_id=:sensorid")
+				conn.createQuery("DELETE FROM int_data WHERE sensor_id=:sensorid")
 				.addParameter("sensorid", sensorData.getSensor_id())
 				.executeUpdate();
 				
-				conn.createQuery("INSERT INTO intdata (`int_id`,`sensor_id`,`int_date`,`int_value`) VALUES(:intid,:sensorid,:intdate,:intvalue)")
+				conn.createQuery("INSERT INTO int_data (`int_id`,`sensor_id`,`prev_stop_date`,`stop_date`,`start_date`,"
+						+ "`delta_date`,`complete`) VALUES(:intid,:sensorid,:prevdate,:stopdate,:startdate,:deltadate,:complete)")
 				.addParameter("intid", sensorData.getSensor_id())
 				.addParameter("sensorid", sensorData.getSensor_id())
-				.addParameter("intdate",cal.getTime())
-				.addParameter("intvalue", 0)
+				.addParameter("prevdate",cal.getTime())
+				.addParameter("stopdate",cal.getTime())
+				.addParameter("startdate",cal.getTime())
+				.addParameter("deltadate",0)
+				.addParameter("complete", 1)
 				.executeUpdate();
 			}
 		}

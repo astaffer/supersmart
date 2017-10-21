@@ -49,6 +49,7 @@
             </md-input-container>
             <md-input-container>
               <label>Цвет</label>
+
               <md-input v-model="newbar.bar_color"></md-input>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
@@ -94,6 +95,7 @@
             <md-input-container>
               <label>Цвет</label>
               <md-input v-model="bar.bar_color" :disabled="!hasAdminAccess()"></md-input>
+
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
             <md-input-container>
