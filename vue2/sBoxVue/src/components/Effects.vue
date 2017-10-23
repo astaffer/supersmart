@@ -26,8 +26,8 @@
     <md-layout md-gutter>
       <md-layout md-flex="80" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
-        <md-button @click.native="getEffects(0,1)" class="md-toggle" >Сегодня</md-button>
-        <md-button @click.native="getEffects(1,0)" >Вчера</md-button>
+        <md-button @click.native="getEffects(0,1)" >Сегодня</md-button>
+        <md-button @click.native="getEffects(1,0)" class="md-toggle" >Вчера</md-button>
         <md-button @click.native="getEffects(7,1)" >Неделя</md-button>
         <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
         <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
@@ -39,9 +39,9 @@
     <md-layout md-gutter>
       <md-layout md-flex="80" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
-        <md-button @click.native="changeDetail('second')" class="md-toggle" >Секунды</md-button>
+        <md-button @click.native="changeDetail('second')"  >Секунды</md-button>
         <md-button @click.native="changeDetail('minute')"  >Минуты</md-button>
-        <md-button @click.native="changeDetail('hour')" >Часы</md-button>
+        <md-button @click.native="changeDetail('hour')" class="md-toggle" >Часы</md-button>
         <md-button @click.native="changeDetail('day')" >Дни</md-button>
         <md-button @click.native="changeDetail('week')" >Недели</md-button>
         <md-button @click.native="changeDetail('month')" >Месяцы</md-button>
@@ -104,8 +104,8 @@ export default {
       dateTo: {},
       eff: [],
       percents: [],
-      detail: 'second',
-      detaillabel: 'Сек'
+      detail: 'hour',
+      detaillabel: 'Часов'
     }
   },
   computed: {
@@ -177,7 +177,7 @@ export default {
     }
   },
   mounted () {
-    this.getEffects(0, 1)
+    this.getEffects(1, 0)
     device.getDeviceFromService(this).then(response => {
       this.deviceInfo = response.data.device_name
     }, response => {
