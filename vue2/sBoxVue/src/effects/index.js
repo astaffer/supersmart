@@ -17,12 +17,12 @@ export default {
       return effect.bar_label
     })
     this.effectsData.backgroundColors = this.effects.map(function (effect) {
-      var color = effect.bar_color
-      return `rgba(${color}, 0.2)`
+      var color = JSON.parse(effect.bar_colors)
+      return `rgba(${color.rgba.r},${color.rgba.g},${color.rgba.b},${color.rgba.a})`
     })
     this.effectsData.borderColors = this.effects.map(function (effect) {
-      var color = effect.bar_color
-      return `rgba(${color}, 1)`
+      var color = JSON.parse(effect.bar_colors)
+      return `rgba(${color.rgba.r},${color.rgba.g},${color.rgba.b}, 1)`
     })
     var plan = this.effects.filter(function (effect) {
       return effect.bar_type === 'Plan'

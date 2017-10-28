@@ -11,18 +11,22 @@ export default {
   },
   setBar (context, barUnit) {
     if (auth.user.authenticated) {
+      var unit = Object.assign({}, barUnit)
+      unit.bar_colors = JSON.stringify(unit.bar_colors)
       var creds = {
         access_id: auth.getAccessId(),
-        bar: barUnit
+        bar: unit
       }
       return context.$http.post(service.getBarsUpdateUrl(), creds)
     }
   },
   createBar (context, barUnit) {
     if (auth.user.authenticated) {
+      var unit = Object.assign({}, barUnit)
+      unit.bar_colors = JSON.stringify(unit.bar_colors)
       var creds = {
         access_id: auth.getAccessId(),
-        bar: barUnit
+        bar: unit
       }
       // console.log(creds)
       return context.$http.post(service.getBarsCreateUrl(), creds)

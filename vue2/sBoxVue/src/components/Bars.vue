@@ -1,5 +1,15 @@
 <template>
   <div>
+    <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog_color">
+      <md-dialog-title>Выбрать цвет</md-dialog-title>
+      <md-dialog-content>
+           <chrome-picker v-model="barToChangeColor.bar_colors"></chrome-picker>
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button class="md-primary" @click.native="onCloseColorChange()">Отмена</md-button>
+        <md-button class="md-primary" @click.native="onApplyColorChange()">Выбрать</md-button>
+      </md-dialog-actions>
+    </md-dialog>
    <md-layout md-gutter >
     <md-layout md-flex="30" >
       <md-dialog-alert
@@ -47,15 +57,9 @@
 
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
-            <md-input-container>
-              <label>Цвет</label>
-
-              <md-input v-model="newbar.bar_color"></md-input>
-              <span class="md-error">Ошибка при заполнении</span>
-            </md-input-container>
+              <md-button  id="fab" v-bind:style="{background:rgba(newbar.bar_colors)}" @click.native="openColorChange(newbar)"></md-button>
             <md-input-container>
               <label>Тип</label>
-              <!--<md-input  v-model="newbar.bar_type"></md-input>-->
               <md-select v-model="newbar.bar_type">
                 <md-option value="Plan">План</md-option>
                 <md-option value="SensorOn">Время Вкл</md-option>
@@ -92,15 +96,9 @@
               <md-input maxlength="30"  v-model="bar.bar_label" :disabled="!hasAdminAccess()"></md-input>
               <span class="md-error">Ошибка при заполнении</span>
             </md-input-container>
-            <md-input-container>
-              <label>Цвет</label>
-              <md-input v-model="bar.bar_color" :disabled="!hasAdminAccess()"></md-input>
-
-              <span class="md-error">Ошибка при заполнении</span>
-            </md-input-container>
+            <md-button  id="fab" v-bind:style="{background:rgba(bar.bar_colors)}" @click.native="openColorChange(bar)"></md-button>
             <md-input-container>
               <label>Тип</label>
-              <!--<md-input  v-model="bar.bar_type"></md-input>-->
               <md-select v-model="bar.bar_type" :disabled="!hasAdminAccess()">
                 <md-option value="Plan">План</md-option>
                 <md-option value="SensorOn">Время Вкл</md-option>
@@ -139,8 +137,12 @@
 <script>
 import barservice from '../bars'
 import sensorservice from '../sensor'
+import {Chrome} from 'vue-color'
 export default {
   name: 'barschange',
+  components: {
+    'chrome-picker': Chrome
+  },
   props: {
     user: {
       user_name: '',
@@ -151,9 +153,55 @@ export default {
     return {
       error: '',
       newbar: {
+        bar_colors: {
+          hex: '#194d33',
+          hsl: {
+            h: 150,
+            s: 0.5,
+            l: 0.2,
+            a: 1
+          },
+          hsv: {
+            h: 150,
+            s: 0.66,
+            v: 0.30,
+            a: 1
+          },
+          rgba: {
+            r: 25,
+            g: 77,
+            b: 51,
+            a: 1
+          },
+          a: 1
+        }
       },
       bars: [],
       sensors: [],
+      barToChangeColor: {
+        bar_colors: {
+          hex: '#194d33',
+          hsl: {
+            h: 150,
+            s: 0.5,
+            l: 0.2,
+            a: 1
+          },
+          hsv: {
+            h: 150,
+            s: 0.66,
+            v: 0.30,
+            a: 1
+          },
+          rgba: {
+            r: 25,
+            g: 77,
+            b: 51,
+            a: 1
+          },
+          a: 1
+        }
+      },
       alert: {
         content: 'Показатель изменен!',
         content_error: 'Ошибка при изменении показателя!',
@@ -169,6 +217,11 @@ export default {
     this.readBars()
     sensorservice.getAllSensors(this).then(response => {
       this.sensors = response.data
+      this.sensors.push({
+        sensor_id: 0,
+        sensor_value: 0,
+        sensor_name: 'План'
+      })
     }, response => {
       this.error = 'Ошибка при получении данных датчиков'
       console.log(this.error)
@@ -178,6 +231,9 @@ export default {
     readBars () {
       barservice.getBars(this).then(response => {
         this.bars = response.data
+        this.bars.forEach(function (element, index, array) {
+          element.bar_colors = JSON.parse(element.bar_colors)
+        })
       }, response => {
         this.error = 'Ошибка при получении данных показателей'
         // console.log(this.error)
@@ -194,7 +250,9 @@ export default {
     },
     updateBar (bar) {
       barservice.setBar(this, bar).then(response => {
-        bar = response.data
+        var res = response.data
+        res.bar_colors = JSON.parse(res.bar_colors)
+        bar = res
         this.openDialog('dialog_bar')
       }, response => {
         // console.log('error')
@@ -222,6 +280,44 @@ export default {
         // console.log('error')
       })
       // console.log(bar)
+    },
+    rgba (colors) {
+      return `rgba(${colors.rgba.r}, ${colors.rgba.g}, ${colors.rgba.b}, ${colors.rgba.a})`
+    },
+    openColorChange (bar) {
+      this.barToChangeColor = bar
+      this.openDialog('dialog_color')
+    },
+    onCloseColorChange (type) {
+      this.closeDialog('dialog_color')
+      this.barToChangeColor = {
+        bar_colors: {
+          hex: '#194d33',
+          hsl: {
+            h: 150,
+            s: 0.5,
+            l: 0.2,
+            a: 1
+          },
+          hsv: {
+            h: 150,
+            s: 0.66,
+            v: 0.30,
+            a: 1
+          },
+          rgba: {
+            r: 25,
+            g: 77,
+            b: 51,
+            a: 1
+          },
+          a: 1
+        }
+      }
+    },
+    onApplyColorChange (type) {
+      this.updateBar(this.barToChangeColor)
+      this.onCloseColorChange(type)
     }
   }
 }
