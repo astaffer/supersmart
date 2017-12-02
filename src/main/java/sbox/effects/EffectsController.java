@@ -2,6 +2,8 @@ package sbox.effects;
 
 import static sbox.Work.sql2o;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import sbox.sql.Sql2oModel;
@@ -23,6 +25,18 @@ public class EffectsController {
 		response.type("application/json");
 		EffectsModel model = new Sql2oModel(sql2o);
 		return JsonUtil.dataToJson(model.getEffects(effects.dateFrom,effects.dateTo, effects.detail));
+	};
+	public static Route getDefaultEffects = (Request request, Response response) -> {
+		ObjectMapper mapper = new ObjectMapper();
+		EffectsDataPayload effects = mapper.readValue(request.body(), EffectsDataPayload.class);
+		if (!effects.isValid()) {
+			response.status(HTTP_BAD_REQUEST);
+			return "";
+		}
+		response.status(200);
+		response.type("application/json");
+		EffectsModel model = new Sql2oModel(sql2o);
+		return JsonUtil.dataToJson(model.getEffects(effects.getPeriodDateFrom(), effects.getPeriodDateTo(),effects.detail));
 	};
 	public static Route getBars = (Request request, Response response) -> {
 		ObjectMapper mapper = new ObjectMapper();

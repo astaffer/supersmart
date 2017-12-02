@@ -50,5 +50,15 @@ export default {
       }
       return context.$http.post(service.getEffectsUrl(), effectsParm)
     }
+  },
+  getDefaultEffects (context, period, detail) {
+    if (auth.user.authenticated) {
+      var effectsParm = {
+        access_id: auth.getAccessId(),
+        period: period,
+        detail: detail
+      }
+      return context.$http.post(service.getDefEffectsUrl(), effectsParm)
+    }
   }
 }

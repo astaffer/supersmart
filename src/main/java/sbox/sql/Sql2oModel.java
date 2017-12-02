@@ -42,7 +42,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	private Sql2o sql2o;
 	public static final String DELETEOK = "OK";
 	public static final String DELETEERROR = "ERROR";
-
+	private static final String defaultColor="{\"hsl\":{\"h\":278.8235294117647,\"s\":0.5000000000000001,\"l\":0.2,\"a\":0.2},\"hex\":\"#3B194D\",\"rgba\":{\"r\":59,\"g\":25,\"b\":77,\"a\":0.2},\"hsv\":{\"h\":278.8235294117647,\"s\":0.6666666666666667,\"v\":0.30000000000000004,\"a\":0.2},\"oldHue\":278.8235294117647,\"source\":\"rgba\",\"a\":0.2}";
 	public Sql2oModel(Sql2o sql2o) {
 		this.sql2o = sql2o;
 
@@ -131,7 +131,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	@Override
 	public DeviceData getData() {
 		try (Connection conn = sql2o.open()) {
-			DeviceData device = conn.createQuery("SELECT device_id, device_name, device_shifts  FROM device limit 1")
+			DeviceData device = conn.createQuery("SELECT device_id, device_name, device_shifts, device_uptime  FROM device limit 1")
 					.executeAndFetch(DeviceData.class).get(0);
 			return device;
 		}
@@ -150,7 +150,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 	public List<EffectsData> getBars() {
 		try (Connection conn = sql2o.open()) {
 			List<EffectsData> effects = conn
-					.createQuery("SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order FROM effectsbar;")
+					.createQuery("SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order,bar_colors FROM effectsbar;")
 					.executeAndFetch(EffectsData.class);
 			return effects;
 		}
@@ -161,7 +161,7 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		try (Connection conn = sql2o.open()) {
 			List<EffectsData> bars = conn
 					.createQuery(
-							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order  FROM effectsbar WHERE bar_id=:bar_id limit 1")
+							"SELECT bar_id,bar_label,bar_color,bar_type,sensor_id,sort_order,bar_colors  FROM effectsbar WHERE bar_id=:bar_id limit 1")
 					.addParameter("bar_id", bar_id).executeAndFetch(EffectsData.class);
 			EffectsData bar = null;
 			if (!bars.isEmpty()) {
@@ -182,6 +182,10 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		if (bar.getBar_color() != null && !bar.getBar_color().isEmpty()) {
 			sql.append("bar_color = :bar_color,");
 			params.put("bar_color", bar.getBar_color());
+		}
+		if (bar.getBar_colors() != null && !bar.getBar_colors().isEmpty()) {
+			sql.append("bar_colors = :bar_colors,");
+			params.put("bar_colors", bar.getBar_colors());
 		}
 		if (bar.getBar_type() != null) {
 			sql.append("bar_type = :bar_type,");
@@ -227,10 +231,11 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 		long bar_id = 0;
 		try (Connection conn = sql2o.open()) {
 			bar_id =  (long) conn
-					.createQuery("INSERT INTO effectsbar (`bar_label`,`bar_color`,`bar_type`,`sensor_id`,`sort_order`)"
-							+ "VALUES(:bar_label,:bar_color,:bar_type,:sensor_id,:sort_order)")
+					.createQuery("INSERT INTO effectsbar (`bar_label`,`bar_color`,`bar_type`,`sensor_id`,`sort_order`,`bar_colors`)"
+							+ "VALUES(:bar_label,:bar_color,:bar_type,:sensor_id,:sort_order,:bar_colors)")
 					.addParameter("bar_label", bar.getBar_label() == null ? "bar" : bar.getBar_label())
-					.addParameter("bar_color", bar.getBar_color() == null ? "255, 255, 255" : bar.getBar_color())
+					.addParameter("bar_color", bar.getBar_color() == null ? "128, 128, 128" : bar.getBar_color())
+					.addParameter("bar_colors", bar.getBar_colors() == null ?defaultColor:bar.getBar_colors())
 					.addParameter("bar_type", bar.getBar_type() == null ? "Plan" : bar.getBar_type().toString())
 					.addParameter("sensor_id", bar.getSensor_id() == 0 ? "0" : bar.getSensor_id())
 					.addParameter("sort_order", bar.getSort_order() == 0 ? "0" : bar.getSort_order()).executeUpdate()
@@ -701,5 +706,17 @@ public class Sql2oModel implements SensorModel, EffectsModel, GaugesModel, Devic
 			data.setData(values);
 			return data;
 		}
+	}
+
+	@Override
+	public int writeUptime(Date uptime) {
+		int ok=0;
+		try (Connection conn = sql2o.open()) {
+			conn.createQuery("UPDATE device SET device_uptime=:deviceuptime")
+					.addParameter("deviceuptime", uptime).executeUpdate();
+			ok=1;
+		}
+		
+		return ok;
 	}
 }

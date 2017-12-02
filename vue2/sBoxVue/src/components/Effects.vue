@@ -26,12 +26,12 @@
     <md-layout md-gutter>
       <md-layout md-flex="80" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
-        <md-button @click.native="getEffects(0,1)" >Сегодня</md-button>
-        <md-button @click.native="getEffects(1,0)" class="md-toggle" >Вчера</md-button>
-        <md-button @click.native="getEffects(7,1)" >Неделя</md-button>
-        <md-button @click.native="getEffects(30,1)" >Месяц</md-button>
-        <md-button @click.native="getEffects(120,1)" >Квартал</md-button>
-        <md-button @click.native="getEffects(365,1)" >Год</md-button>
+        <md-button @click.native="getDefEffects('today')" >Сегодня</md-button>
+        <md-button @click.native="getDefEffects('yesterday')" class="md-toggle" >Вчера</md-button>
+        <md-button @click.native="getDefEffects('week')" >Неделя</md-button>
+        <md-button @click.native="getDefEffects('month')" >Месяц</md-button>
+        <md-button @click.native="getDefEffects('quarter')" >Квартал</md-button>
+        <md-button @click.native="getDefEffects('year')" >Год</md-button>
         <md-button @click.native="openDialog('dialog2')" id="fab">{{ datesButtonLabel }}</md-button>
         </md-button-toggle> 
       </md-layout>
@@ -39,10 +39,10 @@
     <md-layout md-gutter>
       <md-layout md-flex="80" md-flex-offset="5" class="top-5">
         <md-button-toggle md-single class="md-accent">
-        <md-button @click.native="changeDetail('second')"  >Секунды</md-button>
-        <md-button @click.native="changeDetail('minute')"  >Минуты</md-button>
+        <md-button @click.native="changeDetail('second')">Секунды</md-button>
+        <md-button @click.native="changeDetail('minute')">Минуты</md-button>
         <md-button @click.native="changeDetail('hour')" class="md-toggle" >Часы</md-button>
-        <md-button @click.native="changeDetail('day')" >Дни</md-button>
+        <md-button @click.native="changeDetail('day')">Дни</md-button>
         <md-button @click.native="changeDetail('week')" >Недели</md-button>
         <md-button @click.native="changeDetail('month')" >Месяцы</md-button>
         <md-button @click.native="changeDetail('quarter')" >Кварталы</md-button>
@@ -72,10 +72,10 @@
             </md-table-row>
           </md-table-header>
           <md-table-body>
-            <md-table-row v-for="entry in this.eff" :key="entry.bar_id">
+            <md-table-row v-for="(entry, index) in this.eff" :key="entry.bar_id">
               <md-table-cell class="short" nowrap >{{ entry.bar_label }}</md-table-cell>
               <md-table-cell class="short"  md-numeric >{{ Math.round(entry.hours * 100) / 100  }}</md-table-cell>
-              <md-table-cell class="short" >{{ percents[entry.bar_id-1] }}</md-table-cell>
+              <md-table-cell class="short" >{{ percents[index] }}</md-table-cell>
             </md-table-row>
           </md-table-body>
         </md-table>
@@ -219,6 +219,61 @@ export default {
       this.dateFrom = this.getDate(-daysBack)
       this.dateTo = this.getDate(to)
       this.getEffs()
+    },
+    getDefEffects (period) {
+      switch (period) {
+        case 'today':
+          this.dateFrom = this.getDate(0)
+          this.dateTo = this.getDate(1)
+          break
+        case 'yesterday':
+          this.dateFrom = this.getDate(-1)
+          this.dateTo = this.getDate(0)
+          break
+        case 'week':
+          this.dateFrom = this.getDate(-7)
+          this.dateTo = this.getDate(1)
+          break
+        case 'month':
+          this.dateFrom = this.getDate(-30)
+          this.dateTo = this.getDate(1)
+          break
+        case 'quarter':
+          this.dateFrom = this.getDate(-90)
+          this.dateTo = this.getDate(1)
+          break
+        case 'year':
+          this.dateFrom = this.getDate(-365)
+          this.dateTo = this.getDate(1)
+          break
+      }
+      effects.getDefaultEffects(this, period, this.detail).then(response => {
+        var options = {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        }
+        this.dateFromStr = this.dateFrom.toLocaleString('ru', options)
+        this.dateToStr = this.dateTo.toLocaleString('ru', options)
+        var effectsData = effects.prepareData(response.data)
+        this.eff = effectsData.eff
+        this.someData = effectsData.data
+        this.percents = effectsData.percents
+        this.dtc = {
+          labels: effectsData.labels,
+          datasets: [
+            {
+              label: '',
+              data: effectsData.percents,
+              borderWidth: 1,
+              backgroundColor: effectsData.backgroundColors,
+              borderColor: effectsData.borderColors
+            }]
+        }
+      }, response => {
+        this.error = 'Ошибка при получении показателей, сервис недоступен'
+        console.log(this.error)
+      })
     },
     changeDetail (_detail) {
       this.detail = _detail

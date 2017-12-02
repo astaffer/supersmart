@@ -20,6 +20,7 @@ public class PathUrls {
         @Getter public static final String DEVICENETWORKGET = "/device/network/";
         /* EFFECTS */
         @Getter public static final String EFFECTS = "/effects/";
+        @Getter public static final String DEFAULTEFFECTS = "/defeffects/";
         @Getter public static final String BARS = "/bars/";
         @Getter public static final String BAR = "/bar/:id/";
         @Getter public static final String BARUPD = "/bars/change/";

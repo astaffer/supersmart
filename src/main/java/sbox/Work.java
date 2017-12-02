@@ -1,5 +1,6 @@
 package sbox;
 
+import static sbox.Work.sql2o;
 import static spark.Spark.*;
 
 import java.awt.event.ActionEvent;
@@ -9,10 +10,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.swing.Timer;
@@ -24,11 +30,16 @@ import com.beust.jcommander.JCommander;
 import sbox.auth.AuthController;
 import sbox.configuration.ConfigurationController;
 import sbox.device.DeviceController;
+import sbox.device.DeviceData;
+import sbox.device.DeviceModel;
 import sbox.effects.EffectsController;
+import sbox.effects.EffectsDataPayload;
+import sbox.effects.Period;
 import sbox.gauges.GaugesController;
 import sbox.hw.HWModel;
 import sbox.index.IndexController;
 import sbox.sensor.SensorController;
+import sbox.sql.Sql2oModel;
 import sbox.user.UserController;
 import sbox.util.*;
 
@@ -69,6 +80,7 @@ public class Work {
 		post(PathUrls.Web.SENSORCLR, SensorController.clearSensorData);
 
 		post(PathUrls.Web.EFFECTS, EffectsController.getEffects);
+		post(PathUrls.Web.DEFAULTEFFECTS, EffectsController.getDefaultEffects);
 		post(PathUrls.Web.BARS, EffectsController.getBars);
 		post(PathUrls.Web.BAR, EffectsController.getBar);
 		post(PathUrls.Web.BARADD, EffectsController.addBar);
@@ -102,16 +114,18 @@ public class Work {
 		post(PathUrls.Web.CONFIGDEL, ConfigurationController.removeConfiguration);
 		
 		post(PathUrls.Web.PUREDATA, IndexController.getPureData);
-		writeUptime(options.updelay);
+		writeUptime(options.updelay,options.debug);
+	
 	}
 
-	private static void writeUptime(int delay) {
+	private static void writeUptime(int delay,boolean debug) {
 		String fileName = System.getProperty("user.dir") + File.separator + "uptime.txt";
+		OpenOption openOption = debug ? StandardOpenOption.APPEND:StandardOpenOption.CREATE;
 		Timer timer = new Timer(1000 * delay, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				Path path = Paths.get(fileName);
 				try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
-						StandardOpenOption.CREATE)) {
+						openOption)) {
 					writer.write(LocalDateTime.now().toString());
 
 				} catch (IOException e) {
@@ -120,6 +134,11 @@ public class Work {
 					System.out.println(e.getMessage());
 
 				}
+				 
+				DeviceModel model = new Sql2oModel(sql2o);
+				Instant instant = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
+				Date out = Date.from(instant);
+				model.writeUptime(out);
 			}
 		});
 		timer.start();

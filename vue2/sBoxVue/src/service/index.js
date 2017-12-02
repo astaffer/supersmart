@@ -5,6 +5,7 @@ const DEV_API_URL = 'http://' + HOST_NAME + ':' + '8080' + '/'
 const LOGIN_URL = 'auth/'
 const SENSORS_URL = 'sensors/'
 const EFFECTS_URL = 'effects/'
+const DEFEFFECTS_URL = 'defeffects/'
 const GAUGES_URL = 'gauges/'
 const BARS_URL = 'bars/'
 const DEVICE_URL = 'device/'
@@ -51,6 +52,9 @@ export default {
   },
   getEffectsUrl () {
     return this.getApiUrl(EFFECTS_URL)
+  },
+  getDefEffectsUrl () {
+    return this.getApiUrl(DEFEFFECTS_URL)
   },
   getGaugesUrl () {
     return this.getApiUrl(GAUGES_URL)
